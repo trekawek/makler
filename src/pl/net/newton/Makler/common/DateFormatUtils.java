@@ -3,12 +3,14 @@ package pl.net.newton.Makler.common;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateFormatUtils {
-	private static final DateFormat YYYY_MM_DD = new SimpleDateFormat("yyyy-MM-dd");
+	private static final DateFormat YYYY_MM_DD = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
-	private static final DateFormat HH_MM_SS = new SimpleDateFormat("HH:mm:ss");
+	private static final DateFormat HH_MM_SS = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
 	public static String formatYyyyMmDd() {
 		return formatYyyyMmDd(new Date());
@@ -26,7 +28,7 @@ public class DateFormatUtils {
 		}
 	}
 
-	public static String formatHhMmSs(Date date) {
+	public static String formatHhMmSs(Calendar date) {
 		if (date == null) {
 			return "-";
 		} else {

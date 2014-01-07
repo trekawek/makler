@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart;
@@ -40,7 +41,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.LinearLayout;
@@ -129,8 +129,7 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 
-		setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT,
-				android.view.ViewGroup.LayoutParams.FILL_PARENT));
+		setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		setOrientation(LinearLayout.VERTICAL);
 		prepareDialog();
 	}
@@ -279,7 +278,7 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		boolean kursOdn = false;
 		if (graphRange == GraphRange.D1 && quote != null && quote.getKursOdn() != null
 				&& quote.getKursOdn().compareTo(BigDecimal.ZERO) > 0 && quote.getUpdate() != null
-				&& quote.getUpdate().getHours() >= 9) {
+				&& quote.getUpdate().get(Calendar.HOUR_OF_DAY) >= 9) {
 
 			double kursOdnDouble = quote.getKursOdn().doubleValue();
 			series = new XYSeries("Kurs odn.");
@@ -394,13 +393,14 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 	private void addLabels(int labels, EntryListWithIndexes entries, XYMultipleSeriesRenderer renderer,
 			String format) {
 		int lastDay = -1;
-		List<Date> days = new ArrayList<Date>();
+		List<Calendar> days = new ArrayList<Calendar>();
 		List<Integer> daysIndexes = new ArrayList<Integer>();
 		for (int i = 0; i < entries.getLength(); i++) {
-			Date d = new Date(entries.getDate(i));
+			Calendar d = Calendar.getInstance();
+			d.setTimeInMillis(entries.getDate(i));
 			int value = entries.getGraphIndex(i);
-			if (d.getDate() != lastDay) {
-				lastDay = d.getDate();
+			if (d.get(Calendar.DATE) != lastDay) {
+				lastDay = d.get(Calendar.DATE);
 				days.add(d);
 				daysIndexes.add(value);
 			}
@@ -411,7 +411,7 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		if (labels == 0)
 			return;
 
-		DateFormat sdf = new SimpleDateFormat(format);
+		DateFormat sdf = new SimpleDateFormat(format, Locale.US);
 		int d = days.size() / labels;
 		for (int i = 0; i < labels; i++) {
 			int j = i * d;
@@ -429,8 +429,8 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 				addView(layout);
 
 				LayoutParams params = (LayoutParams) layout.getLayoutParams();
-				params.width = android.view.ViewGroup.LayoutParams.FILL_PARENT;
-				params.height = android.view.ViewGroup.LayoutParams.FILL_PARENT;
+				params.width = LayoutParams.MATCH_PARENT;
+				params.height = LayoutParams.MATCH_PARENT;
 				layout.setLayoutParams(params);
 
 				ProgressBar spinner = new ProgressBar(context);
@@ -438,8 +438,8 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 				spinner.setIndeterminate(true);
 				RelativeLayout.LayoutParams spinnerParams = (android.widget.RelativeLayout.LayoutParams) spinner
 						.getLayoutParams();
-				spinnerParams.width = android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-				spinnerParams.height = android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+				spinnerParams.width = LayoutParams.WRAP_CONTENT;
+				spinnerParams.height = LayoutParams.WRAP_CONTENT;
 				spinnerParams.addRule(RelativeLayout.CENTER_IN_PARENT, -1);
 				spinner.setLayoutParams(spinnerParams);
 			}
@@ -482,13 +482,12 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 	}
 
 	public void onLongPress(MotionEvent e) {
-
 		if (!interActiveMode) {
 			Toast.makeText(getContext(), context.getString(R.string.graph_interactive_mode_on),
-					Toast.LENGTH_LONG);
+					Toast.LENGTH_LONG).show();
 		} else {
 			Toast.makeText(getContext(), context.getString(R.string.graph_interactive_mode_off),
-					Toast.LENGTH_LONG);
+					Toast.LENGTH_LONG).show();
 		}
 
 		interActiveMode = !interActiveMode;

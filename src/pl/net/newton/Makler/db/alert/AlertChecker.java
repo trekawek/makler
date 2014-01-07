@@ -58,7 +58,7 @@ public class AlertChecker {
 		Notification notification = new Notification(icon, "Alert", System.currentTimeMillis());
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		notification.setLatestEventInfo(ctx, "Alert maklera", a.notification(ctx), pendingIntent);
-		
+
 		if (!"".equals(ringTone)) {
 			notification.sound = Uri.parse(ringTone);
 		}

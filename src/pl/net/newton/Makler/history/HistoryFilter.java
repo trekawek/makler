@@ -133,7 +133,7 @@ public class HistoryFilter {
 				day++;
 				lastDay = currentDay;
 
-				cal.set(Calendar.HOUR, 9);
+				cal.set(Calendar.HOUR_OF_DAY, 9);
 				cal.set(Calendar.MINUTE, 0);
 				cal.set(Calendar.SECOND, 0);
 				dayBeginning = cal.getTimeInMillis();

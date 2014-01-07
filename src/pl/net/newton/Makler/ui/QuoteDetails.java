@@ -1,14 +1,13 @@
 package pl.net.newton.Makler.ui;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.util.TypedValue;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,8 +32,7 @@ import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.QuotesAdapter;
 import pl.net.newton.Makler.ui.graph.GraphView;
 
-public class QuoteDetails extends AbstractActivity implements QuotesListener,
-		HistoryListener {
+public class QuoteDetails extends AbstractActivity implements QuotesListener, HistoryListener {
 
 	private Quote quote;
 
@@ -44,7 +42,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener,
 
 	private Boolean index;
 
-	private HashMap<Integer, TextView> textViews;
+	private SparseArray<TextView> textViews;
 
 	private GraphView graphView;
 
@@ -63,9 +61,9 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener,
 			graphType = savedInstanceState.getInt("graphType", 0);
 		}
 
-		textViews = new HashMap<Integer, TextView>();
+		textViews = new SparseArray<TextView>();
 		quoteSymbol = getIntent().getStringExtra("symbol");
-		//isWalletItem = getIntent().getBooleanExtra("wallet_item", false);
+		// isWalletItem = getIntent().getBooleanExtra("wallet_item", false);
 	}
 
 	@Override
@@ -116,12 +114,12 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener,
 	}
 
 	private void refresh() {
-		if(quotesDb == null) {
+		if (quotesDb == null) {
 			return;
 		}
-		
+
 		quote = quotesDb.getQuoteBySymbol(quoteSymbol);
-		if(quote == null || quote.getSymbol() == null) {
+		if (quote == null || quote.getSymbol() == null) {
 			return;
 		}
 
@@ -173,10 +171,8 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener,
 	}
 
 	private void setTextView(int id, String text) {
-		TextView t;
-		if (textViews.containsKey(id))
-			t = textViews.get(id);
-		else {
+		TextView t = textViews.get(id);
+		if (t == null) {
 			t = (TextView) findViewById(id);
 			textViews.put(id, t);
 		}
@@ -219,7 +215,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener,
 				intent.putExtra("quote", quote.chooseKurs());
 				startActivity(intent);
 				break;
-			
+
 			case R.id.graphRange:
 				graphView.changeGraphRange();
 				break;
@@ -254,8 +250,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener,
 		index = quote.isIndex();
 		if (index) {
 			setContentView(R.layout.quote_details_index);
-		}
-		else {
+		} else {
 			setContentView(R.layout.quote_details);
 		}
 		graphLayout = (LinearLayout) findViewById(R.id.graphParent);

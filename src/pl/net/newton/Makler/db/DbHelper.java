@@ -11,6 +11,7 @@ public class DbHelper {
 				new String[] { id.toString() }, null, null, null);
 		c.moveToFirst();
 		Integer currentPos = c.getInt(1);
+		c.close();
 
 		String cond = "";
 		if (table.equals("quotes")) {

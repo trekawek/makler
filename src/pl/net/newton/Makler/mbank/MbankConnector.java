@@ -3,6 +3,7 @@ package pl.net.newton.Makler.mbank;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +49,7 @@ public class MbankConnector extends pl.net.newton.Makler.httpClient.Connector {
 
 		List<NameValuePair> data = new ArrayList<NameValuePair>();
 		data.add(new BasicNameValuePair("seed", seed));
-		data.add(new BasicNameValuePair("localDT", new Date().toLocaleString()));
+		data.add(new BasicNameValuePair("localDT", SimpleDateFormat.getDateTimeInstance().format(new Date())));
 		data.add(new BasicNameValuePair("customer", login));
 		data.add(new BasicNameValuePair("password", password));
 

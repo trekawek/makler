@@ -2,7 +2,7 @@ package pl.net.newton.Makler.db.quote;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
+import java.util.Calendar;
 
 import pl.net.newton.Makler.common.NumberFormatUtils;
 
@@ -17,7 +17,7 @@ public class Quote {
 
 	private final Integer kOfert, kWol, sOfert, sWol, wolumen;
 
-	private final Date update;
+	private final Calendar update;
 
 	private final Boolean index;
 
@@ -30,7 +30,8 @@ public class Quote {
 		BigDecimal z = builder.getZmiana();
 		if (z == null || z.compareTo(BigDecimal.ZERO) == 0) {
 			if (kurs != null && kursOdn.compareTo(BigDecimal.ZERO) > 0) {
-				z = (kurs.divide(kursOdn, 4, RoundingMode.HALF_UP).subtract(BigDecimal.ONE)).multiply(new BigDecimal(100));
+				z = (kurs.divide(kursOdn, 4, RoundingMode.HALF_UP).subtract(BigDecimal.ONE))
+						.multiply(new BigDecimal(100));
 			}
 		}
 		this.zmiana = z;
@@ -47,7 +48,8 @@ public class Quote {
 		this.sOfert = builder.getsOfert();
 		this.sWol = builder.getsWol();
 		this.wolumen = builder.getWolumen();
-		this.update = builder.getUpdate();
+		this.update = Calendar.getInstance();
+		this.update.setTime(builder.getUpdate());
 		this.index = builder.getIndex();
 	}
 
@@ -107,7 +109,7 @@ public class Quote {
 		return wartosc;
 	}
 
-	public Date getUpdate() {
+	public Calendar getUpdate() {
 		return update;
 	}
 
@@ -157,8 +159,8 @@ public class Quote {
 	}
 
 	public BigDecimal chooseKurs() {
-		if (tko != null && update != null && update.getHours() == 17 && update.getMinutes() >= 20
-				&& update.getMinutes() < 30)
+		if (tko != null && update != null && update.get(Calendar.HOUR_OF_DAY) == 17
+				&& update.get(Calendar.MINUTE) >= 20 && update.get(Calendar.MINUTE) < 30)
 			return tko;
 		else if (kurs != null)
 			return kurs;
@@ -173,8 +175,8 @@ public class Quote {
 	}
 
 	public BigDecimal chooseZmiana() {
-		if (tkoProcent != null && update != null && update.getHours() == 17 && update.getMinutes() >= 20
-				&& update.getMinutes() < 30)
+		if (tkoProcent != null && update != null && update.get(Calendar.HOUR_OF_DAY) == 17
+				&& update.get(Calendar.MINUTE) >= 20 && update.get(Calendar.MINUTE) < 30)
 			return tkoProcent;
 		else if (zmiana != null)
 			return zmiana;
