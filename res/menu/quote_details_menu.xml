@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:enabled="true" android:title="Odśwież" android:visible="true" android:checkable="false"
+android:checked="false" android:id="@+id/refreshQuote" android:icon="@drawable/refresh" android:showAsAction="ifRoom"></item>
+<item android:id="@+id/showAlerts" android:title="Alerty" android:icon="@drawable/alerts" android:showAsAction="always"></item>
+<item android:id="@+id/addToWallet" android:title="Portfel" android:icon="@drawable/wallet" android:showAsAction="always"></item>
+<item android:id="@+id/graphRange" android:title="Wykres" android:icon="@drawable/graph" android:showAsAction="always"></item>
+</menu>

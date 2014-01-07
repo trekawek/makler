@@ -1,0 +1,154 @@
+package pl.net.newton.Makler.ui;
+
+import java.math.BigDecimal;
+
+import pl.net.newton.Makler.R;
+import pl.net.newton.Makler.db.symbol.Symbol;
+import pl.net.newton.Makler.db.symbol.SymbolsDb;
+import pl.net.newton.Makler.db.wallet.WalletDb;
+import pl.net.newton.Makler.db.wallet.WalletItem;
+import pl.net.newton.Makler.gpw.service.GpwProvider;
+import pl.net.newton.Makler.history.service.HistoryService;
+import android.app.Activity;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
+import android.widget.RadioButton;
+
+public class WalletForm extends AbstractActivity implements OnClickListener {
+	private RadioButton kupno, sprzedaż;
+
+	private EditText walor, ilosc, kurs;
+
+	private SymbolsDb symbolsDb;
+
+	private WalletDb walletDb;
+
+	public static final int GET_SYMBOL_K = 200;
+
+	public static final int GET_SYMBOL_S = 201;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.wallet_trans);
+
+		kupno = (RadioButton) findViewById(R.id.transTypeK);
+		sprzedaż = (RadioButton) findViewById(R.id.transTypeS);
+		ilosc = (EditText) findViewById(R.id.transIlosc);
+		walor = (EditText) findViewById(R.id.transWalor);
+		kurs = (EditText) findViewById(R.id.transKurs);
+
+		findViewById(R.id.transWalorBtn).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(v.getContext(), Symbols.class);
+				if (kupno.isChecked()) {
+					startActivityForResult(intent, GET_SYMBOL_K);
+				} else if (sprzedaż.isChecked()) {
+					intent.putExtra("forWalletSell", true);
+					startActivityForResult(intent, GET_SYMBOL_S);
+				}
+			}
+		});
+
+		findViewById(R.id.transDodaj).setOnClickListener(this);
+
+		String symbol = getIntent().getStringExtra("symbol");
+		String quote = getIntent().getStringExtra("quote");
+		if (symbol != null)
+			this.walor.setText(symbol);
+		if (quote != null)
+			this.kurs.setText(quote.replace(',', '.').replaceAll("[^0-9\\.]", ""));
+
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+			case GET_SYMBOL_K:
+			case GET_SYMBOL_S:
+				if (resultCode == Activity.RESULT_OK) {
+					String symbol = data.getStringExtra("symbol");
+					walor.setText(symbol);
+				}
+		}
+	}
+
+	public void onClick(View v) {
+		String walor, ilosc, kurs;
+		Character type = null;
+		if (kupno.isChecked())
+			type = 'K';
+		else if (sprzedaż.isChecked())
+			type = 'S';
+		walor = this.walor.getText().toString();
+		ilosc = this.ilosc.getText().toString();
+		kurs = this.kurs.getText().toString();
+		if (walor.length() == 0)
+			return;
+		if (ilosc.length() == 0)
+			return;
+		if (kurs.length() == 0)
+			return;
+		if (type == null)
+			return;
+		Symbol s = symbolsDb.getSymbolBySymbol(walor);
+		if (s == null)
+			return;
+
+		if (s.isIndex()) {
+			showMessage("Nie możesz przeprowadzić transakcji z indeksem");
+			return;
+		}
+
+		WalletItem item = walletDb.getWalletItem(s);
+		if (type == 'S' && item.getQuantity() < Integer.parseInt(ilosc)) {
+			ilosc = item.getQuantity().toString();
+		}
+
+		BigDecimal commision = BigDecimal.ZERO;
+		BigDecimal minCommision = BigDecimal.ZERO;
+		BigDecimal account = BigDecimal.ZERO;
+		try {
+			commision = config.getCommision();
+		} catch (Exception e) {
+		}
+		try {
+			minCommision = config.getMinCommision();
+		} catch (Exception e) {
+		}
+		try {
+			account = config.getWalletAccount();
+		} catch (Exception e) {
+		}
+
+		BigDecimal value = new BigDecimal(kurs).multiply(new BigDecimal(ilosc));
+		BigDecimal com = value.divide(new BigDecimal(100)).multiply(commision);
+		if (com.compareTo(minCommision) < 0)
+			com = minCommision;
+		account = account.subtract(com);
+		if (type == 'K')
+			account = account.subtract(value);
+		else
+			account = account.add(value);
+
+		item.addTrans(type, Integer.parseInt(ilosc), new BigDecimal(kurs.replace(" ", "")), com);
+		walletDb.updateWalletItem(item);
+
+		config.setWalletAccount(account.toString());
+
+		Intent resultIntent = new Intent();
+		setResult(Activity.RESULT_OK, resultIntent);
+		finish();
+	}
+
+	@Override
+	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+		this.walletDb = new WalletDb(sqlDb, this);
+		this.symbolsDb = new SymbolsDb(sqlDb, this);
+	}
+}

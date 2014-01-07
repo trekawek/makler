@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content" android:gravity="left|center"
+	android:layout_width="fill_parent" android:paddingLeft="5dip">
+
+	<TextView android:id="@+id/symbolItemSymbol"
+		android:layout_width="190dip" android:layout_height="wrap_content"
+		android:textColor="#ffaa56" android:text="" android:textSize="30dip"></TextView>
+
+	<TextView android:text="" android:id="@+id/symbolItemName"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:textSize="20dip" android:textColor="#0099CC" android:gravity="right"
+		android:paddingRight="10dip"></TextView>
+
+</LinearLayout>

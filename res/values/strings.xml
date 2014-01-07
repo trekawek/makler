@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Hello World, Makler!</string>
+	<string name="app_name">Makler</string>
+	<string name="about_title">O Maklerze</string>
+	<string name="about_text">Program prezentuje aktualne notowania giełdowe.
+		Umożliwia przeglądanie dziennych wykresów
+		zmian kursu i zdefiniowanie alertów.</string>
+	<string name="about_code_copyright">Copyright © Tomasz Rękawek 2011</string>
+	<string name="about_art_copyright">Ikona programu pochodzi z \"Gnome Project\". Ikona
+		\"Odśwież\" pochodzi z systemu
+		Android. Ikona ustawień i \"O programie\" pochodzi z
+		http://www.androidicons.com/ Layout listy notowań wzorowany na
+		aplikacji MobiTradeOne.</string>
+	<string name="about_url">Strona: http://newton.net.pl/makler/</string>
+
+	<string name="disable_ads_text">
+		Istnieje możliwość wyłączenia reklam w aplikacji. Koszt takiej
+		operacji to 5 zł, pieniądze można przesłać przy użyciu programu
+		PayPal.
+		<br />
+		W ten sposób zdobędziesz więcej miejsca na wyświetlanie notowań i
+		zachęcisz autora do dalszych prac :)
+	</string>
+ 
+	<!-- GRAPH strings -->
+	<string name="d1">1D</string>
+	<string name="d5">5D</string>
+	<string name="m1">1M</string>
+	<string name="m3">3M</string>
+	<string name="r1">1R</string>
+	<string name="r2">2R</string>
+	<string name="all">Od początku</string>
+	<string name="graph_interactive_mode_on">Tryb interaktywny włączony.</string>
+	<string name="graph_interactive_mode_off">Tryb interaktywny wyłączony.</string>
+	<string name="graph_error_when_downloading">Wystąpił‚ błąd w pobieraniu wykresu.</string>
+</resources>
+

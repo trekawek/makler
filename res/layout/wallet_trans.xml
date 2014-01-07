@@ -1,0 +1,106 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="3dip" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingRight="6dip" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Typ" >
+        </TextView>
+
+        <RadioGroup
+            android:id="@+id/transType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/transTypeK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Kupno" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/transTypeS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sprzedaż" >
+            </RadioButton>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Walor" >
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/transWalor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textCapCharacters"
+                android:singleLine="true"
+                android:text="" >
+            </EditText>
+
+            <Button
+                android:id="@+id/transWalorBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Lista" >
+            </Button>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Ilość" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/transIlosc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numeric="integer"
+            android:text="" >
+        </EditText>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Kurs" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/transKurs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numeric="decimal"
+            android:text="" >
+        </EditText>
+
+        <Button
+            android:id="@+id/transDodaj"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Dodaj transakcję" >
+        </Button>
+    </LinearLayout>
+
+</ScrollView>

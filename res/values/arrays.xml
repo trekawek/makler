@@ -1,0 +1,122 @@
+<resources>
+	<string-array name="alert_subjects_strings">
+		<item>kurs</item>
+		<item>wolumen</item>
+		<item>wartość</item>
+	</string-array>
+
+	<string-array name="alert_subjects_codes">
+		<item>KURS</item>
+		<item>WOLUMEN</item>
+		<item>WARTOSC</item>
+	</string-array>
+
+	<string-array name="alert_events_quote_strings">
+		<item>wzrośnie powyżej</item>
+		<item>wzrośnie do</item>
+		<item>wzrośnie o</item>
+		<item>spadnie o</item>
+		<item>spadnie do</item>
+		<item>spadnie poniżej</item>
+	</string-array>
+	
+	<string-array name="alert_events_quote_strings2">
+		<item>wzrósł powyżej</item>
+		<item>wzrósł do</item>
+		<item>wzrósł o</item>
+		<item>spadł o</item>
+		<item>spadł do</item>
+		<item>spadł poniżej</item>
+	</string-array>
+
+	<string-array name="alert_events_quote_codes">
+		<item>WZR_POW</item>
+		<item>WZR_DO</item>
+		<item>WZR_O</item>
+		<item>SPA_O</item>
+		<item>SPA_DO</item>
+		<item>SPA_PON</item>
+	</string-array>
+
+	<string-array name="alert_events_non_quote_strings">
+		<item>wzrośnie powyżej</item>
+		<item>wzrośnie do</item>
+	</string-array>
+
+	<string-array name="update_frequency">
+		<item>30 sekund</item>
+		<item>1 minuta</item>
+		<item>2 minuty</item>
+		<item>5 minut</item>
+		<item>15 minut</item>
+		<item>30 minut</item>
+		<item>1 godzina</item>
+		<item>brak aktualizacji</item>
+	</string-array>
+
+	<string-array name="update_frequency_values">
+		<item>30</item>
+		<item>60</item>
+		<item>120</item>
+		<item>300</item>
+		<item>900</item>
+		<item>1800</item>
+		<item>3600</item>
+		<item>0</item>
+	</string-array>
+	
+	<string-array name="order_form_waznosc">
+		<item>do dnia</item>
+		<item>WDC</item>
+		<item>WLA</item>
+		<item>WIA</item>
+		<item>WNF</item>
+		<item>WNZ</item>
+	</string-array>
+
+	<!-- WPROW, ZAKSIEG, ZREAL, ZAMKN, ANULOWANO, W_TR_ANUL, MODYF, REDU -->
+	<string-array name="order_states">
+		<item>wprowadzono</item>
+		<item>zaksięgowano</item>
+		<item>zrealizowano</item>
+		<item>zamknięto</item>
+		<item>anulowano</item>
+		<item>anulowanie...</item>
+		<item>modyfikowanie</item>
+		<item>redukowanie</item>
+	</string-array>
+	
+	<string-array name="data_source">
+		<item>mBank</item>
+		<!--item>DM PKO BP</item>
+		<item>Millennium</item>
+		<item>BRE Bank</item>
+		<item>BDM (test)</item>
+		<item>DMBH (test)</item-->
+	</string-array>
+	
+	<string-array name="data_source_values">
+		<item>mbank</item>
+		<!--item>pkobp</item>
+		<item>millennium</item>
+		<item>bre</item>
+		<item>bdm</item>
+		<item>dmbh</item-->
+	</string-array>
+	
+	<string-array name="graph_ranges">
+		<item>1 dzień</item>
+		<item>5 dni</item>
+		<item>1 miesiąc</item>
+		<item>3 miesiące</item>
+		<item>1 rok</item>
+		<item>2 lata</item>
+		<item>zawsze</item>
+	</string-array>
+	
+	
+	<string-array name="graph_types">
+		<item>liniowy</item>
+		<item>świeczkowy</item>
+	</string-array>
+</resources>

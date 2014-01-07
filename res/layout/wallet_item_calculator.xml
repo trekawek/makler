@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/pl.net.newton.Makler"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/walletItemSymbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="-5dp"
+                android:text="KAR"
+                android:textColor="#ffaa56"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/walletItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2dp"
+                android:text="Karen"
+                android:textColor="#0099CC"
+                android:textSize="10dip" />
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dip" >
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ilość:"
+                    android:textColor="#ffffff"
+                    android:textSize="10dip" />
+
+                <TextView
+                    android:id="@+id/walletItemQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="32"
+                    android:textColor="#ffffff"
+                    android:textSize="12dip" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kupno: "
+                    android:textColor="#ffffff"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:id="@+id/walletItemAvg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="32"
+                    android:textColor="#ffffff"
+                    android:textSize="12dip" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Zysk:"
+                    android:textColor="#ffffff"
+                    android:textSize="10dip" />
+
+                <TextView
+                    android:id="@+id/walletItemGain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="32"
+                    android:textColor="#ffffff"
+                    android:textSize="12dip" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="right|center_vertical" >
+
+            <TextView
+                android:id="@+id/walletItemKurs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="99,99"
+                android:textColor="#FFFFFF"
+                android:textSize="30dip" />
+
+            <LinearLayout
+                android:id="@id/quoteDetailZmiana"
+                android:layout_width="70px"
+                android:layout_height="30px"
+                android:layout_marginLeft="6dip"
+                android:layout_marginTop="0dip"
+                android:background="@drawable/bluebox" >
+
+                <TextView
+                    android:id="@+id/walletItemZmiana"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:paddingLeft="5px"
+                    android:paddingTop="2px"
+                    android:text="1,5%"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18px"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent" >
+
+            <TextView
+                android:id="@+id/textView03"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="Zysk"
+                android:textSize="20dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewZysk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="5dp"
+        android:paddingTop="20dp" >
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="Ilość"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/iloscMinus"
+            android:layout_width="55dp"
+            android:layout_height="fill_parent"
+            android:tag="iloscminus"
+            android:text="-"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/editTextIlosc"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:numeric="integer" >
+            </EditText>
+
+            <Button
+                android:id="@+id/iloscPlus"
+                android:layout_width="55dp"
+                android:layout_height="fill_parent"
+                android:tag="iloscplus"
+                android:text="+"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="5dp"
+        android:paddingTop="20dp" >
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="Kupno"
+            android:textSize="18dp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutKupno"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal" >
+ 
+
+            <Button
+                android:id="@+id/kupnoMinus"
+                android:layout_width="55dp"
+                android:layout_height="fill_parent"
+                android:tag="kupnominus"
+                android:text="-"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/editTextKupno"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:inputType="numberDecimal" />
+
+            <Button
+                android:id="@+id/kupnoPlus"
+                android:layout_width="55dp"
+                android:layout_height="fill_parent"
+                android:tag="kupnoplus"
+                android:text="+"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="5dp"
+        android:paddingTop="20dp" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="Sprzedaż"
+            android:textSize="18dp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSprzedaz"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal" >
+ 
+            <Button
+                android:id="@+id/sprzedazMinus"
+                android:layout_width="55dp"
+                android:layout_height="fill_parent"
+                android:tag="sprzedazminus"
+                android:text="-"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/editTextSprzedaz"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:inputType="numberDecimal" />
+
+            <Button
+                android:id="@+id/sprzedazPlus"
+                android:layout_width="55dp"
+                android:layout_height="fill_parent"
+                android:tag="sprzedazplus"
+                android:text="+"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:paddingRight="10dp" >
+
+        <Button
+            android:id="@+id/buttonReset"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="Resetuj"
+            android:textSize="20dp" >
+        </Button>
+    </LinearLayout>
+
+</LinearLayout>

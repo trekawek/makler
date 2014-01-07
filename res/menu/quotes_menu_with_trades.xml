@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/addQuote" android:title="Dodaj symbole" android:icon="@drawable/add" android:showAsAction="always"></item>
+<item android:id="@+id/showOrders" android:title="Zlecenia" android:icon="@drawable/orders" android:showAsAction="always"></item>
+<item android:id="@+id/showAccount" android:title="Stan konta" android:icon="@drawable/account_state" android:showAsAction="always"></item>
+<item android:id="@+id/showWallet" android:title="Portfel" android:icon="@drawable/wallet" android:showAsAction="always"></item>
+<item android:id="@+id/refreshQuotes" android:title="Odśwież" android:icon="@drawable/refresh" android:showAsAction="ifRoom"></item>
+<item android:id="@+id/showSettings" android:title="Ustawienia" android:icon="@drawable/settings" android:showAsAction="ifRoom"></item>
+<item android:id="@+id/showAbout" android:title="O programie" android:icon="@drawable/about" android:showAsAction="ifRoom"></item>
+</menu>

@@ -1,0 +1,256 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="3dip" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingRight="6dip" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Typ" >
+        </TextView>
+
+        <RadioGroup
+            android:id="@+id/orderFormType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/orderFormTypeK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kupno" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/orderFormTypeS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sprzedaż" >
+            </RadioButton>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Walor" >
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/orderFormWalor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textCapCharacters"
+                android:singleLine="true"
+                android:text="" >
+            </EditText>
+
+            <Button
+                android:id="@+id/orderFormWalorBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Lista" >
+            </Button>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Ilość" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/orderFormIlosc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numeric="integer"
+            android:text="" >
+        </EditText>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Limit ceny" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/orderFormLimit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numeric="decimal"
+            android:text="" >
+        </EditText>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Limit ceny może zostać zaokrąglony w dół."
+            android:textSize="12dip" >
+        </TextView>
+
+        <RadioGroup
+            android:id="@+id/orderFormLimitType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/orderFormPEG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PEG" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/orderFormPKC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PKC" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/orderFormPCR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PCR" >
+            </RadioButton>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Data sesji" >
+        </TextView>
+
+        <Button
+            android:id="@+id/orderFormSesja"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="" >
+        </Button>
+
+        <TextView
+            android:id="@+id/orderFormWaznoscLbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Ważność" >
+        </TextView>
+
+        <Spinner
+            android:id="@+id/orderFormWaznosc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+        </Spinner>
+
+        <TextView
+            android:id="@+id/orderFormDoDniaLbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Do dnia" >
+        </TextView>
+
+        <Button
+            android:id="@+id/orderFormDoDnia"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="" >
+        </Button>
+
+        <TextView
+            android:id="@+id/orderFormWdcLbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Godzina" >
+        </TextView>
+
+        <Button
+            android:id="@+id/orderFormWdc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="" >
+        </Button>
+
+        <TextView
+            android:id="@+id/orderFormLimitAktLbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Limit aktywacji" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/orderFormLimitAkt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numeric="decimal"
+            android:text="" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/orderFormIloscUjawnLbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="WUJ" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/orderFormIloscUjawn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numeric="decimal"
+            android:text="" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/orderFormIloscMinLbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="MWW" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/orderFormIloscMin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numeric="decimal"
+            android:text="" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/orderFormSmsPasswordLbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Kod SMS"
+            android:visibility="gone" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/orderFormSmsPassword"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numeric="decimal"
+            android:text=""
+            android:visibility="gone" >
+        </EditText>
+
+        <Button
+            android:id="@+id/orderFormDodaj"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Dodaj zlecenie" >
+        </Button>
+    </LinearLayout>
+
+</ScrollView>

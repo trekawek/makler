@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/quotesLinearLayout" android:layout_width="fill_parent"
+android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/pl.net.newton.Makler"
+xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads">
+
+<TextView android:padding="5dip" android:id="@+id/noQuotes" android:visibility="gone" android:text="W tej chwili nie obserwujesz żadnych akcji. Naciśnij Menu aby dodać interesujące Cię papiery." android:layout_width="wrap_content" android:layout_height="fill_parent"></TextView>
+
+<RelativeLayout android:layout_width="fill_parent"  android:layout_height="fill_parent">
+<ListView android:id="@+id/quotesListView" android:layout_width="fill_parent"
+android:layout_height="fill_parent" android:layout_marginBottom="51dip">
+</ListView>
+</RelativeLayout>
+
+<com.google.ads.AdView android:id="@+id/ad" android:layout_height="wrap_content" android:layout_width="fill_parent"
+android:layout_below="@id/quotesListView" android:layout_marginTop="-51dip" ads:adUnitId="a14cb03ac5db23f"
+ads:adSize="BANNER" ads:loadAdOnCreate="false"/>
+
+</LinearLayout>

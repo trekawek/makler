@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="5dip" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/quoteItemUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dip"
+            android:text="2010-06-04 12:35:32"
+            android:textColor="#FFFFFF"
+            android:textSize="10dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteItemSymbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="7dip"
+            android:text="KAR"
+            android:textColor="#ffaa56"
+            android:textSize="30dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dip"
+            android:paddingTop="41dip"
+            android:text="Karen"
+            android:textColor="#0099CC"
+            android:textSize="10dip" >
+        </TextView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/quoteItemKursMin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingLeft="2dip"
+                android:text="128,12"
+                android:textColor="#FFFFFF"
+                android:textSize="10dip" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/quoteItemKurs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingTop="7dip"
+                android:text="99,99"
+                android:textColor="#FFFFFF"
+                android:textSize="30dip" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/quoteItemKursMax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingLeft="2dip"
+                android:paddingTop="41dip"
+                android:text="135,12"
+                android:textColor="#FFFFFF"
+                android:textSize="10dip" >
+            </TextView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="70px"
+            android:layout_height="30px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dip"
+            android:background="@drawable/redbox" >
+
+            <TextView
+                android:id="@+id/quoteItemZmiana"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:paddingLeft="5px"
+                android:paddingTop="4px"
+                android:text="1,5%"
+                android:textColor="#FFFFFF"
+                android:textSize="16px"
+                android:textStyle="bold" >
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

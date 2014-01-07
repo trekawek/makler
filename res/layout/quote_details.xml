@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout android:layout_width="fill_parent" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/quoteDetailUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2dip"
+                android:text="2010-06-04 12:35:32"
+                android:textColor="#FFFFFF"
+                android:textSize="10dip" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/quoteDetailSymbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="7dip"
+                android:text="KAR"
+                android:textColor="#ffaa56"
+                android:textSize="30dip" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/quoteDetailName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2dip"
+                android:paddingTop="41dip"
+                android:text="Karen"
+                android:textColor="#0099CC"
+                android:textSize="10dip" >
+            </TextView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/quoteDetailKursMin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:paddingLeft="2dip"
+                    android:text="128,12"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10dip" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/quoteDetailKurs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingTop="7dip"
+                    android:text="99,99"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30dip" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/quoteDetailKursMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:paddingLeft="2dip"
+                    android:paddingTop="41dip"
+                    android:text="135,12"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10dip" >
+                </TextView>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="70px"
+                android:layout_height="30px"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6dip"
+                android:background="@drawable/bluebox" >
+
+                <TextView
+                    android:id="@+id/quoteDetailZmiana"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:paddingLeft="5px"
+                    android:paddingTop="4px"
+                    android:text="1,5%"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16px"
+                    android:textStyle="bold" >
+                </TextView>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingRight="2dip"
+            android:text="Kurs odniesienia: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailKursOdn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1,12" >
+        </TextView>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="10dip"
+            android:text="[K] Ofert: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailOfertK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" >
+        </TextView>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/quoteDetailKursOtwRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingRight="2dip"
+            android:text="Kurs otwarcia: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailKursOtw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2,23" >
+        </TextView>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="10dip"
+            android:text="[K] Wolumen: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailWolumenK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" >
+        </TextView>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingRight="2dip"
+            android:text="TKO: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailTko"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1,12" >
+        </TextView>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="10dip"
+            android:text="[K] Limit: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailLimitK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" >
+        </TextView>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingRight="2dip"
+            android:text="TKO(%): "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailTkoProcent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2,23" >
+        </TextView>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="10dip"
+            android:text="[S] Limit: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailLimitS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" >
+        </TextView>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView>
+        </TextView>
+
+        <TextView>
+        </TextView>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="10dip"
+            android:text="[S] Wolumen: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailWolumenS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" >
+        </TextView>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView>
+        </TextView>
+
+        <TextView>
+        </TextView>
+
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="10dip"
+            android:text="[S] Ofert: "
+            android:textSize="12dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailOfertS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" >
+        </TextView>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="4"
+            android:paddingLeft="4dip" >
+
+            <TextView
+                android:layout_width="100dip"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:paddingRight="2dip"
+                android:text="Wolumen obrotu: "
+                android:textSize="12dip" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/quoteDetailWolumen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1,12" >
+            </TextView>
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="4"
+            android:paddingLeft="4dip" >
+
+            <TextView
+                android:layout_width="100dip"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:paddingRight="2dip"
+                android:text="Wartość obrótu: "
+                android:textSize="12dip" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/quoteDetailWartosc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2,23" >
+            </TextView>
+        </LinearLayout>
+    </TableRow>
+
+    <LinearLayout
+        android:id="@+id/graphParent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</TableLayout>

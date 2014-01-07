@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content" android:layout_width="fill_parent"
+	android:paddingLeft="5dip">
+
+	<RelativeLayout android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+
+		<TextView
+		    android:id="@+id/walletItemSymbol"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:paddingTop="7dip"
+		    android:text="KAR"
+		    android:textColor="#ffaa56"
+		    android:textSize="30dip" >
+		</TextView>
+
+		<TextView android:text="Karen" android:id="@+id/walletItemName"
+			android:paddingTop="39dip" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="10dip"
+			android:textColor="#0099CC" android:paddingLeft="2dip"></TextView>
+	</RelativeLayout>
+
+	<LinearLayout android:layout_height="wrap_content"
+		android:gravity="left" android:layout_width="fill_parent">
+		<TableLayout android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:paddingLeft="5dip"
+			android:gravity="center_vertical">
+			<TableRow android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:text="Ilość:"
+					android:textColor="#ffffff" android:textSize="10dip">
+				</TextView>
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:text="32"
+					android:textColor="#ffffff" android:textSize="12dip"
+					android:id="@+id/walletItemQuantity">
+				</TextView>
+			</TableRow>
+			<TableRow android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:text="Kupno: "
+					android:textColor="#ffffff" android:textSize="10dip">
+				</TextView>
+
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:text="32"
+					android:textColor="#ffffff" android:textSize="12dip" android:id="@+id/walletItemAvg">
+				</TextView>
+			</TableRow>
+			<TableRow android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:text="Zysk:"
+					android:textColor="#ffffff" android:textSize="10dip">
+				</TextView>
+
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:text="32"
+					android:textColor="#ffffff" android:textSize="12dip" android:id="@+id/walletItemGain">
+				</TextView>
+			</TableRow>
+		</TableLayout>
+
+		<RelativeLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:gravity="right">
+			<TextView android:id="@+id/walletItemKurs"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:gravity="left" android:textColor="#FFFFFF" android:text="99,99"
+				android:textSize="30dip" android:paddingTop="7dip"></TextView>
+			<LinearLayout android:layout_marginTop="10dip"
+				android:layout_width="70px" android:layout_height="30px"
+				android:layout_gravity="center_vertical" android:layout_marginLeft="6dip"
+				android:background="@drawable/bluebox" android:layout_toRightOf="@id/walletItemKurs">
+				<TextView android:text="1,5%" android:id="@+id/walletItemZmiana"
+					android:textSize="16px" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:textColor="#FFFFFF"
+					android:textStyle="bold" android:paddingTop="4px"
+					android:paddingLeft="5px"></TextView>
+			</LinearLayout>
+		</RelativeLayout>
+	</LinearLayout>
+</LinearLayout>
