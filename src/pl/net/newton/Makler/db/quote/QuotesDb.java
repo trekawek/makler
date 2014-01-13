@@ -35,9 +35,9 @@ public class QuotesDb {
 		}
 		Cursor c = sqlDb.rawQuery(sql, null);
 		if (c.moveToFirst()) {
-			do
+			do {
 				quotes.add(new QuoteBuilder().setFromCursor(c).build());
-			while (c.moveToNext());
+			} while (c.moveToNext());
 		}
 		c.close();
 		return quotes;
@@ -55,15 +55,15 @@ public class QuotesDb {
 
 	public Quote getQuoteById(Integer id) {
 		Cursor c = sqlDb.rawQuery(ctx.getString(R.string.quoteById), new String[] { id.toString() });
-		if (!c.moveToFirst())
-			return null;
-		Quote q = null;
 		try {
-			q = new QuoteBuilder().setFromCursor(c).build();
+			if (!c.moveToFirst()) {
+				return null;
+			}
+			Quote q = new QuoteBuilder().setFromCursor(c).build();
+			return q;
 		} finally {
 			c.close();
 		}
-		return q;
 	}
 
 	public void addQuotes(String symbols) {
@@ -73,8 +73,9 @@ public class QuotesDb {
 		Integer pos = size + 1;
 		for (String symbol : s) {
 			Integer symbolId = this.symbolsDb.getSymbolId(symbol);
-			if (symbolId == null)
+			if (symbolId == null) {
 				continue;
+			}
 			ContentValues cv = new ContentValues();
 			cv.put("symbol_id", symbolId);
 			cv.put("position", pos++);
@@ -113,10 +114,11 @@ public class QuotesDb {
 		DbHelper.putToCv(cv, "kurs_min", quote.getKursMin());
 		DbHelper.putToCv(cv, "kurs_max", quote.getKursMax());
 		DbHelper.putToCv(cv, "wartosc", quote.getWartosc());
-		if (quote.getUpdate() != null)
-			DbHelper.putToCv(cv, "`update`", DateFormatUtils.formatTime(quote.getUpdate()));
-		else
+		if (quote.getUpdate() == null) {
 			DbHelper.putToCv(cv, "`update`", null);
+		} else {
+			DbHelper.putToCv(cv, "`update`", DateFormatUtils.formatTime(quote.getUpdate()));
+		}
 		DbHelper.putToCv(cv, "kurs_otw", quote.getKursOtw());
 		DbHelper.putToCv(cv, "tko", quote.getTko());
 		DbHelper.putToCv(cv, "tko_procent", quote.getTkoProcent());

@@ -1,14 +1,12 @@
 package pl.net.newton.Makler.db.quote;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.Date;
 
-import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.database.Cursor;
 
 public class QuoteBuilder {
+
 	private Integer id;
 
 	private String symbol, name;
@@ -19,7 +17,7 @@ public class QuoteBuilder {
 
 	private Integer kOfert, kWol, sOfert, sWol, wolumen;
 
-	private Date update;
+	private String update;
 
 	private Boolean index;
 
@@ -40,21 +38,14 @@ public class QuoteBuilder {
 		}
 		this.wolumen = NumberFormatUtils.parseIntOrNull(c.getString(c.getColumnIndex("wolumen")));
 		this.wartosc = NumberFormatUtils.parseOrNull(c.getString(c.getColumnIndex("wartosc")));
-
 		this.kOfert = NumberFormatUtils.parseIntOrNull(c.getString(c.getColumnIndex("k_ofert")));
 		this.kWol = NumberFormatUtils.parseIntOrNull(c.getString(c.getColumnIndex("k_wol")));
 		this.kLim = NumberFormatUtils.parseOrNull(c.getString(c.getColumnIndex("k_lim")));
 		this.sLim = NumberFormatUtils.parseOrNull(c.getString(c.getColumnIndex("s_lim")));
 		this.sWol = NumberFormatUtils.parseIntOrNull(c.getString(c.getColumnIndex("s_wol")));
 		this.sOfert = NumberFormatUtils.parseIntOrNull(c.getString(c.getColumnIndex("s_ofert")));
+		this.update = c.getString(c.getColumnIndex("update"));
 
-		try {
-			this.update = DateFormatUtils.parseTime(c.getString(c.getColumnIndex("update")));
-		} catch (NullPointerException e) {
-			this.update = null;
-		} catch (ParseException e) {
-			this.update = null;
-		}
 		return this;
 	}
 
@@ -233,11 +224,11 @@ public class QuoteBuilder {
 		return this;
 	}
 
-	Date getUpdate() {
+	String getUpdate() {
 		return update;
 	}
 
-	public QuoteBuilder setUpdate(Date update) {
+	public QuoteBuilder setUpdate(String update) {
 		this.update = update;
 		return this;
 	}

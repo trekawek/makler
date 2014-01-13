@@ -4,7 +4,11 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
+import android.util.Log;
+
 public final class NumberFormatUtils {
+	private static final String TAG = "MaklerNumberFormat";
+	
 	private static final NumberFormat NF;
 
 	static {
@@ -48,11 +52,13 @@ public final class NumberFormatUtils {
 	}
 
 	public static BigDecimal parseOrNull(String s) {
+		if (s == null) {
+			return null;
+		}
 		try {
 			return parse(s);
-		} catch (NullPointerException e) {
-			return null;
 		} catch (NumberFormatException e) {
+			Log.e(TAG, "Can't parse number", e);
 			return null;
 		}
 	}
@@ -73,11 +79,13 @@ public final class NumberFormatUtils {
 	}
 
 	public static Integer parseIntOrNull(String s) {
+		if (s == null) {
+			return null;
+		}
 		try {
 			return parseInt(s);
-		} catch (NullPointerException e) {
-			return null;
 		} catch (NumberFormatException e) {
+			Log.e(TAG, "Can't parse number", e);
 			return null;
 		}
 	}
@@ -95,6 +103,7 @@ public final class NumberFormatUtils {
 		try {
 			return NF.parse(s).doubleValue();
 		} catch (ParseException e) {
+			Log.e(TAG, "Can't parse number", e);
 			return 0.0;
 		}
 	}

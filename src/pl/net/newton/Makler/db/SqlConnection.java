@@ -19,11 +19,11 @@ import android.util.Log;
 public class SqlConnection extends SQLiteOpenHelper {
 	private static final String TAG = "MaklerSql";
 
-	private final static int DATABASE_VERSION = 7;
+	private static final int DATABASE_VERSION = 7;
 
-	private final static String DATABASE_NAME = "makler.db";
+	private static final String DATABASE_NAME = "makler.db";
 
-	private final static boolean COPY_DB = true;
+	private static final boolean COPY_DB = true;
 
 	private final File dataBaseFile;
 
@@ -46,7 +46,7 @@ public class SqlConnection extends SQLiteOpenHelper {
 			}
 			return getWritableDatabase();
 		} catch (IOException e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "can't get database", e);
 			return null;
 		}
 	}
@@ -60,7 +60,7 @@ public class SqlConnection extends SQLiteOpenHelper {
 			}
 			onUpgrade(db, 1, DATABASE_VERSION);
 		} catch (SQLException e) {
-			Log.e(TAG, e.getMessage());
+			Log.e(TAG, "can't create database", e);
 		}
 	}
 
@@ -150,19 +150,36 @@ public class SqlConnection extends SQLiteOpenHelper {
 
 	private void copyDatabase() throws IOException {
 		File parent = dataBaseFile.getParentFile();
-		if (!parent.exists()) {
-			parent.mkdir();
+		if (!parent.exists() && !parent.mkdir()) {
+			throw new IOException("can't create dir " + parent.getAbsolutePath());
 		}
 
-		InputStream myInput = context.getAssets().open(DATABASE_NAME);
-		OutputStream myOutput = new FileOutputStream(dataBaseFile);
-		byte[] buffer = new byte[1024];
-		int length;
-		while ((length = myInput.read(buffer)) > 0) {
-			myOutput.write(buffer, 0, length);
+		InputStream is = null;
+		OutputStream os = null;
+
+		try {
+			is = context.getAssets().open(DATABASE_NAME);
+			os = new FileOutputStream(dataBaseFile);
+			copy(is, os);
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+			if (os != null) {
+				os.close();
+			}
 		}
-		myOutput.flush();
-		myOutput.close();
-		myInput.close();
 	}
+
+	private static int copy(InputStream input, OutputStream output) throws IOException {
+		byte[] buffer = new byte[1024];
+		int count = 0;
+		int n = 0;
+		while (-1 != (n = input.read(buffer))) {
+			output.write(buffer, 0, n);
+			count += n;
+		}
+		return count;
+	}
+
 }

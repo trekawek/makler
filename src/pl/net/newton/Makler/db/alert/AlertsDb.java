@@ -2,14 +2,19 @@ package pl.net.newton.Makler.db.alert;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.gpw.ex.GpwException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class AlertsDb {
+	private static final String TAG = "MaklerAlertsDb";
+
 	private final SQLiteDatabase sqlDb;
 
 	private final QuotesDb quotesDb;
@@ -26,8 +31,8 @@ public class AlertsDb {
 			do {
 				try {
 					alerts.add(new AlertBuilder().setFromCursor(c, quotesDb).build());
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (GpwException e) {
+					Log.e(TAG, "Can't get alert", e);
 				}
 			} while (c.moveToNext());
 		}
@@ -50,7 +55,11 @@ public class AlertsDb {
 				null, null, null);
 		if (c.moveToFirst()) {
 			do {
-				alerts.add(new AlertBuilder().setFromCursor(c, quotesDb).build());
+				try {
+					alerts.add(new AlertBuilder().setFromCursor(c, quotesDb).build());
+				} catch (GpwException e) {
+					Log.e(TAG, "Can't get alert", e);
+				}
 			} while (c.moveToNext());
 		}
 		c.close();
@@ -76,24 +85,26 @@ public class AlertsDb {
 			return true;
 		}
 	}
-	
+
 	public Alert getAlertById(int id) {
-		Cursor c = sqlDb.query("alerts", null, "id=?", new String[] {String.valueOf(id)}, null, null, null);
-		Alert alert;
-		if(c.moveToFirst()) {
-			alert = new AlertBuilder().setFromCursor(c, quotesDb).build();
-		} else {
-			alert = null;
+		Cursor c = sqlDb.query("alerts", null, "id=?", new String[] { String.valueOf(id) }, null, null, null);
+		Alert alert = null;
+		if (c.moveToFirst()) {
+			try {
+				alert = new AlertBuilder().setFromCursor(c, quotesDb).build();
+			} catch (GpwException e) {
+				Log.e(TAG, "Can't get alert", e);
+			}
 		}
 		c.close();
 		return alert;
 	}
-	
+
 	public void updateAlert(Alert a) {
 		ContentValues cv = getContentValues(a);
 		if (cv != null) {
 			sqlDb.beginTransaction();
-			sqlDb.update("alerts", cv, "id=?", new String[] {String.valueOf(a.getId())});
+			sqlDb.update("alerts", cv, "id=?", new String[] { String.valueOf(a.getId()) });
 			sqlDb.setTransactionSuccessful();
 			sqlDb.endTransaction();
 		}
@@ -104,10 +115,10 @@ public class AlertsDb {
 		cv.put("quote_id", a.getQuote().getId());
 		cv.put("subject", a.getSubject().toString());
 		cv.put("event", a.getEvent().toString());
-		cv.put("value", a.getValue().toString());
-		cv.put("percent", a.getPercent() ? 1 : 0);
-		if (a.getBaseValue() != null) {
-			cv.put("base_value", a.getBaseValue().toString());
+		cv.put("value", a.getAlertValue().getValue().toString());
+		cv.put("percent", a.getAlertValue().isPercent() ? 1 : 0);
+		if (a.getAlertValue().getBaseValue() != null) {
+			cv.put("base_value", a.getAlertValue().getBaseValue().toString());
 		} else if (!a.getEvent().isBaseValueRequired()) {
 			cv.put("base_value", "0");
 		} else {

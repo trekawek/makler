@@ -6,10 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public final class DateFormatUtils {
-	private static final DateFormat YYYY_MM_DD = new SimpleDateFormat("yyyy-MM-dd", LocaleUtils.LOCALE);
+import android.util.Log;
 
-	private static final DateFormat HH_MM_SS = new SimpleDateFormat("HH:mm:ss", LocaleUtils.LOCALE);
+public final class DateFormatUtils {
+	private static final String TAG = "MaklerDateFormatUtils";
+
+	private static final String YYYY_MM_DD = "yyyy-MM-dd";
+
+	private static final String HH_MM_SS = "HH:mm:ss";
 
 	private DateFormatUtils() {
 	}
@@ -18,15 +22,19 @@ public final class DateFormatUtils {
 		return formatDate(new Date());
 	}
 
+	public static String formatCurrentTime() {
+		return formatTime(Calendar.getInstance());
+	}
+
 	public static Date parseDate(String s) throws ParseException {
-		return YYYY_MM_DD.parse(s);
+		return getDateFormat().parse(s);
 	}
 
 	public static String formatDate(Date date) {
 		if (date == null) {
 			return "-";
 		} else {
-			return YYYY_MM_DD.format(date);
+			return getDateFormat().format(date);
 		}
 	}
 
@@ -34,19 +42,33 @@ public final class DateFormatUtils {
 		if (date == null) {
 			return "-";
 		} else {
-			return HH_MM_SS.format(date.getTime());
+			return getTimeFormat().format(date.getTime());
 		}
 	}
 
-	public static Date parseTime(String s) throws ParseException {
-		return HH_MM_SS.parse(s);
+	public static Calendar parseTime(String s) throws ParseException {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(getTimeFormat().parse(s));
+		return calendar;
 	}
 
-	public static Date safeParseTime(String string) {
+	public static Calendar safeParseTime(String string) {
+		if (string == null) {
+			return null;
+		}
 		try {
 			return parseTime(string);
 		} catch (Exception e) {
+			Log.e(TAG, "Can't parse time", e);
 			return null;
 		}
+	}
+
+	private static DateFormat getTimeFormat() {
+		return new SimpleDateFormat(HH_MM_SS, LocaleUtils.LOCALE);
+	}
+
+	private static DateFormat getDateFormat() {
+		return new SimpleDateFormat(YYYY_MM_DD, LocaleUtils.LOCALE);
 	}
 }

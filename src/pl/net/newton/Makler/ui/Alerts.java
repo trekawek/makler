@@ -279,8 +279,8 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 
 		eventInitialized = false;
 		subjectSpinner.setSelection(alert.getSubject().ordinal());
-		valueEditText.setText(alert.getValue().toString());
-		percentCheckBox.setChecked(alert.getPercent());
+		valueEditText.setText(alert.getAlertValue().getValue().toString());
+		percentCheckBox.setChecked(alert.getAlertValue().isPercent());
 		setCheckboxEnabled();
 	}
 }

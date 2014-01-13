@@ -16,13 +16,17 @@ public final class GpwUtils {
 
 		Calendar c = Calendar.getInstance();
 		c.setTimeZone(WARSAW_TIMEZONE);
+		return !isWeekend(c) && workingHours(c);
+	}
 
-		int dayOfTheWeek = c.get(Calendar.DAY_OF_WEEK);
-		int hour = c.get(Calendar.HOUR_OF_DAY);
-		int minute = c.get(Calendar.MINUTE);
-		if (dayOfTheWeek == Calendar.SATURDAY || dayOfTheWeek == Calendar.SUNDAY) {
-			return false;
-		}
+	private static boolean isWeekend(Calendar calendar) {
+		int dayOfTheWeek = calendar.get(Calendar.DAY_OF_WEEK);
+		return dayOfTheWeek == Calendar.SATURDAY || dayOfTheWeek == Calendar.SUNDAY;
+	}
+
+	private static boolean workingHours(Calendar calendar) {
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
 		if (hour < 8 || hour > 17) {
 			return false;
 		}

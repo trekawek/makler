@@ -1,9 +1,11 @@
 package pl.net.newton.Makler.db.alert;
 
 import java.math.BigDecimal;
+
 import android.database.Cursor;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.gpw.ex.GpwException;
 
 public class AlertBuilder {
 	private int id;
@@ -22,11 +24,12 @@ public class AlertBuilder {
 
 	private boolean used;
 
-	public AlertBuilder setFromCursor(Cursor c, QuotesDb db) {
+	public AlertBuilder setFromCursor(Cursor c, QuotesDb db) throws GpwException {
 		this.id = c.getInt(c.getColumnIndex("id"));
 		this.quote = db.getQuoteById(c.getInt(c.getColumnIndex("quote_id")));
-		if (quote == null)
-			throw new RuntimeException("Nieznany walor");
+		if (quote == null) {
+			throw new GpwException("Nieznany walor");
+		}
 		this.subject = Subject.valueOf(c.getString(c.getColumnIndex("subject")));
 		this.event = Event.valueOf(c.getString(c.getColumnIndex("event")));
 		this.value = new BigDecimal(c.getString(c.getColumnIndex("value")));

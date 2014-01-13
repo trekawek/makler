@@ -4,35 +4,30 @@ import java.math.BigDecimal;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
+import pl.net.newton.Makler.common.LocaleUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Context;
 
 public class Alert {
-	private int id;
+	private final int id;
 
-	private Quote quote;
+	private final Quote quote;
 
-	private Subject subject;
+	private final Subject subject;
 
-	private Event event;
-
-	private BigDecimal value;
-
-	private boolean percent;
-
-	private BigDecimal baseValue;
+	private final Event event;
 
 	private boolean used;
+
+	private final AlertValue alertValue;
 
 	Alert(AlertBuilder builder) {
 		this.id = builder.getId();
 		this.quote = builder.getQuote();
 		this.subject = builder.getSubject();
 		this.event = builder.getEvent();
-		this.value = builder.getValue();
-		this.percent = builder.getPercent();
-		this.baseValue = builder.getBaseValue();
 		this.used = builder.getUsed();
+		this.alertValue = new AlertValue(builder);
 	}
 
 	public Quote getQuote() {
@@ -47,14 +42,6 @@ public class Alert {
 		return event;
 	}
 
-	public BigDecimal getValue() {
-		return value;
-	}
-
-	public boolean getPercent() {
-		return percent;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -63,17 +50,18 @@ public class Alert {
 		return used;
 	}
 
+	public AlertValue getAlertValue() {
+		return alertValue;
+	}
+
 	public void setUsed(boolean used) {
 		this.used = used;
 	}
 
-	public BigDecimal getBaseValue() {
-		return baseValue;
-	}
-
 	public String toString(Context context) {
-		return subject.getLabel(context) + " " + event.getLabel(context) + " "
-				+ NumberFormatUtils.formatNumber(value) + (percent ? "%" : "");
+		return String.format(LocaleUtils.LOCALE, "%s %s %s%s", subject.getLabel(context),
+				event.getLabel(context), NumberFormatUtils.formatNumber(alertValue.getValue()),
+				alertValue.isPercent() ? "%" : "");
 	}
 
 	public String notification(Context context) {
@@ -85,8 +73,8 @@ public class Alert {
 		s.append(" ");
 		s.append(event.getLabel(context, R.array.alert_events_quote_strings2));
 		s.append(" ");
-		s.append(NumberFormatUtils.formatNumber(value));
-		if (percent) {
+		s.append(NumberFormatUtils.formatNumber(alertValue.getValue()));
+		if (alertValue.isPercent()) {
 			s.append("%");
 		}
 		String str = s.toString();
@@ -98,35 +86,10 @@ public class Alert {
 
 	public boolean isAlarming() {
 		BigDecimal currentValue = subject.getValue(quote);
-
-		if (currentValue == null)
+		if (currentValue == null) {
 			return false;
-
-		switch (event) {
-			case WZR_POW:
-				return currentValue.compareTo(value) > 0;
-			case SPA_PON:
-				return currentValue.compareTo(value) < 0;
-			case SPA_DO:
-				return currentValue.compareTo(value) <= 0;
-			case WZR_DO:
-				return currentValue.compareTo(value) >= 0;
-			case SPA_O:
-				if (percent) {
-					return baseValue.subtract(currentValue).compareTo(
-							baseValue.multiply(value).divide(new BigDecimal(100))) >= 0;
-				} else {
-					return baseValue.subtract(currentValue).compareTo(value) >= 0;
-				}
-			case WZR_O:
-				if (percent) {
-					return currentValue.subtract(baseValue).compareTo(
-							baseValue.multiply(value).divide(new BigDecimal(100))) >= 0;
-				} else {
-					return currentValue.subtract(baseValue).compareTo(value) >= 0;
-				}
 		}
-		return false;
+		return event.isAlarming(currentValue, alertValue);
 	}
 
 }

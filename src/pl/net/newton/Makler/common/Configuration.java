@@ -10,7 +10,7 @@ import android.util.Log;
 
 public final class Configuration {
 	private static final String TAG = "MaklerConfiguration";
-	
+
 	private static final String FREQ_BACKGROUND = "frequencyBackground";
 
 	private static final String FREQ_FOREGROUND = "frequencyForeground";

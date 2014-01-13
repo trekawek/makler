@@ -2,8 +2,10 @@ package pl.net.newton.Makler.db.quote;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Calendar;
 
+import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class Quote {
@@ -27,14 +29,7 @@ public class Quote {
 		this.name = builder.getName();
 		this.kurs = builder.getKurs();
 		this.kursOdn = builder.getKursOdn();
-		BigDecimal z = builder.getZmiana();
-		if (z == null || z.compareTo(BigDecimal.ZERO) == 0) {
-			if (kurs != null && kursOdn.compareTo(BigDecimal.ZERO) > 0) {
-				z = (kurs.divide(kursOdn, 4, RoundingMode.HALF_UP).subtract(BigDecimal.ONE))
-						.multiply(new BigDecimal(100));
-			}
-		}
-		this.zmiana = z;
+		this.zmiana = calculateChange(builder.getZmiana(), builder.getKurs(), builder.getKursOdn());
 		this.kursOtw = builder.getKursOtw();
 		this.kursMin = builder.getKursMin();
 		this.kursMax = builder.getKursMax();
@@ -48,13 +43,19 @@ public class Quote {
 		this.sOfert = builder.getsOfert();
 		this.sWol = builder.getsWol();
 		this.wolumen = builder.getWolumen();
-		if (builder.getUpdate() != null) {
-			this.update = Calendar.getInstance();
-			this.update.setTime(builder.getUpdate());
-		} else {
-			this.update = null;
-		}
+		this.update = DateFormatUtils.safeParseTime(builder.getUpdate());
 		this.index = builder.getIndex();
+	}
+
+	private BigDecimal calculateChange(BigDecimal zmiana, BigDecimal kurs, BigDecimal kursOdn) {
+		if (zmiana != null && zmiana.compareTo(BigDecimal.ZERO) != 0) {
+			return zmiana;
+		}
+		if (kurs == null || kursOdn == null || kursOdn.compareTo(BigDecimal.ZERO) == 0) {
+			return zmiana;
+		}
+		return kurs.divide(kursOdn, 4, RoundingMode.HALF_UP).subtract(BigDecimal.ONE)
+				.multiply(new BigDecimal(100));
 	}
 
 	public Integer getId() {
@@ -147,52 +148,53 @@ public class Quote {
 	}
 
 	public String getsLimString() {
-		String name = limitString(sLim);
-		if (name != null)
-			return name;
-		else
+		String value = limitString(sLim);
+		if (value != null) {
+			return value;
+		} else {
 			return NumberFormatUtils.formatNumber(sLim);
+		}
 	}
 
 	public String getkLimString() {
-		String name = limitString(kLim);
-		if (name != null)
-			return name;
-		else
+		String value = limitString(kLim);
+		if (value != null) {
+			return value;
+		} else {
 			return NumberFormatUtils.formatNumber(kLim);
+		}
 	}
 
 	public BigDecimal chooseKurs() {
 		if (tko != null && update != null && update.get(Calendar.HOUR_OF_DAY) == 17
-				&& update.get(Calendar.MINUTE) >= 20 && update.get(Calendar.MINUTE) < 30)
+				&& update.get(Calendar.MINUTE) >= 20 && update.get(Calendar.MINUTE) < 30) {
 			return tko;
-		else if (kurs != null)
-			return kurs;
-		else if (tko != null)
-			return tko;
-		else if (kursOtw != null)
-			return kursOtw;
-		else if (kursOdn != null)
-			return kursOdn;
-		else
-			return null;
+		}
+		for (BigDecimal v : Arrays.asList(kurs, tko, kursOtw, kursOdn)) {
+			if (v != null) {
+				return v;
+			}
+		}
+		return null;
 	}
 
 	public BigDecimal chooseZmiana() {
 		if (tkoProcent != null && update != null && update.get(Calendar.HOUR_OF_DAY) == 17
-				&& update.get(Calendar.MINUTE) >= 20 && update.get(Calendar.MINUTE) < 30)
+				&& update.get(Calendar.MINUTE) >= 20 && update.get(Calendar.MINUTE) < 30) {
 			return tkoProcent;
-		else if (zmiana != null)
-			return zmiana;
-		else if (tkoProcent != null)
-			return tkoProcent;
-		else
-			return null;
+		}
+		for (BigDecimal v : Arrays.asList(zmiana, tkoProcent)) {
+			if (v != null) {
+				return v;
+			}
+		}
+		return null;
 	}
 
 	private String limitString(BigDecimal limit) {
-		if (limit == null)
+		if (limit == null) {
 			return null;
+		}
 		switch (limit.intValue()) {
 			case -1:
 				return "PCRO";

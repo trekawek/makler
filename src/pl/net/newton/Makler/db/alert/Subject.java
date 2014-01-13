@@ -50,9 +50,11 @@ public enum Subject {
 		Resources res = context.getResources();
 		String[] codes = res.getStringArray(R.array.alert_subjects_codes);
 		String[] labels = res.getStringArray(R.array.alert_subjects_strings);
-		for (int i = 0; i < codes.length; i++)
-			if (Subject.valueOf(codes[i]) == this)
+		for (int i = 0; i < codes.length; i++) {
+			if (Subject.valueOf(codes[i]) == this) {
 				return labels[i];
+			}
+		}
 		return null;
 	}
 }

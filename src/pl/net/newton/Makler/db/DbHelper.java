@@ -4,7 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class DbHelper {
+public final class DbHelper {
+	private DbHelper() {
+	}
+
 	public static void move(SQLiteDatabase sqlDb, String table, Integer id, boolean up) {
 		sqlDb.beginTransaction();
 		Cursor c = sqlDb.query(table, new String[] { "id", "position" }, "id = ?",
@@ -22,7 +25,7 @@ public class DbHelper {
 			cond.append("position > ?");
 			order = "position ASC";
 		}
-		if (table.equals("quotes")) {
+		if ("quotes".equals(table)) {
 			cond.append(" AND from_wallet=0");
 		}
 		c = sqlDb.query(table, new String[] { "id", "position" }, cond.toString(),

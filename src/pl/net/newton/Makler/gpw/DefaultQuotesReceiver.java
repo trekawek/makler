@@ -100,8 +100,8 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 				String[] a = line.split("\\|");
 
 				SymbolBuilder builder = new SymbolBuilder();
-				builder.setSymbol(a[0]).setName(a[1]).setIsIndex(a[2].equals("1")).setDeleted(a[3].equals("1"))
-						.setCode(a[4]);
+				builder.setSymbol(a[0]).setName(a[1]).setIsIndex(a[2].equals("1"))
+						.setDeleted(a[3].equals("1")).setCode(a[4]);
 				symbols.add(builder.build());
 			}
 
@@ -131,10 +131,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 		QuoteBuilder builder = new QuoteBuilder();
 
 		builder.setSymbol(a[0]).setName(a[1]);
-		try {
-			builder.setUpdate(DateFormatUtils.parseTime(a[2]));
-		} catch (ParseException e) {
-		}
+		builder.setUpdate(a[2]);
 		try {
 			builder.setKurs(NumberFormatUtils.parseOrNull(a[3]))
 					.setZmiana(NumberFormatUtils.parseOrNull(a[4]))
@@ -158,7 +155,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 		}
 
 		if (Configuration.DEBUG_UPDATES) {
-			builder.setUpdate(new Date());
+			builder.setUpdate(DateFormatUtils.formatCurrentTime());
 		}
 		return builder.build();
 	}
