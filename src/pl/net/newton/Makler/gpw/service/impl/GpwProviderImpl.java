@@ -1,8 +1,7 @@
 package pl.net.newton.Makler.gpw.service.impl;
 
 import java.util.concurrent.Executors;
-import pl.net.newton.Makler.common.Configuration;
-import pl.net.newton.Makler.common.DataSource;
+
 import pl.net.newton.Makler.db.service.SqlProvider;
 import pl.net.newton.Makler.db.service.impl.SqlProviderImpl;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
@@ -10,6 +9,8 @@ import pl.net.newton.Makler.gpw.QuotesReceiver;
 import pl.net.newton.Makler.gpw.ex.GpwException;
 import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
 import pl.net.newton.Makler.gpw.service.GpwProvider;
+import pl.net.newton.Makler.common.Configuration;
+import pl.net.newton.Makler.common.DataSource;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;

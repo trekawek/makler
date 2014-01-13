@@ -3,9 +3,9 @@ package pl.net.newton.Makler.ui.adapter;
 import java.util.List;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.gpw.model.Order;
 import pl.net.newton.Makler.gpw.model.OrderState;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

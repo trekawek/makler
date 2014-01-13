@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.db.DbHelper;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
+import pl.net.newton.Makler.common.DateFormatUtils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

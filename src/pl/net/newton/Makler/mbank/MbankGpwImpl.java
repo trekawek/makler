@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 import android.content.Context;
 import android.util.Log;
-import pl.net.newton.Makler.common.Configuration;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
@@ -18,6 +18,7 @@ import pl.net.newton.Makler.gpw.model.Finances;
 import pl.net.newton.Makler.gpw.model.Order;
 import pl.net.newton.Makler.gpw.model.OrderState;
 import pl.net.newton.Makler.mbank.model.MbankPaper;
+import pl.net.newton.Makler.common.Configuration;
 
 public class MbankGpwImpl implements QuotesReceiver, Trades {
 	private static final String TAG = "Makler";

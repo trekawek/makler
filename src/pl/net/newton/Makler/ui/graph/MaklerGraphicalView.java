@@ -2,14 +2,16 @@ package pl.net.newton.Makler.ui.graph;
 
 import java.math.BigDecimal;
 import java.util.Locale;
+
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.AbstractChart;
 import org.achartengine.chart.XYChart;
 import org.achartengine.model.SeriesSelection;
-import pl.net.newton.Makler.common.NumberFormatUtils;
+
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.ui.graph.GraphView.GraphRange;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;

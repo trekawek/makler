@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.db.wallet.WalletDb;
@@ -18,6 +17,7 @@ import pl.net.newton.Makler.gpw.model.Paper;
 import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.SymbolsAdapter;
+import pl.net.newton.Makler.common.DateFormatUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;

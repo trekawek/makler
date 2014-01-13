@@ -1,9 +1,9 @@
 package pl.net.newton.Makler.ui.adapter;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.gpw.model.Finances;
 import pl.net.newton.Makler.gpw.model.Paper;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.LayoutInflater;

@@ -3,8 +3,8 @@ package pl.net.newton.Makler.db.alert;
 import java.util.List;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.Configuration;
 import pl.net.newton.Makler.ui.QuoteDetails;
+import pl.net.newton.Makler.common.Configuration;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

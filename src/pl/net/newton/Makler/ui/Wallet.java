@@ -7,7 +7,6 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdView;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.wallet.WalletDb;
 import pl.net.newton.Makler.db.wallet.WalletItem;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
@@ -18,7 +17,7 @@ import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.WalletAdapter;
-
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

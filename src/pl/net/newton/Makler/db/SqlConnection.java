@@ -8,7 +8,6 @@ import java.io.OutputStream;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.common.Configuration;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,20 +16,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class SQLConnection extends SQLiteOpenHelper {
+public class SqlConnection extends SQLiteOpenHelper {
 	private static final String TAG = "MaklerSql";
 
 	private final static int DATABASE_VERSION = 7;
 
 	private final static String DATABASE_NAME = "makler.db";
 
-	private final static boolean copyDB = true;
+	private final static boolean COPY_DB = true;
 
 	private final File dataBaseFile;
 
 	private Context context;
 
-	public SQLConnection(Context context) {
+	public SqlConnection(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
 		this.dataBaseFile = context.getDatabasePath(DATABASE_NAME);
@@ -38,7 +37,7 @@ public class SQLConnection extends SQLiteOpenHelper {
 
 	public SQLiteDatabase getDb() {
 		try {
-			if (!isDatabaseExist() && copyDB) {
+			if (!isDatabaseExist() && COPY_DB) {
 				Log.d(TAG, "copying db");
 				copyDatabase();
 
@@ -56,8 +55,9 @@ public class SQLConnection extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		String[] createDB = context.getResources().getStringArray(pl.net.newton.Makler.R.array.createDB);
 		try {
-			for (String q : createDB)
+			for (String q : createDB) {
 				db.execSQL(q);
+			}
 			onUpgrade(db, 1, DATABASE_VERSION);
 		} catch (SQLException e) {
 			Log.e(TAG, e.getMessage());
@@ -69,14 +69,16 @@ public class SQLConnection extends SQLiteOpenHelper {
 		if (from <= 1 && to >= 2) {
 			Log.w(TAG, "Akutalizacja do schematu 2.");
 			String[] update = context.getResources().getStringArray(R.array.update_1_2);
-			for (String q : update)
+			for (String q : update) {
 				db.execSQL(q);
+			}
 		}
 		if (from <= 2 && to >= 3) {
 			Log.w(TAG, "Akutalizacja do schematu 3.");
 			String[] update = context.getResources().getStringArray(R.array.update_2_3);
-			for (String q : update)
+			for (String q : update) {
 				db.execSQL(q);
+			}
 
 			int i = 1;
 			db.beginTransaction();
@@ -95,14 +97,16 @@ public class SQLConnection extends SQLiteOpenHelper {
 		if (from <= 3 && to >= 4) {
 			Log.w(TAG, "Akutalizacja do schematu 4.");
 			String[] update = context.getResources().getStringArray(R.array.update_3_4);
-			for (String q : update)
+			for (String q : update) {
 				db.execSQL(q);
+			}
 		}
 		if (from <= 4 && to >= 5) {
 			Log.w(TAG, "Akutalizacja do schematu 5.");
 			String[] update = context.getResources().getStringArray(R.array.update_4_5);
-			for (String q : update)
+			for (String q : update) {
 				db.execSQL(q);
+			}
 
 			db.beginTransaction();
 			Cursor c = db.query("wallet_items", new String[] { "id", "symbol_id" }, null, null, null, null,
@@ -127,27 +131,24 @@ public class SQLConnection extends SQLiteOpenHelper {
 		if (from <= 5 && to >= 6) {
 			Log.w(TAG, "Akutalizacja do schematu 6.");
 			String[] update = context.getResources().getStringArray(R.array.update_5_6);
-			for (String q : update)
+			for (String q : update) {
 				db.execSQL(q);
+			}
 		}
 		if (from <= 6 && to >= 7) {
 			Log.w(TAG, "Akutalizacja do schematu 7.");
 			String[] update = context.getResources().getStringArray(R.array.update_6_7);
-			for (String q : update)
+			for (String q : update) {
 				db.execSQL(q);
+			}
 		}
-		/*
-		 * if { Log.w(TAG, "Aktualizacja aplikacji usunie starą bazę i utworzy nową."); String[] dropDB =
-		 * context.getResources().getStringArray(R.array.dropDB); for (String q : dropDB) db.execSQL(q);
-		 * onCreate(db); }
-		 */
 	}
 
-	public boolean isDatabaseExist() {
+	private boolean isDatabaseExist() {
 		return dataBaseFile.exists();
 	}
 
-	public void copyDatabase() throws IOException {
+	private void copyDatabase() throws IOException {
 		File parent = dataBaseFile.getParentFile();
 		if (!parent.exists()) {
 			parent.mkdir();
@@ -157,8 +158,9 @@ public class SQLConnection extends SQLiteOpenHelper {
 		OutputStream myOutput = new FileOutputStream(dataBaseFile);
 		byte[] buffer = new byte[1024];
 		int length;
-		while ((length = myInput.read(buffer)) > 0)
+		while ((length = myInput.read(buffer)) > 0) {
 			myOutput.write(buffer, 0, length);
+		}
 		myOutput.flush();
 		myOutput.close();
 		myInput.close();

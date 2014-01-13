@@ -1,11 +1,12 @@
 package pl.net.newton.Makler.db.wallet;
 
 import java.math.BigDecimal;
+
 import android.database.Cursor;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.symbol.Symbol;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class WalletItemBuilder {
 	private Integer id;

@@ -3,6 +3,7 @@ package pl.net.newton.Makler.db.quote;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
+
 import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class Quote {

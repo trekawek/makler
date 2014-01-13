@@ -5,18 +5,19 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import android.content.Context;
 import android.provider.Settings.Secure;
 import android.util.Log;
-import pl.net.newton.Makler.common.Configuration;
-import pl.net.newton.Makler.common.DateFormatUtils;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuoteBuilder;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolBuilder;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.httpClient.Connector;
+import pl.net.newton.Makler.common.Configuration;
+import pl.net.newton.Makler.common.DateFormatUtils;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class DefaultQuotesReceiver implements QuotesReceiver {
 	private static final String TAG = "Makler";

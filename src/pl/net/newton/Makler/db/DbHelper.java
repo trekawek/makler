@@ -10,23 +10,23 @@ public class DbHelper {
 		Cursor c = sqlDb.query(table, new String[] { "id", "position" }, "id = ?",
 				new String[] { id.toString() }, null, null, null);
 		c.moveToFirst();
-		Integer currentPos = c.getInt(1);
+		int currentPos = c.getInt(1);
 		c.close();
 
-		String cond = "";
-		if (table.equals("quotes")) {
-			cond = " AND from_wallet=0";
-		}
+		StringBuilder cond = new StringBuilder();
 		String order;
 		if (up) {
-			cond = "position < ?" + cond;
+			cond.append("position < ?");
 			order = "position DESC";
 		} else {
-			cond = "position > ?" + cond;
+			cond.append("position > ?");
 			order = "position ASC";
 		}
-		c = sqlDb.query(table, new String[] { "id", "position" }, cond,
-				new String[] { currentPos.toString() }, null, null, order);
+		if (table.equals("quotes")) {
+			cond.append(" AND from_wallet=0");
+		}
+		c = sqlDb.query(table, new String[] { "id", "position" }, cond.toString(),
+				new String[] { String.valueOf(currentPos) }, null, null, order);
 		if (!c.moveToFirst()) {
 			c.close();
 			sqlDb.endTransaction();

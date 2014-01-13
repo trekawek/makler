@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.ui;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
 import pl.net.newton.Makler.gpw.Trades;
 import pl.net.newton.Makler.gpw.ex.GpwException;
@@ -11,6 +10,7 @@ import pl.net.newton.Makler.gpw.model.Paper;
 import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.PapersAdapter;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;

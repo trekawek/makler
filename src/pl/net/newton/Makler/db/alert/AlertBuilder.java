@@ -6,7 +6,7 @@ import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 
 public class AlertBuilder {
-	private Integer id;
+	private int id;
 
 	private Quote quote;
 
@@ -40,7 +40,7 @@ public class AlertBuilder {
 		return new Alert(this);
 	}
 
-	Integer getId() {
+	int getId() {
 		return id;
 	}
 

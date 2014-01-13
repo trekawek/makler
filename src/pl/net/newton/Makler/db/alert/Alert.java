@@ -3,13 +3,12 @@ package pl.net.newton.Makler.db.alert;
 import java.math.BigDecimal;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.quote.Quote;
-
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Context;
 
 public class Alert {
-	private Integer id;
+	private int id;
 
 	private Quote quote;
 
@@ -56,7 +55,7 @@ public class Alert {
 		return percent;
 	}
 
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 

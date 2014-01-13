@@ -1,9 +1,9 @@
 package pl.net.newton.Makler.mbank.model;
 
-import pl.net.newton.Makler.common.DateFormatUtils;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.quote.QuoteBuilder;
 import pl.net.newton.Makler.db.symbol.Symbol;
+import pl.net.newton.Makler.common.DateFormatUtils;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class MbankQuote {
 	private Symbol paper;

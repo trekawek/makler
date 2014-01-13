@@ -15,8 +15,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.DateFormatUtils;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
@@ -31,6 +29,8 @@ import pl.net.newton.Makler.history.service.HistoryListener;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.QuotesAdapter;
 import pl.net.newton.Makler.ui.graph.GraphView;
+import pl.net.newton.Makler.common.DateFormatUtils;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class QuoteDetails extends AbstractActivity implements QuotesListener, HistoryListener {
 

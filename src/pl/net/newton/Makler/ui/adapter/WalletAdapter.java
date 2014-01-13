@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.wallet.WalletItem;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.LayoutInflater;

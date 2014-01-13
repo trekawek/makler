@@ -5,8 +5,6 @@ package pl.net.newton.Makler.ui;
 
 import java.math.BigDecimal;
 
-import pl.net.newton.Makler.common.Configuration;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
@@ -16,6 +14,8 @@ import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.QuotesAdapter;
 import pl.net.newton.Makler.R;
+import pl.net.newton.Makler.common.Configuration;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;

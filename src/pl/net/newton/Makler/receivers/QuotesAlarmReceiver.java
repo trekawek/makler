@@ -1,8 +1,8 @@
 package pl.net.newton.Makler.receivers;
 
+import pl.net.newton.Makler.gpw.service.impl.QuotesServiceImpl;
 import pl.net.newton.Makler.common.Configuration;
 import pl.net.newton.Makler.common.GpwUtils;
-import pl.net.newton.Makler.gpw.service.impl.QuotesServiceImpl;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;

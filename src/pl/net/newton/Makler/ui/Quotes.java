@@ -6,7 +6,6 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdView;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.symbol.Symbol;
@@ -21,6 +20,7 @@ import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.receivers.QuotesAlarmReceiver;
 import pl.net.newton.Makler.ui.adapter.QuotesAdapter;
+import pl.net.newton.Makler.common.DateFormatUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

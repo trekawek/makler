@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.DateFormatUtils;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolBuilder;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
@@ -34,6 +34,8 @@ import pl.net.newton.Makler.gpw.model.Order.LimitType;
 import pl.net.newton.Makler.mbank.model.MbankOrder;
 import pl.net.newton.Makler.mbank.model.MbankPaper;
 import pl.net.newton.Makler.mbank.model.MbankQuote;
+import pl.net.newton.Makler.common.DateFormatUtils;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

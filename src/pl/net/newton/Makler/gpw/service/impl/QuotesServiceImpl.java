@@ -6,8 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import pl.net.newton.Makler.common.Configuration;
-import pl.net.newton.Makler.common.GpwUtils;
+
 import pl.net.newton.Makler.db.alert.AlertChecker;
 import pl.net.newton.Makler.db.alert.AlertsDb;
 import pl.net.newton.Makler.db.quote.Quote;
@@ -19,6 +18,8 @@ import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
 import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.gpw.service.QuotesService;
+import pl.net.newton.Makler.common.Configuration;
+import pl.net.newton.Makler.common.GpwUtils;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;

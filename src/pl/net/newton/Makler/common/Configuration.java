@@ -1,12 +1,16 @@
 package pl.net.newton.Makler.common;
 
 import java.math.BigDecimal;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
-public class Configuration {
+public final class Configuration {
+	private static final String TAG = "MaklerConfiguration";
+	
 	private static final String FREQ_BACKGROUND = "frequencyBackground";
 
 	private static final String FREQ_FOREGROUND = "frequencyForeground";
@@ -35,7 +39,7 @@ public class Configuration {
 
 	private static final String WALLET_ACCOUNT = "walletAccount";
 
-	public static boolean DEBUG_UPDATES = false;
+	public static final boolean DEBUG_UPDATES = false;
 
 	private SharedPreferences pref;
 
@@ -121,6 +125,7 @@ public class Configuration {
 			try {
 				return DataSource.valueOf(type);
 			} catch (IllegalArgumentException e) {
+				Log.e(TAG, "Unknown data source type", e);
 				edit.putString(DATA_SOURCE_TYPE, null);
 				edit.putBoolean(OWN_DATA_SOURCE, false);
 				edit.commit();

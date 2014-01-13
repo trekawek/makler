@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import pl.net.newton.Makler.R;
+import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
-import pl.net.newton.Makler.db.quote.Quote;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.TypedValue;

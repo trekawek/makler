@@ -39,7 +39,7 @@ public class AlertsDb {
 		sqlDb.beginTransaction();
 		ContentValues cv = new ContentValues();
 		cv.put("used", 1);
-		sqlDb.update("alerts", cv, "id = ?", new String[] { alert.getId().toString() });
+		sqlDb.update("alerts", cv, "id = ?", new String[] { String.valueOf(alert.getId()) });
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();
 	}

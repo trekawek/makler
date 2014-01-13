@@ -3,6 +3,7 @@ package pl.net.newton.Makler.db.quote;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
+
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.database.Cursor;

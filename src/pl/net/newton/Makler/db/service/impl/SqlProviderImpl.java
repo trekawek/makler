@@ -1,6 +1,6 @@
 package pl.net.newton.Makler.db.service.impl;
 
-import pl.net.newton.Makler.db.SQLConnection;
+import pl.net.newton.Makler.db.SqlConnection;
 import pl.net.newton.Makler.db.service.SqlProvider;
 import android.app.Service;
 import android.content.Intent;
@@ -20,7 +20,7 @@ public class SqlProviderImpl extends Service {
 	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG, this.getClass().getName() + " - onCreate");
-		sql = new SQLConnection(this).getDb();
+		sql = new SqlConnection(this).getDb();
 	}
 
 	@Override
