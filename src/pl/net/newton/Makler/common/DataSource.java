@@ -1,6 +1,5 @@
 package pl.net.newton.Makler.common;
 
-import pl.net.newton.Makler.epromak.EpromakGpwImpl;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
 import pl.net.newton.Makler.gpw.DefaultQuotesReceiver;
 import pl.net.newton.Makler.mbank.MbankGpwImpl;
@@ -13,40 +12,10 @@ public enum DataSource {
 			recv = new DefaultQuotesReceiver(ctx);
 		}
 	},
-	pkobp("www.supermakler.pkobp.pl", true, true) {
-		@Override
-		protected void init(Context ctx) {
-			recv = new EpromakGpwImpl();
-		}
-	},
 	mbank("www.mbank.com.pl", false, true) {
 		@Override
 		protected void init(Context ctx) {
 			recv = new MbankGpwImpl();
-		}
-	},
-	millennium("epromak.millenniumdm.pl", true, true) {
-		@Override
-		protected void init(Context ctx) {
-			recv = new EpromakGpwImpl();
-		}
-	},
-	bre("www.brebrokers.pl", true, true) {
-		@Override
-		protected void init(Context ctx) {
-			recv = new EpromakGpwImpl();
-		}
-	},
-	bdm("e.bdm.com.pl", true, true) {
-		@Override
-		protected void init(Context ctx) {
-			recv = new EpromakGpwImpl();
-		}
-	},
-	dmbh("online.dmbh.pl", true, true) {
-		@Override
-		protected void init(Context ctx) {
-			recv = new EpromakGpwImpl();
 		}
 	};
 
