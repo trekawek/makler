@@ -1,18 +1,19 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="3dip" >
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingRight="6dip" >
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Typ" >
+            android:text="@string/type" >
         </TextView>
 
         <RadioGroup
@@ -25,21 +26,21 @@
                 android:id="@+id/orderFormTypeK"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kupno" >
+                android:text="@string/do_ask" >
             </RadioButton>
 
             <RadioButton
                 android:id="@+id/orderFormTypeS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sprzedaż" >
+                android:text="@string/do_bid" >
             </RadioButton>
         </RadioGroup>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Walor" >
+            android:text="@string/share" >
         </TextView>
 
         <LinearLayout
@@ -62,43 +63,43 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Lista" >
+                android:text="@string/list" >
             </Button>
         </LinearLayout>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Ilość" >
+            android:text="@string/amount" >
         </TextView>
 
         <EditText
             android:id="@+id/orderFormIlosc"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numeric="integer"
+            android:inputType="number"
             android:text="" >
         </EditText>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Limit ceny" >
+            android:text="@string/limit" >
         </TextView>
 
         <EditText
             android:id="@+id/orderFormLimit"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numeric="decimal"
+            android:inputType="numberDecimal"
             android:text="" >
         </EditText>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Limit ceny może zostać zaokrąglony w dół."
-            android:textSize="12dip" >
+            android:text="@string/limit_disclaimer"
+            android:textSize="12sp" >
         </TextView>
 
         <RadioGroup
@@ -111,28 +112,28 @@
                 android:id="@+id/orderFormPEG"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PEG" >
+                android:text="@string/peg" >
             </RadioButton>
 
             <RadioButton
                 android:id="@+id/orderFormPKC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PKC" >
+                android:text="@string/pkc" >
             </RadioButton>
 
             <RadioButton
                 android:id="@+id/orderFormPCR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PCR" >
+                android:text="@string/pcr" >
             </RadioButton>
         </RadioGroup>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Data sesji" >
+            android:text="@string/session_date" >
         </TextView>
 
         <Button
@@ -146,7 +147,7 @@
             android:id="@+id/orderFormWaznoscLbl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Ważność" >
+            android:text="@string/validity" >
         </TextView>
 
         <Spinner
@@ -159,7 +160,7 @@
             android:id="@+id/orderFormDoDniaLbl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Do dnia" >
+            android:text="@string/to_date" >
         </TextView>
 
         <Button
@@ -173,7 +174,7 @@
             android:id="@+id/orderFormWdcLbl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Godzina" >
+            android:text="@string/hour" >
         </TextView>
 
         <Button
@@ -187,14 +188,14 @@
             android:id="@+id/orderFormLimitAktLbl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Limit aktywacji" >
+            android:text="@string/limit_act" >
         </TextView>
 
         <EditText
             android:id="@+id/orderFormLimitAkt"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numeric="decimal"
+            android:inputType="numberDecimal"
             android:text="" >
         </EditText>
 
@@ -202,14 +203,14 @@
             android:id="@+id/orderFormIloscUjawnLbl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="WUJ" >
+            android:text="@string/wuj" >
         </TextView>
 
         <EditText
             android:id="@+id/orderFormIloscUjawn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numeric="decimal"
+            android:inputType="numberDecimal"
             android:text="" >
         </EditText>
 
@@ -217,14 +218,14 @@
             android:id="@+id/orderFormIloscMinLbl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="MWW" >
+            android:text="@string/mww" >
         </TextView>
 
         <EditText
             android:id="@+id/orderFormIloscMin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numeric="decimal"
+            android:inputType="numberDecimal"
             android:text="" >
         </EditText>
 
@@ -232,7 +233,7 @@
             android:id="@+id/orderFormSmsPasswordLbl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Kod SMS"
+            android:text="@string/sms_code"
             android:visibility="gone" >
         </TextView>
 
@@ -240,16 +241,17 @@
             android:id="@+id/orderFormSmsPassword"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numeric="decimal"
+            android:inputType="numberDecimal"
             android:text=""
-            android:visibility="gone" >
+            android:visibility="gone"
+            tools:ignore="TextFields" >
         </EditText>
 
         <Button
             android:id="@+id/orderFormDodaj"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Dodaj zlecenie" >
+            android:text="@string/add_order" >
         </Button>
     </LinearLayout>
 

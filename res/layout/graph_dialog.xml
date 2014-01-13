@@ -9,7 +9,7 @@
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:textColor="#FFF"
-              android:text="Zakres danych"
+              android:text="@string/data_range"
               />
     <Spinner
         android:id="@+id/graphRange"
@@ -19,7 +19,7 @@
 	<TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:textColor="#FFF"
-              android:text="Zakres wykresu możesz zmieniać również gestami, przesuwając go w lewo i w prawo."
+              android:text="@string/range_info"
               />
               
     <!-- <TextView android:layout_width="wrap_content"

@@ -1,33 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/quotesLinearLayout" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
-<TableLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/alertQuoteItem">
-<!-- <LinearLayout android:layout_width="fill_parent"  android:layout_height="wrap_content" android:id="@+id/alertQuoteItem">
-</LinearLayout> -->
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alertQuoteItem"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-<TextView android:text="Wywołaj alert gdy" android:gravity="center"></TextView>
+    <TextView
+        android:gravity="center"
+        android:text="@string/invoke_alert_when" >
+    </TextView>
 
-<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center">
-<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/alertSubject">
-</Spinner>
-<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/alertEvent"></Spinner>
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
 
-<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center">
-<EditText android:layout_width="70dip" android:layout_height="wrap_content" android:id="@+id/alertValue" android:inputType="numberDecimal"></EditText>
-<CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="%" android:checked="false" android:id="@+id/alertPercent" android:enabled="false"></CheckBox>
-</LinearLayout>
+        <Spinner
+            android:id="@+id/alertSubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </Spinner>
 
-<Button android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/addAlert" android:text="Dodaj"></Button>
+        <Spinner
+            android:id="@+id/alertEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </Spinner>
+    </LinearLayout>
 
-<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:id="@+id/alertListLabel">
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Uruchom alert dla "></TextView>
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#0099CC" android:id="@+id/alertQuoteName"></TextView>
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" jeśli:"></TextView>
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
 
-<ListView android:id="@+id/alertList" android:layout_width="wrap_content" android:layout_height="fill_parent">
-</ListView>
+        <EditText
+            android:id="@+id/alertValue"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" >
+        </EditText>
+
+        <CheckBox
+            android:id="@+id/alertPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:enabled="false"
+            android:text="@string/percent" >
+        </CheckBox>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/addAlert"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_alert" >
+    </Button>
+
+    <LinearLayout
+        android:id="@+id/alertListLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/invoke_alert_for" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/alertQuoteName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#0099CC" >
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/alert_if" >
+        </TextView>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/alertList"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" >
+    </ListView>
 
 </TableLayout>
-
-</LinearLayout>

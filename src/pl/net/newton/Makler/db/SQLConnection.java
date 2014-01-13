@@ -26,15 +26,14 @@ public class SQLConnection extends SQLiteOpenHelper {
 
 	private final static boolean copyDB = true;
 
-	public String DB_PATH;
+	private final File dataBaseFile;
 
 	private Context context;
 
 	public SQLConnection(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
-		this.DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
-
+		this.dataBaseFile = context.getDatabasePath(DATABASE_NAME);
 	}
 
 	public SQLiteDatabase getDb() {
@@ -137,28 +136,25 @@ public class SQLConnection extends SQLiteOpenHelper {
 			for (String q : update)
 				db.execSQL(q);
 		}
-		/*if {
-			Log.w(TAG, "Aktualizacja aplikacji usunie starą bazę i utworzy nową.");
-			String[] dropDB = context.getResources().getStringArray(R.array.dropDB);
-			for (String q : dropDB)
-				db.execSQL(q);
-			onCreate(db);
-		}*/
+		/*
+		 * if { Log.w(TAG, "Aktualizacja aplikacji usunie starą bazę i utworzy nową."); String[] dropDB =
+		 * context.getResources().getStringArray(R.array.dropDB); for (String q : dropDB) db.execSQL(q);
+		 * onCreate(db); }
+		 */
 	}
 
 	public boolean isDatabaseExist() {
-		File dbFile = new File(DB_PATH + DATABASE_NAME);
-		return dbFile.exists();
+		return dataBaseFile.exists();
 	}
 
 	public void copyDatabase() throws IOException {
-		File dbPath = new File(DB_PATH);
-		if (!dbPath.exists())
-			dbPath.mkdir();
+		File parent = dataBaseFile.getParentFile();
+		if (!parent.exists()) {
+			parent.mkdir();
+		}
 
 		InputStream myInput = context.getAssets().open(DATABASE_NAME);
-		String outFileName = DB_PATH + DATABASE_NAME;
-		OutputStream myOutput = new FileOutputStream(outFileName);
+		OutputStream myOutput = new FileOutputStream(dataBaseFile);
 		byte[] buffer = new byte[1024];
 		int length;
 		while ((length = myInput.read(buffer)) > 0)

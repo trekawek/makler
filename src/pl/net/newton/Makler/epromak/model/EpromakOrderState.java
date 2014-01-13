@@ -1,12 +1,9 @@
 package pl.net.newton.Makler.epromak.model;
 
 import java.text.ParseException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import android.content.Context;
-
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.gpw.model.Order;

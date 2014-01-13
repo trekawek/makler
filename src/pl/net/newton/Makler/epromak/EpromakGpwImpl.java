@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 import android.content.Context;
 import android.util.Log;
 import pl.net.newton.Makler.common.Configuration;
@@ -175,14 +174,14 @@ public class EpromakGpwImpl implements QuotesReceiver, Trades {
 				EpromakOwnership o = oList.get(i);
 				if (o.getPaper() != null)
 					papers.add(new Paper(symbolsDb.getSymbolBySymbol(o.getPaper()
-							.getSymbol()), new Integer(o.get("stanPWPodst")),
-							new Integer(o.get("prawaWlas")), new BigDecimal(quotes.get(j++).getKurs())));
+							.getSymbol()), Integer.parseInt(o.get("stanPWPodst")),
+							Integer.parseInt(o.get("prawaWlas")), new BigDecimal(quotes.get(j++).getKurs())));
 				else {
 					Symbol s = symbolsDb.getSymbolBySymbol(o.getSymbol());
 					if (s == null)
 						s = new SymbolBuilder().setSymbol(o.getSymbol()).setName(o.getName()).build();
-					papers.add(new Paper(s, new Integer(o.get("stanPWPodst")),
-							new Integer(o.get("prawaWlas")), BigDecimal.ZERO));
+					papers.add(new Paper(s, Integer.parseInt(o.get("stanPWPodst")),
+							Integer.parseInt(o.get("prawaWlas")), BigDecimal.ZERO));
 				}
 			}
 
@@ -198,7 +197,7 @@ public class EpromakGpwImpl implements QuotesReceiver, Trades {
 			checkClient();
 			EpromakOrderState s = client.getOrderStateById(id);
 			Order o = s.getGPWOrder(ctx, symbolsDb);
-			return new OrderState(o, id, s.getStan(), new Integer(s.get("iloscrea")));
+			return new OrderState(o, id, s.getStan(), Integer.parseInt(s.get("iloscrea")));
 		} finally {
 			lock.unlock();
 		}
@@ -212,7 +211,7 @@ public class EpromakGpwImpl implements QuotesReceiver, Trades {
 			for (EpromakOrderState s : states) {
 				Order o = s.getGPWOrder(ctx, symbolsDb);
 				Log.d("Makler - zrealizowano", s.get("iloscrea"));
-				list.add(new OrderState(o, s.getId(), s.getStan(), new Integer(s.get("iloscrea"))));
+				list.add(new OrderState(o, s.getId(), s.getStan(), Integer.parseInt(s.get("iloscrea"))));
 			}
 			return list;
 		} finally {

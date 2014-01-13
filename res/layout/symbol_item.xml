@@ -5,11 +5,11 @@
 
 	<TextView android:id="@+id/symbolItemSymbol"
 		android:layout_width="190dip" android:layout_height="wrap_content"
-		android:textColor="#ffaa56" android:text="" android:textSize="30dip"></TextView>
+		android:textColor="#ffaa56" android:text="" android:textSize="30sp"></TextView>
 
 	<TextView android:text="" android:id="@+id/symbolItemName"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:textSize="20dip" android:textColor="#0099CC" android:gravity="right"
+		android:textSize="20sp" android:textColor="#0099CC" android:gravity="right"
 		android:paddingRight="10dip"></TextView>
 
 </LinearLayout>

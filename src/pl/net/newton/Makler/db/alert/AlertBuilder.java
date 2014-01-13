@@ -1,9 +1,7 @@
 package pl.net.newton.Makler.db.alert;
 
 import java.math.BigDecimal;
-
 import android.database.Cursor;
-
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 

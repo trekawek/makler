@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android">
-<Button android:text="Nowe zlecenie" android:id="@+id/newOrderBtn" android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
-<TextView android:id="@+id/noOrders" android:visibility="gone" android:text=" Brak zleceń " android:layout_width="wrap_content" android:layout_height="fill_parent"></TextView>
-<TextView android:id="@+id/ordersInst" android:paddingLeft="3dip" android:paddingRight="3dip" android:visibility="gone" android:text="Kliknij i przytrzymaj zlecenie, aby je zmienić lub anulować. " android:layout_width="wrap_content" android:layout_height="fill_parent"></TextView>
-<ListView android:id="@+id/ordersListView" android:layout_width="wrap_content" android:layout_height="fill_parent">
-</ListView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/newOrderBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_order" >
+    </Button>
+
+    <TextView
+        android:id="@+id/noOrders"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:text="@string/no_orders"
+        android:visibility="gone" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/ordersInst"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:paddingLeft="3dip"
+        android:paddingRight="3dip"
+        android:text="@string/click_to_modify_order"
+        android:visibility="gone" >
+    </TextView>
+
+    <ListView
+        android:id="@+id/ordersListView"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" >
+    </ListView>
+
 </LinearLayout>

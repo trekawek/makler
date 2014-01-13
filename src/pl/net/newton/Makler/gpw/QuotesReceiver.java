@@ -1,9 +1,7 @@
 package pl.net.newton.Makler.gpw;
 
 import java.util.List;
-
 import android.content.Context;
-
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;

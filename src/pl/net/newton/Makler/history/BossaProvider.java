@@ -6,12 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 import org.apache.http.HttpEntity;
-
 import android.content.Context;
 import android.util.Log;
-
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.httpClient.Connector;
 

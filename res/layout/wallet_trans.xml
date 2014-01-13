@@ -5,14 +5,14 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingRight="6dip" >
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Typ" >
+            android:text="@string/type" >
         </TextView>
 
         <RadioGroup
@@ -26,21 +26,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Kupno" >
+                android:text="@string/do_ask" >
             </RadioButton>
 
             <RadioButton
                 android:id="@+id/transTypeS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sprzedaż" >
+                android:text="@string/do_bid" >
             </RadioButton>
         </RadioGroup>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Walor" >
+            android:text="@string/share" >
         </TextView>
 
         <LinearLayout
@@ -63,35 +63,35 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Lista" >
+                android:text="@string/list" >
             </Button>
         </LinearLayout>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Ilość" >
+            android:text="@string/amount" >
         </TextView>
 
         <EditText
             android:id="@+id/transIlosc"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numeric="integer"
+            android:inputType="number"
             android:text="" >
         </EditText>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Kurs" >
+            android:text="@string/quote" >
         </TextView>
 
         <EditText
             android:id="@+id/transKurs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:numeric="decimal"
+            android:inputType="numberDecimal"
             android:text="" >
         </EditText>
 
@@ -99,7 +99,7 @@
             android:id="@+id/transDodaj"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Dodaj transakcję" >
+            android:text="@string/add_transaction" >
         </Button>
     </LinearLayout>
 

@@ -2,6 +2,7 @@ package pl.net.newton.Makler.sms;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,7 @@ import android.util.Log;
 public class SmsIntentReceiver extends BroadcastReceiver {
 	private static final String TAG = "Makler";
 
-	private static final SimpleDateFormat SMS_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+	private static final SimpleDateFormat SMS_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
 
 	private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 

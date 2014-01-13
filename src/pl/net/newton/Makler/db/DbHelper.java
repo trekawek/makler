@@ -17,20 +17,23 @@ public class DbHelper {
 		if (table.equals("quotes")) {
 			cond = " AND from_wallet=0";
 		}
+		String order;
 		if (up) {
-			c = sqlDb.query(table, new String[] { "id", "position" }, "position < ?" + cond,
-					new String[] { currentPos.toString() }, null, null, "position DESC");
+			cond = "position < ?" + cond;
+			order = "position DESC";
 		} else {
-			c = sqlDb.query(table, new String[] { "id", "position" }, "position > ?" + cond,
-					new String[] { currentPos.toString() }, null, null, "position ASC");
+			cond = "position > ?" + cond;
+			order = "position ASC";
 		}
+		c = sqlDb.query(table, new String[] { "id", "position" }, cond,
+				new String[] { currentPos.toString() }, null, null, order);
 		if (!c.moveToFirst()) {
 			c.close();
 			sqlDb.endTransaction();
 			return;
 		}
-		Integer prevId = c.getInt(0);
-		Integer prevPos = c.getInt(1);
+		int prevId = c.getInt(0);
+		int prevPos = c.getInt(1);
 		c.close();
 
 		ContentValues cv = new ContentValues();

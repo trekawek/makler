@@ -1,17 +1,16 @@
 package pl.net.newton.Makler.ui.graph;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Locale;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.AbstractChart;
 import org.achartengine.chart.XYChart;
 import org.achartengine.model.SeriesSelection;
-
 import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.ui.graph.GraphView.GraphRange;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -26,6 +25,7 @@ import android.view.MotionEvent;
  * @author Igor Andruszkiewicz
  * 
  */
+@SuppressLint("ViewConstructor")
 public class MaklerGraphicalView extends GraphicalView {
 	private static final String TAG = "MaklerGraphicalView";
 
@@ -43,14 +43,14 @@ public class MaklerGraphicalView extends GraphicalView {
 
 	private PointF selectedPoint = null;
 
-	public MaklerGraphicalView(Context context, AbstractChart arg1, final EntryListWithIndexes entries,
-			final Quote quote, final int graphRange) {
-		super(context, arg1);
+	public MaklerGraphicalView(Context context, AbstractChart chart, final EntryListWithIndexes entries,
+			Quote quote, int graphRange) {
+		super(context, chart);
 
 		this.entries = entries;
 		this.quote = quote;
 		this.graphRange = graphRange;
-		this.mChart = arg1;
+		this.mChart = chart;
 
 		paint = new Paint();
 		paint.setAntiAlias(true);
@@ -74,11 +74,6 @@ public class MaklerGraphicalView extends GraphicalView {
 		} else {
 			double x1 = ((double) entries.getClose(0)) / 100;
 			double x2 = ((double) entries.getClose(entries.getLength() - 1)) / 100;
-
-			Date d = new Date(entries.getDate(0));
-			Log.d(TAG, "from: " + x1 + "@" + d);
-			Date d2 = new Date(entries.getDate(entries.getLength() - 1));
-			Log.d(TAG, "to: " + x2 + "@" + d2);
 
 			change = (x2 - x1) / x1 * 100;
 		}
@@ -109,7 +104,7 @@ public class MaklerGraphicalView extends GraphicalView {
 		}
 
 		if (selectedPoint != null) {
-			String valueToDraw = String.format("%.2f", selectedValue);
+			String valueToDraw = String.format(Locale.US, "%.2f", selectedValue);
 
 			canvas.drawText(valueToDraw, canvas.getWidth() - paint.measureText(valueToDraw), 50, paint);
 			canvas.drawCircle(selectedPoint.x, selectedPoint.y, 4, paint);

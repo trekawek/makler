@@ -6,8 +6,8 @@
         android:checked="false"
         android:enabled="true"
         android:icon="@drawable/refresh"
-        android:title="Odśwież"
-        android:visible="true" android:showAsAction="always"></item>
+        android:title="@string/refresh"
+        android:visible="true" android:showAsAction="ifRoom"></item>
 
     <item
         android:id="@+id/setWalletState"
@@ -15,7 +15,7 @@
         android:checked="false"
         android:enabled="true"
         android:icon="@drawable/edit"
-        android:title="Ustaw stan konta"
+        android:title="@string/set_balance"
         android:visible="true" android:showAsAction="always"></item>
 
 </menu>

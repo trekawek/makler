@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.ui.adapter;
 
 import java.util.List;
-
 import pl.net.newton.Makler.db.alert.Alert;
 import android.content.Context;
 import android.text.Spannable;

@@ -113,6 +113,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 		mHandler.post(mRefreshList);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void refresh() {
 		if (quotesDb == null) {
 			return;

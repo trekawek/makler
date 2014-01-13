@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string name="hello">Hello World, Makler!</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">Makler</string>
 	<string name="about_title">O Maklerze</string>
 	<string name="about_text">Program prezentuje aktualne notowania giełdowe.
@@ -14,15 +13,6 @@
 		aplikacji MobiTradeOne.</string>
 	<string name="about_url">Strona: http://newton.net.pl/makler/</string>
 
-	<string name="disable_ads_text">
-		Istnieje możliwość wyłączenia reklam w aplikacji. Koszt takiej
-		operacji to 5 zł, pieniądze można przesłać przy użyciu programu
-		PayPal.
-		<br />
-		W ten sposób zdobędziesz więcej miejsca na wyświetlanie notowań i
-		zachęcisz autora do dalszych prac :)
-	</string>
- 
 	<!-- GRAPH strings -->
 	<string name="d1">1D</string>
 	<string name="d5">5D</string>
@@ -34,5 +24,101 @@
 	<string name="graph_interactive_mode_on">Tryb interaktywny włączony.</string>
 	<string name="graph_interactive_mode_off">Tryb interaktywny wyłączony.</string>
 	<string name="graph_error_when_downloading">Wystąpił‚ błąd w pobieraniu wykresu.</string>
+	<string name="logo_maklera">Logo maklera</string>
+	<string name="we_do_recommend">Polecamy:</string>
+	<string name="taxity">Taxity</string>
+	<string name="new_order" tools:ignore="Typos">Nowe zlecenie</string>
+	<string name="no_orders">" Brak zleceń "</string>
+	<string name="click_to_modify_order">"Kliknij i przytrzymaj zlecenie, aby je zmienić lub anulować. "</string>
+	<string name="invoke_alert_when">Wywołaj alert gdy</string>
+	<string name="percent">%</string>
+	<string name="add_alert">Dodaj</string>
+	<string name="invoke_alert_for">"Uruchom alert dla "</string>
+	<string name="alert_if">" jeśli:"</string>
+	<string name="you_dont_have_any_papers">" W tej chwili nie posiadasz żadnych papierów.  "</string>
+	<string name="minus">-</string>
+	<string name="ask_limit">"[K] Limit: "</string>
+	<string name="ask_offers">"[K] Ofert: "</string>
+	<string name="ask_vol">"[K] Wolumen: "</string>
+	<string name="bid_limit">"[S] Limit: "</string>
+	<string name="bid_offers">"[S] Ofert: "</string>
+	<string name="bid_vol">"[S] Wolumen: "</string>
+	<string name="plus">+</string>
+	<string name="zero">0</string>
+	<string name="float_placeholder">1,12</string>
+	<string name="percent_float">1,5%</string>
+	<string name="one">1</string>
+	<string name="min_quote_placeholder">128,12</string>
+	<string name="quote_placeholder">130,94</string>
+	<string name="max_quote_placeholder">135,12</string>
+	<string name="datetime_placeholder">2010&#8211;06&#8211;04 12:35:32</string>
+	<string name="date_placeholder">2010&#8211;08&#8211;21</string>
+	<string name="integer_placeholder">32</string>
+	<string name="current_quote">Aktualny kurs:</string>
+	<string name="alerts">Alerty</string>
+	<string name="wallet">Portfel</string>
+	<string name="graph">Wykres</string>
+	<string name="session_date">"Data sesji: "</string>
+	<string name="to_date">Do dnia</string>
+	<string name="add_symbols">Dodaj symbole</string>
+	<string name="orders">Zlecenia</string>
+	<string name="account_state">Stan konta</string>
+	<string name="refresh">Odśwież</string>
+	<string name="settings">Ustawienia</string>
+	<string name="about">O programie</string>
+	<string name="quote_symbol_placeholder">KAR</string>
+	<string name="add_transaction">Dodaj transakcję</string>
+	<string name="add_order">Dodaj zlecenie</string>
+	<string name="avail_for_orders">"Dostępne dla zleceń: "</string>
+	<string name="hour">Godzina</string>
+	<string name="gpw">GPW</string>
+	<string name="amount">Ilość:</string>
+	<string name="quote_name_placeholder">Karen</string>
+	<string name="sms_code">Kod SMS</string>
+	<string name="base_account">"Konto podstawowe: "</string>
+	<string name="account">"Konto: "</string>
+	<string name="ask">"Kupno: "</string>
+	<string name="do_ask">Kupno</string>
+	<string name="do_bid">Sprzedaż</string>
+	<string name="ref_quote_short">"Kurs odn.: "</string>
+	<string name="ref_quote">"Kurs odniesienia: "</string>
+	<string name="quote_open_short">"Kurs otw.: "</string>
+	<string name="quote_open">"Kurs otwarcia: "</string>
+	<string name="quote">Kurs</string>
+	<string name="limit_act">Limit aktywacji</string>
+	<string name="limit_disclaimer">Limit ceny może zostać zaokrąglony w dół.</string>
+	<string name="limit">"Limit ceny: "</string>
+	<string name="list">Lista</string>
+	<string name="total_gain">"Łączny zysk: "</string>
+	<string name="mww">MWW</string>
+	<string name="amount_due">"Należności: "</string>
+	<string name="pcr">PCR</string>
+	<string name="peg">PEG</string>
+	<string name="pkc">PKC</string>
+	<string name="show_list">Pokaż listę</string>
+	<string name="owned_shares">Posiadane akcje</string>
+	<string name="proprietorships">Prawa własności:</string>
+	<string name="do_reset">Resetuj</string>
+	<string name="sell">sprzedaj</string>
+	<string name="state">"Stan: "</string>
+	<string name="tko">"TKO: "</string>
+	<string name="tko_percent">"TKO(%): "</string>
+	<string name="type">"Typ: "</string>
+	<string name="set_balance">Ustaw stan konta</string>
+	<string name="no_quotes">W tej chwili nie obserwujesz żadnych akcji. Naciśnij Menu aby dodać interesujące Cię papiery.</string>
+	<string name="share">Walor</string>
+	<string name="turnover_value_short">"Wart. obr.: "</string>
+	<string name="shares_value">"Wartość akcji: "</string>
+	<string name="turnover_value">"Wartość obrótu: "</string>
+	<string name="validity">Ważność</string>
+	<string name="turnover_vol_short">"Wol. obr.: "</string>
+	<string name="turnover_vol">"Wolumen obrotu: "</string>
+	<string name="enter_symbols">Wprowadź skrót nazwy papieru lub kilka skrótów oddzielonych spacjami.</string>
+	<string name="wuj">WUJ</string>
+	<string name="data_range">Zakres danych</string>
+	<string name="range_info">Zakres wykresu możesz zmieniać również gestami, przesuwając go w lewo i w prawo.</string>
+	<string name="done_and_cancelled">"zrealizowane i anulowane "</string>
+	<string name="done">"Zrealizowano: "</string>
+	<string name="gain">Zysk:</string>
 </resources>
 

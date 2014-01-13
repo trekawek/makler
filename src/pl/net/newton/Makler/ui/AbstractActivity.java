@@ -3,7 +3,6 @@ package pl.net.newton.Makler.ui;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import pl.net.newton.Makler.common.Configuration;
 import pl.net.newton.Makler.db.service.SqlProvider;
 import pl.net.newton.Makler.gpw.DefaultQuotesReceiver;

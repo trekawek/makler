@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.gpw.service.impl;
 
 import java.util.concurrent.Executors;
-
 import pl.net.newton.Makler.common.Configuration;
 import pl.net.newton.Makler.common.DataSource;
 import pl.net.newton.Makler.db.service.SqlProvider;

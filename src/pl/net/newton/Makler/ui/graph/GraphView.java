@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart;
 import org.achartengine.chart.BarChart.Type;
@@ -17,7 +16,6 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
-
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.symbol.Symbol;
@@ -26,6 +24,7 @@ import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.history.HistoryFilter;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.FullScreenGraph;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,6 +49,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("ViewConstructor")
 public class GraphView extends LinearLayout implements OnGestureListener, OnTouchListener {
 
 	public class GraphRange {

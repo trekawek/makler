@@ -15,9 +15,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="2dip"
-                android:text="2010-06-04 12:35:32"
+                android:text="@string/datetime_placeholder"
                 android:textColor="#FFFFFF"
-                android:textSize="10dip" >
+                android:textSize="12sp" >
             </TextView>
 
             <TextView
@@ -25,9 +25,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="7dip"
-                android:text="KAR"
+                android:text="@string/quote_symbol_placeholder"
                 android:textColor="#ffaa56"
-                android:textSize="30dip" >
+                android:textSize="30sp" >
             </TextView>
         </RelativeLayout>
 
@@ -46,9 +46,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:paddingLeft="2dip"
-                    android:text="128,12"
+                    android:text="@string/min_quote_placeholder"
                     android:textColor="#FFFFFF"
-                    android:textSize="10dip" >
+                    android:textSize="12sp" >
                 </TextView>
 
                 <TextView
@@ -57,9 +57,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:paddingTop="7dip"
-                    android:text="99,99"
+                    android:text="@string/quote_placeholder"
                     android:textColor="#FFFFFF"
-                    android:textSize="30dip" >
+                    android:textSize="30sp" >
                 </TextView>
 
                 <TextView
@@ -69,15 +69,15 @@
                     android:layout_gravity="right"
                     android:paddingLeft="2dip"
                     android:paddingTop="41dip"
-                    android:text="135,12"
+                    android:text="@string/max_quote_placeholder"
                     android:textColor="#FFFFFF"
-                    android:textSize="10dip" >
+                    android:textSize="12sp" >
                 </TextView>
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="70px"
-                android:layout_height="30px"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="6dip"
                 android:background="@drawable/bluebox" >
@@ -86,11 +86,11 @@
                     android:id="@+id/quoteDetailZmiana"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:paddingLeft="5px"
-                    android:paddingTop="4px"
-                    android:text="1,5%"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/percent_float"
                     android:textColor="#FFFFFF"
-                    android:textSize="16px"
+                    android:textSize="16sp"
                     android:textStyle="bold" >
                 </TextView>
             </LinearLayout>
@@ -106,15 +106,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingRight="2dip"
-            android:text="Kurs odniesienia: "
-            android:textSize="12dip" >
+            android:text="@string/ref_quote"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailKursOdn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1,12" >
+            android:text="@string/float_placeholder" >
         </TextView>
 
         <TextView
@@ -122,15 +122,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingRight="2dip"
-            android:text="Wartość obrótu: "
-            android:textSize="12dip" >
+            android:text="@string/turnover_value"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailWartosc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2,23" >
+            android:text="@string/float_placeholder" >
         </TextView>
     </TableRow>
 

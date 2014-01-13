@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.gpw.model;
 
 import java.math.BigDecimal;
-
 import pl.net.newton.Makler.db.symbol.Symbol;
 
 public class Paper {

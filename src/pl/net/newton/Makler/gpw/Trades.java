@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.gpw;
 
 import java.util.List;
-
 import pl.net.newton.Makler.gpw.ex.GpwException;
 import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
 import pl.net.newton.Makler.gpw.model.Finances;

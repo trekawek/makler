@@ -14,13 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
+import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.symbol.Symbol;
@@ -127,9 +126,9 @@ public class MbankClient {
 		Element dataset = doc.createElement("dataset");
 		dataset.setAttribute("name", "pRdfPapiery");
 		dataset.setAttribute("ileOfert", "1");
-		dataset.setAttribute("pac", "0");
-		dataset.setAttribute("pact", "0");
-		dataset.setAttribute("paco", "0");
+		dataset.setAttribute("pac", ctx.getString(R.string.zero));
+		dataset.setAttribute("pact", ctx.getString(R.string.zero));
+		dataset.setAttribute("paco", ctx.getString(R.string.zero));
 		for (MbankPaper p : papers) {
 			if (p != null) {
 				Element pEl = doc.createElement("pRdfPapiery");
@@ -194,7 +193,7 @@ public class MbankClient {
 		papers = new ArrayList<MbankPaper>();
 		while (m.find()) {
 			String code = m.group(1).substring(3);
-			String trimmedName = m.group(2).split("-")[0];
+			String trimmedName = m.group(2).split(ctx.getString(R.string.minus))[0];
 			if (symbolByCode.containsKey(code)) {
 				Symbol s = symbolByCode.get(code);
 				papers.add(new MbankPaper(s.getSymbol(), m.group(2), false, code));

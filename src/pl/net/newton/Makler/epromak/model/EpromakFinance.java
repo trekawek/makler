@@ -29,7 +29,7 @@ public class EpromakFinance extends AbstractEpromakModel {
 	@Override
 	public String get(String name) {
 		if(empty) {
-			return "0";
+			return "-";
 		} else {
 			return super.get(name);
 		}

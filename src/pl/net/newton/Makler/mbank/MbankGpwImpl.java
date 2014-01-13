@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 import android.content.Context;
 import android.util.Log;
 import pl.net.newton.Makler.common.Configuration;

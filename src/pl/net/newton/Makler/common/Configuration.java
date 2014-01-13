@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.common;
 
 import java.math.BigDecimal;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

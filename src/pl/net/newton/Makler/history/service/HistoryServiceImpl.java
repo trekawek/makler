@@ -2,7 +2,6 @@ package pl.net.newton.Makler.history.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.history.HistoryFilter;

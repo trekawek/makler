@@ -271,7 +271,7 @@ public class Wallet extends AbstractActivity implements QuotesListener,
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String value = input.getText().toString();
 				if (value.length() == 0)
-					value = "0";
+					value = getString(R.string.zero);
 				config.setWalletAccount(value);
 				refreshList();
 			}

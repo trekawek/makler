@@ -2,7 +2,6 @@ package pl.net.newton.Makler.db.alert;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import android.content.ContentValues;

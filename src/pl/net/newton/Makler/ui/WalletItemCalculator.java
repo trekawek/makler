@@ -191,7 +191,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 		walletItemSymbol.setText(quote.getSymbol());
 		walletItemName.setText(quote.getName());
 		if (quote.getKurs() == null) {
-			walletItemKurs.setText("0");
+			walletItemKurs.setText(R.string.zero);
 		} else {
 			walletItemKurs.setText(quote.getKurs().toString());
 		}
@@ -225,6 +225,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 	/**
 	 * @param quote
 	 */
+	@SuppressWarnings("deprecation")
 	public void updateZmianaBackground(BigDecimal value) {
 		Resources res = getResources();
 		View zmiana = findViewById(R.id.quoteDetailZmiana);

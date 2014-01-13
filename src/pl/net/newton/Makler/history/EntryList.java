@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class EntryList implements Serializable {
 	private static final long serialVersionUID = -8335210038807291253L;
@@ -30,9 +31,9 @@ public class EntryList implements Serializable {
 
 	private int i;
 
-	private static final DateFormat DATE_WITH_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
+	private static final DateFormat DATE_WITH_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
 
-	private static final DateFormat DATE_WITHOUT_FORMAT = new SimpleDateFormat("yyyyMMdd");
+	private static final DateFormat DATE_WITHOUT_FORMAT = new SimpleDateFormat("yyyyMMdd", Locale.US);
 
 	private static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
@@ -40,10 +41,7 @@ public class EntryList implements Serializable {
 
 	public EntryList(int length, boolean intraday) {
 		date = new long[length];
-		// open = new int[length];
 		close = new int[length];
-		// low = new int[length];
-		// high = new int[length];
 		graphIndex = new int[length];
 		vol = new long[length];
 		this.intraday = intraday;

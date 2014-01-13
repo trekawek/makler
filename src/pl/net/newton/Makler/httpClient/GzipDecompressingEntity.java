@@ -3,7 +3,6 @@ package pl.net.newton.Makler.httpClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.HttpEntityWrapper;
 

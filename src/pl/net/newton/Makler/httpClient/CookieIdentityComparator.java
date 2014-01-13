@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.httpClient;
 
 import java.util.Comparator;
-
 import org.apache.http.cookie.Cookie;
 
 public class CookieIdentityComparator implements Comparator<Cookie> {

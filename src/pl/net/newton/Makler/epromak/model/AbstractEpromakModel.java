@@ -3,7 +3,6 @@ package pl.net.newton.Makler.epromak.model;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-
 import org.w3c.dom.Element;
 
 public abstract class AbstractEpromakModel {

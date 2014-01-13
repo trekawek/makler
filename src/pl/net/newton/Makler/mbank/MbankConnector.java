@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,7 +25,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
+import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.gpw.ex.GpwException;
 import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
 import android.util.Log;
@@ -123,7 +122,7 @@ public class MbankConnector extends pl.net.newton.Makler.httpClient.Connector {
 		Boolean thr = false;
 		try {
 			err = (Element) doc.getElementsByTagName("ERR").item(0);
-			if (err.hasAttribute("code") && !err.getAttribute("code").equals("0"))
+			if (err.hasAttribute("code") && !err.getAttribute("code").equals(R.string.zero))
 				thr = true;
 		} catch (Exception e) {
 			return null;

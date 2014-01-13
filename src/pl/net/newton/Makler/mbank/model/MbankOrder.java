@@ -3,10 +3,8 @@ package pl.net.newton.Makler.mbank.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.gpw.model.Order.LimitType;
 import pl.net.newton.Makler.gpw.model.Order.Validity;

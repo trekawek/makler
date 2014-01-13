@@ -14,19 +14,16 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import pl.net.newton.Makler.common.DataSource;
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.db.symbol.Symbol;

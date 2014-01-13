@@ -59,6 +59,7 @@ public class WalletAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@SuppressWarnings("deprecation")
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {

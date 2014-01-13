@@ -15,9 +15,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="2dip"
-                android:text="2010-06-04 12:35:32"
+                android:text="@string/datetime_placeholder"
                 android:textColor="#FFFFFF"
-                android:textSize="10dip" >
+                android:textSize="12sp" >
             </TextView>
 
             <TextView
@@ -25,9 +25,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="7dip"
-                android:text="KAR"
+                android:text="@string/quote_symbol_placeholder"
                 android:textColor="#ffaa56"
-                android:textSize="30dip" >
+                android:textSize="30sp" >
             </TextView>
 
             <TextView
@@ -36,9 +36,9 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="2dip"
                 android:paddingTop="41dip"
-                android:text="Karen"
+                android:text="@string/quote_name_placeholder"
                 android:textColor="#0099CC"
-                android:textSize="10dip" >
+                android:textSize="12sp" >
             </TextView>
         </RelativeLayout>
 
@@ -57,9 +57,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:paddingLeft="2dip"
-                    android:text="128,12"
+                    android:text="@string/min_quote_placeholder"
                     android:textColor="#FFFFFF"
-                    android:textSize="10dip" >
+                    android:textSize="12sp" >
                 </TextView>
 
                 <TextView
@@ -68,9 +68,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:paddingTop="7dip"
-                    android:text="99,99"
+                    android:text="@string/quote_placeholder"
                     android:textColor="#FFFFFF"
-                    android:textSize="30dip" >
+                    android:textSize="30sp" >
                 </TextView>
 
                 <TextView
@@ -80,15 +80,15 @@
                     android:layout_gravity="right"
                     android:paddingLeft="2dip"
                     android:paddingTop="41dip"
-                    android:text="135,12"
+                    android:text="@string/max_quote_placeholder"
                     android:textColor="#FFFFFF"
-                    android:textSize="10dip" >
+                    android:textSize="12sp" >
                 </TextView>
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="70px"
-                android:layout_height="30px"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="6dip"
                 android:background="@drawable/bluebox" >
@@ -97,11 +97,11 @@
                     android:id="@+id/quoteDetailZmiana"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:paddingLeft="5px"
-                    android:paddingTop="4px"
-                    android:text="1,5%"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/percent_float"
                     android:textColor="#FFFFFF"
-                    android:textSize="16px"
+                    android:textSize="16sp"
                     android:textStyle="bold" >
                 </TextView>
             </LinearLayout>
@@ -117,15 +117,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingRight="2dip"
-            android:text="Kurs odniesienia: "
-            android:textSize="12dip" >
+            android:text="@string/ref_quote"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailKursOdn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1,12" >
+            android:text="@string/float_placeholder" >
         </TextView>
 
         <TextView
@@ -133,15 +133,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingLeft="10dip"
-            android:text="[K] Ofert: "
-            android:textSize="12dip" >
+            android:text="@string/ask_offers"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailOfertK"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1" >
+            android:text="@string/one" >
         </TextView>
     </TableRow>
 
@@ -155,15 +155,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingRight="2dip"
-            android:text="Kurs otwarcia: "
-            android:textSize="12dip" >
+            android:text="@string/quote_open"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailKursOtw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2,23" >
+            android:text="@string/float_placeholder" >
         </TextView>
 
         <TextView
@@ -171,15 +171,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingLeft="10dip"
-            android:text="[K] Wolumen: "
-            android:textSize="12dip" >
+            android:text="@string/ask_vol"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailWolumenK"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1" >
+            android:text="@string/one" >
         </TextView>
     </TableRow>
 
@@ -192,15 +192,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingRight="2dip"
-            android:text="TKO: "
-            android:textSize="12dip" >
+            android:text="@string/tko"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailTko"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1,12" >
+            android:text="@string/float_placeholder" >
         </TextView>
 
         <TextView
@@ -208,15 +208,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingLeft="10dip"
-            android:text="[K] Limit: "
-            android:textSize="12dip" >
+            android:text="@string/ask_limit"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailLimitK"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1" >
+            android:text="@string/one" >
         </TextView>
     </TableRow>
 
@@ -229,15 +229,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingRight="2dip"
-            android:text="TKO(%): "
-            android:textSize="12dip" >
+            android:text="@string/tko_percent"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailTkoProcent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2,23" >
+            android:text="@string/float_placeholder" >
         </TextView>
 
         <TextView
@@ -245,15 +245,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingLeft="10dip"
-            android:text="[S] Limit: "
-            android:textSize="12dip" >
+            android:text="@string/bid_limit"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailLimitS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1" >
+            android:text="@string/one" >
         </TextView>
     </TableRow>
 
@@ -272,15 +272,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingLeft="10dip"
-            android:text="[S] Wolumen: "
-            android:textSize="12dip" >
+            android:text="@string/bid_vol"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailWolumenS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1" >
+            android:text="@string/one" >
         </TextView>
     </TableRow>
 
@@ -299,72 +299,60 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingLeft="10dip"
-            android:text="[S] Ofert: "
-            android:textSize="12dip" >
+            android:text="@string/bid_offers"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
             android:id="@+id/quoteDetailOfertS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1" >
+            android:text="@string/one" >
         </TextView>
     </TableRow>
 
     <TableRow
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dip" >
 
-        <LinearLayout
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingRight="2dip"
+            android:text="@string/turnover_vol"
+            android:textSize="12sp" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailWolumen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_span="4"
-            android:paddingLeft="4dip" >
-
-            <TextView
-                android:layout_width="100dip"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:paddingRight="2dip"
-                android:text="Wolumen obrotu: "
-                android:textSize="12dip" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/quoteDetailWolumen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1,12" >
-            </TextView>
-        </LinearLayout>
+            android:text="@string/float_placeholder" >
+        </TextView>
     </TableRow>
 
     <TableRow
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dip" >
 
-        <LinearLayout
+        <TextView
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingRight="2dip"
+            android:text="@string/turnover_value"
+            android:textSize="12sp" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/quoteDetailWartosc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_span="4"
-            android:paddingLeft="4dip" >
-
-            <TextView
-                android:layout_width="100dip"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:paddingRight="2dip"
-                android:text="Wartość obrótu: "
-                android:textSize="12dip" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/quoteDetailWartosc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2,23" >
-            </TextView>
-        </LinearLayout>
+            android:text="@string/float_placeholder" >
+        </TextView>
     </TableRow>
 
     <LinearLayout

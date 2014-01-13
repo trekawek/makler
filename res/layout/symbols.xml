@@ -2,7 +2,7 @@
 <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical">
 
 <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/symbolsSearchRow">
-<EditText android:id="@+id/findSymbolName" android:layout_weight="10" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:inputType="text|textCapCharacters"></EditText>
+<EditText android:id="@+id/findSymbolName" android:layout_weight="10" android:layout_width="0dip" android:layout_height="wrap_content" android:singleLine="true" android:inputType="text|textCapCharacters"></EditText>
 
 <!-- 
 <Button android:text="Wyszukaj" android:id="@+id/findSymbol"

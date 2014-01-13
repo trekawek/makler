@@ -37,6 +37,7 @@ public class AlertChecker {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void launchAlert(Alert a) {
 		alertsDb.markAlertAsUsed(a);
 		int icon;

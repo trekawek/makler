@@ -5,11 +5,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import android.content.Context;
 import android.provider.Settings.Secure;
 import android.util.Log;
-
 import pl.net.newton.Makler.common.Configuration;
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
@@ -26,7 +24,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 	private static final String URL = "http://makler.newton.net.pl:8080/";
 
 	private Context context;
-	
+
 	private Connector connector;
 
 	public DefaultQuotesReceiver(Context ctx) {
@@ -101,8 +99,8 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 				String[] a = line.split("\\|");
 
 				SymbolBuilder builder = new SymbolBuilder();
-				builder.setSymbol(a[0]).setName(a[1]).setIsIndex(a[2].equals("1"))
-						.setDeleted(a[3].equals("1")).setCode(a[4]);
+				builder.setSymbol(a[0]).setName(a[1]).setIsIndex(a[2].equals("1")).setDeleted(a[3].equals("1"))
+						.setCode(a[4]);
 				symbols.add(builder.build());
 			}
 
@@ -158,7 +156,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 		} catch (ArrayIndexOutOfBoundsException e) {
 		}
 
-		if(Configuration.DEBUG_UPDATES) {
+		if (Configuration.DEBUG_UPDATES) {
 			builder.setUpdate(new Date());
 		}
 		return builder.build();

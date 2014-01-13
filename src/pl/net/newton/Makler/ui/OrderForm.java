@@ -286,6 +286,7 @@ public class OrderForm extends AbstractActivity implements OnCheckedChangeListen
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.orderFormSesja:
@@ -419,9 +420,9 @@ public class OrderForm extends AbstractActivity implements OnCheckedChangeListen
 		if (dataSource == DataSource.mbank) {
 			String[] waz = null;
 			if (o.getDoDnia() != null)
-				waz = o.getDoDnia().split("-");
+				waz = o.getDoDnia().split(getString(R.string.minus));
 			else
-				waz = o.getSesja().split("-");
+				waz = o.getSesja().split(getString(R.string.minus));
 			doDniaYear = Integer.valueOf(waz[0]);
 			doDniaMonth = Integer.valueOf(waz[1]);
 			doDniaDay = Integer.valueOf(waz[2]);

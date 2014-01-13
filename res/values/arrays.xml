@@ -81,7 +81,7 @@
 		<item>zrealizowano</item>
 		<item>zamknięto</item>
 		<item>anulowano</item>
-		<item>anulowanie...</item>
+		<item>anulowanie&#8230;</item>
 		<item>modyfikowanie</item>
 		<item>redukowanie</item>
 	</string-array>
@@ -112,11 +112,5 @@
 		<item>1 rok</item>
 		<item>2 lata</item>
 		<item>zawsze</item>
-	</string-array>
-	
-	
-	<string-array name="graph_types">
-		<item>liniowy</item>
-		<item>świeczkowy</item>
 	</string-array>
 </resources>

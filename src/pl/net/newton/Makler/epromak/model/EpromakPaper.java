@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.epromak.model;
 
 import java.util.Hashtable;
-
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolBuilder;
 

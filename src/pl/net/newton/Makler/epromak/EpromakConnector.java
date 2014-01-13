@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -24,7 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
-
+import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.common.DataSource;
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.gpw.ex.GpwException;
@@ -159,7 +158,7 @@ public class EpromakConnector extends pl.net.newton.Makler.httpClient.Connector 
 		Boolean thr = false;
 		try {
 			err = (Element) doc.getElementsByTagName("ERR").item(0);
-			if (err.hasAttribute("code") && !err.getAttribute("code").equals("0"))
+			if (err.hasAttribute("code") && !err.getAttribute("code").equals(R.string.zero))
 				thr = true;
 		} catch (Exception e) {
 			return null;

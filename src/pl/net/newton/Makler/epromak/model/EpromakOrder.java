@@ -3,7 +3,6 @@ package pl.net.newton.Makler.epromak.model;
 import java.math.BigDecimal;
 import java.util.Hashtable;
 import java.util.Map;
-
 import pl.net.newton.Makler.gpw.model.Order.LimitType;
 import pl.net.newton.Makler.gpw.model.Order.Validity;
 

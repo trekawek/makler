@@ -1,9 +1,46 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/addQuote" android:title="Dodaj symbole" android:icon="@drawable/add" android:showAsAction="always"></item>
-<item android:id="@+id/showOrders" android:title="Zlecenia" android:icon="@drawable/orders" android:showAsAction="always"></item>
-<item android:id="@+id/showAccount" android:title="Stan konta" android:icon="@drawable/account_state" android:showAsAction="always"></item>
-<item android:id="@+id/showWallet" android:title="Portfel" android:icon="@drawable/wallet" android:showAsAction="always"></item>
-<item android:id="@+id/refreshQuotes" android:title="Odśwież" android:icon="@drawable/refresh" android:showAsAction="ifRoom"></item>
-<item android:id="@+id/showSettings" android:title="Ustawienia" android:icon="@drawable/settings" android:showAsAction="ifRoom"></item>
-<item android:id="@+id/showAbout" android:title="O programie" android:icon="@drawable/about" android:showAsAction="ifRoom"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/addQuote"
+        android:icon="@drawable/add"
+        android:showAsAction="ifRoom"
+        android:title="@string/add_symbols">
+    </item>
+    <item
+        android:id="@+id/showOrders"
+        android:icon="@drawable/orders"
+        android:showAsAction="ifRoom"
+        android:title="@string/orders">
+    </item>
+    <item
+        android:id="@+id/showAccount"
+        android:icon="@drawable/account_state"
+        android:showAsAction="always"
+        android:title="@string/account_state">
+    </item>
+    <item
+        android:id="@+id/showWallet"
+        android:icon="@drawable/wallet"
+        android:showAsAction="always"
+        android:title="@string/wallet">
+    </item>
+    <item
+        android:id="@+id/refreshQuotes"
+        android:icon="@drawable/refresh"
+        android:showAsAction="ifRoom"
+        android:title="@string/refresh">
+    </item>
+    <item
+        android:id="@+id/showSettings"
+        android:icon="@drawable/settings"
+        android:showAsAction="ifRoom"
+        android:title="@string/settings">
+    </item>
+    <item
+        android:id="@+id/showAbout"
+        android:icon="@drawable/about"
+        android:showAsAction="ifRoom"
+        android:title="@string/about">
+    </item>
+
 </menu>

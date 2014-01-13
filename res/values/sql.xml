@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string-array name="createDB">
-    <item>
-CREATE TABLE symbols (
+
+    <string-array name="createDB">
+        <item>CREATE TABLE symbols (
 	id INTEGER PRIMARY KEY,
 	symbol TEXT,
 	name TEXT,
 	is_index INTEGER,
 	deleted INTEGER
-);
-    </item>
-    <item>
-CREATE TABLE quotes (
+);</item>
+        <item>CREATE TABLE quotes (
 	id INTEGER PRIMARY KEY,
 	symbol_id INTEGER,
 	`update` TEXT,
@@ -25,10 +23,8 @@ CREATE TABLE quotes (
 	tko_procent TEXT,
 	wolumen TEXT,
 	wartosc TEXT
-);
-    </item>
-	<item>
-CREATE TABLE alerts (
+);</item>
+        <item>CREATE TABLE alerts (
 	id INTEGER PRIMARY KEY,
 	quote_id INTEGER,
 	subject TEXT,
@@ -37,110 +33,70 @@ CREATE TABLE alerts (
 	percent INTEGER,
 	base_value TEXT,
 	used INTEGER
-);
-    </item>
-  </string-array>
-  
-  <string-array name="update_1_2">
-    <item>ALTER TABLE quotes ADD k_ofert TEXT;</item>
-    <item>ALTER TABLE quotes ADD k_wol TEXT;</item>
-    <item>ALTER TABLE quotes ADD k_lim TEXT;</item>
-    <item>ALTER TABLE quotes ADD s_lim TEXT;</item>
-    <item>ALTER TABLE quotes ADD s_wol TEXT;</item>
-    <item>ALTER TABLE quotes ADD s_ofert TEXT;</item>
-  </string-array>
-  
-  <string-array name="update_2_3">
-    <item>ALTER TABLE quotes ADD position INTEGER;</item>
-    <item>CREATE TABLE wallet_items (
+);</item>
+    </string-array>
+    <string-array name="update_1_2">
+        <item>ALTER TABLE quotes ADD k_ofert TEXT;</item>
+        <item>ALTER TABLE quotes ADD k_wol TEXT;</item>
+        <item>ALTER TABLE quotes ADD k_lim TEXT;</item>
+        <item>ALTER TABLE quotes ADD s_lim TEXT;</item>
+        <item>ALTER TABLE quotes ADD s_wol TEXT;</item>
+        <item>ALTER TABLE quotes ADD s_ofert TEXT;</item>
+    </string-array>
+    <string-array name="update_2_3">
+        <item>ALTER TABLE quotes ADD position INTEGER;</item>
+        <item>CREATE TABLE wallet_items (
 	id INTEGER PRIMARY KEY,
 	symbol_id INTEGER,
 	quantity INTEGER,
 	avg_buy TEXT,
 	quote TEXT,
 	position INTEGER);</item>
-  </string-array>
-  
-  <string-array name="update_3_4">
-    <item>ALTER TABLE symbols ADD code TEXT;</item>
-  </string-array>
-  
-  <string-array name="update_4_5">
-    <item>ALTER TABLE quotes ADD from_wallet INTEGER DEFAULT 0;</item>
-    <item>ALTER TABLE wallet_items ADD quote_id INTEGER;</item>
-  </string-array>
-  
-  <string-array name="update_5_6">
-    <item>ALTER TABLE wallet_items ADD total_commision TEXT;</item>
-  </string-array>
-  
-  <string-array name="update_6_7">
-    <item>CREATE INDEX IF NOT EXISTS symbols_sym ON symbols(symbol);</item>
-  </string-array>
-  
-  <string-array name="dropDB">
-    <item>DROP TABLE symbols;</item>
-    <item>DROP TABLE quotes;</item>
-    <item>DROP TABLE alerts;</item>
-    <item>DROP TABLE wallet_items;</item>
-  </string-array>
+    </string-array>
+    <string-array name="update_3_4">
+        <item>ALTER TABLE symbols ADD code TEXT;</item>
+    </string-array>
+    <string-array name="update_4_5">
+        <item>ALTER TABLE quotes ADD from_wallet INTEGER DEFAULT 0;</item>
+        <item>ALTER TABLE wallet_items ADD quote_id INTEGER;</item>
+    </string-array>
+    <string-array name="update_5_6">
+        <item>ALTER TABLE wallet_items ADD total_commision TEXT;</item>
+    </string-array>
+    <string-array name="update_6_7">
+        <item>CREATE INDEX IF NOT EXISTS symbols_sym ON symbols(symbol);</item>
+    </string-array>
 
-  <string name="getWalletItems">
-SELECT wallet_items.*, symbols.symbol, symbols.name
+    <string name="getWalletItems">SELECT wallet_items.*, symbols.symbol, symbols.name
 FROM wallet_items
 LEFT JOIN quotes ON wallet_items.quote_id = quotes.id
-LEFT JOIN symbols ON symbols.id = quotes.symbol_id ORDER BY position;
-  </string>
-  
-  <string name="getWalletItemBySymbol">
-SELECT wallet_items.*, symbols.symbol, symbols.name
+LEFT JOIN symbols ON symbols.id = quotes.symbol_id ORDER BY position;</string>
+    <string name="getWalletItemBySymbol">SELECT wallet_items.*, symbols.symbol, symbols.name
 FROM wallet_items
 LEFT JOIN quotes ON wallet_items.quote_id = quotes.id
 LEFT JOIN symbols ON symbols.id = quotes.symbol_id
-WHERE symbols.id = ?; 
-  </string>
-
-  <string name="getQuotes">
-SELECT quotes.*, symbols.symbol, symbols.name, symbols.is_index
+WHERE symbols.id = ?; </string>
+    <string name="getQuotes">SELECT quotes.*, symbols.symbol, symbols.name, symbols.is_index
 FROM quotes
 LEFT JOIN symbols ON symbols.id = quotes.symbol_id
 WHERE quotes.from_wallet = 0
-ORDER BY position;
-  </string>
-  
-  <string name="getAllQuotes">
-SELECT quotes.*, symbols.symbol, symbols.name, symbols.is_index
+ORDER BY position;</string>
+    <string name="getAllQuotes">SELECT quotes.*, symbols.symbol, symbols.name, symbols.is_index
 FROM quotes
 LEFT JOIN symbols ON symbols.id = quotes.symbol_id
-ORDER BY position;
-  </string>
-  
-  <string name="quoteBySymbol">
-SELECT quotes.*, symbols.symbol, symbols.name, symbols.is_index
+ORDER BY position;</string>
+    <string name="quoteBySymbol">SELECT quotes.*, symbols.symbol, symbols.name, symbols.is_index
 FROM quotes
 LEFT JOIN symbols ON symbols.id = quotes.symbol_id
-WHERE symbols.symbol = ?;  
-  </string>
-  
-  <string name="quoteById">
-SELECT quotes.*, symbols.symbol, symbols.name, symbols.is_index
+WHERE symbols.symbol = ?;  </string>
+    <string name="quoteById">SELECT quotes.*, symbols.symbol, symbols.name, symbols.is_index
 FROM quotes
 LEFT JOIN symbols ON symbols.id = quotes.symbol_id
-WHERE quotes.id = ?;  
-  </string>
-  
-  <string name="deleteQuote">
-DELETE FROM quotes WHERE id = ?;
-  </string>
-  
-  <string name="symbolsEmpty">
-SELECT COUNT(id) FROM symbols;
-  </string>
-  
-  <string name="getSymbolDuplicates">
-SELECT s2.id AS old_id, s1.id AS new_id
+WHERE quotes.id = ?;  </string>
+    <string name="symbolsEmpty">SELECT COUNT(id) FROM symbols;</string>
+    <string name="getSymbolDuplicates">SELECT s2.id AS old_id, s1.id AS new_id
 FROM symbols s1
 LEFT JOIN symbols s2 ON s1.symbol = s2.symbol AND s1.id != s2.id
-WHERE s1.deleted = 0 AND s2.id IS NOT NULL;
-  </string>
+WHERE s1.deleted = 0 AND s2.id IS NOT NULL;</string>
+
 </resources>
