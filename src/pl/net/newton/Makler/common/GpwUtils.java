@@ -3,11 +3,14 @@ package pl.net.newton.Makler.common;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public class GpwUtils {
+public final class GpwUtils {
 	private static final TimeZone WARSAW_TIMEZONE = TimeZone.getTimeZone("Europe/Warsaw");
 
+	private GpwUtils() {
+	}
+
 	public static boolean gpwActive() {
-		if(Configuration.DEBUG_UPDATES) {
+		if (Configuration.DEBUG_UPDATES) {
 			return true;
 		}
 

@@ -114,7 +114,7 @@ public class QuotesDb {
 		DbHelper.putToCv(cv, "kurs_max", quote.getKursMax());
 		DbHelper.putToCv(cv, "wartosc", quote.getWartosc());
 		if (quote.getUpdate() != null)
-			DbHelper.putToCv(cv, "`update`", DateFormatUtils.formatHhMmSs(quote.getUpdate()));
+			DbHelper.putToCv(cv, "`update`", DateFormatUtils.formatTime(quote.getUpdate()));
 		else
 			DbHelper.putToCv(cv, "`update`", null);
 		DbHelper.putToCv(cv, "kurs_otw", quote.getKursOtw());

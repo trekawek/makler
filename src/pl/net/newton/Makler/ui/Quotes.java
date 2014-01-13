@@ -241,7 +241,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (config.getDataSourceType().isSupportTrades()) {
+		if (config.getDataSourceType().doesSupportTrades()) {
 			menu.getItem(1).setVisible(true);
 			menu.getItem(2).setVisible(true);
 		} else {
@@ -329,7 +329,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		boolean doUpdate = false;
 		
 		final String lastSymbolsUpdated = config.getLastSymbolsUpdated();
-		final String date = DateFormatUtils.formatYyyyMmDd();
+		final String date = DateFormatUtils.formatCurrentDate();
 		String sinceDate = "";
 		if (!date.equals(lastSymbolsUpdated)) {
 			doUpdate = true;
@@ -377,7 +377,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		List<Symbol> symbols;
 		symbols = quotesReceiver.getSymbols();
 		if (symbols != null) {
-			config.setLastSymbolsUpdated(DateFormatUtils.formatYyyyMmDd());
+			config.setLastSymbolsUpdated(DateFormatUtils.formatCurrentDate());
 			symbolsDb.updateSymbols(symbols);
 		}
 	}

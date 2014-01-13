@@ -5,22 +5,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
-public class DateFormatUtils {
-	private static final DateFormat YYYY_MM_DD = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+public final class DateFormatUtils {
+	private static final DateFormat YYYY_MM_DD = new SimpleDateFormat("yyyy-MM-dd", LocaleUtils.LOCALE);
 
-	private static final DateFormat HH_MM_SS = new SimpleDateFormat("HH:mm:ss", Locale.US);
+	private static final DateFormat HH_MM_SS = new SimpleDateFormat("HH:mm:ss", LocaleUtils.LOCALE);
 
-	public static String formatYyyyMmDd() {
-		return formatYyyyMmDd(new Date());
+	private DateFormatUtils() {
 	}
 
-	public static Date parseYyyyMmSs(String s) throws ParseException {
+	public static String formatCurrentDate() {
+		return formatDate(new Date());
+	}
+
+	public static Date parseDate(String s) throws ParseException {
 		return YYYY_MM_DD.parse(s);
 	}
 
-	public static String formatYyyyMmDd(Date date) {
+	public static String formatDate(Date date) {
 		if (date == null) {
 			return "-";
 		} else {
@@ -28,7 +30,7 @@ public class DateFormatUtils {
 		}
 	}
 
-	public static String formatHhMmSs(Calendar date) {
+	public static String formatTime(Calendar date) {
 		if (date == null) {
 			return "-";
 		} else {
@@ -36,13 +38,13 @@ public class DateFormatUtils {
 		}
 	}
 
-	public static Date parseHhMmSs(String s) throws ParseException {
+	public static Date parseTime(String s) throws ParseException {
 		return HH_MM_SS.parse(s);
 	}
 
-	public static Date parseHhMmSsOrNull(String string) {
+	public static Date safeParseTime(String string) {
 		try {
-			return parseHhMmSs(string);
+			return parseTime(string);
 		} catch (Exception e) {
 			return null;
 		}

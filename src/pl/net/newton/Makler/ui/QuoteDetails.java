@@ -152,7 +152,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 			setTextView(R.id.quoteDetailOfertS, quote.getsOfert());
 
 		}
-		setTextView(R.id.quoteDetailUpdate, DateFormatUtils.formatHhMmSs(quote.getUpdate()));
+		setTextView(R.id.quoteDetailUpdate, DateFormatUtils.formatTime(quote.getUpdate()));
 		setTextView(R.id.quoteDetailWartosc, quote.getWartosc());
 
 		Resources res = getResources();

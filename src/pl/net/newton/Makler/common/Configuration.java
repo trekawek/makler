@@ -116,7 +116,7 @@ public class Configuration {
 	public DataSource getDataSourceType() {
 		String type = pref.getString(DATA_SOURCE_TYPE, null);
 		if (type == null || !getOwnDataSource()) {
-			return DataSource.makler;
+			return DataSource.MAKLER;
 		} else {
 			try {
 				return DataSource.valueOf(type);
@@ -124,7 +124,7 @@ public class Configuration {
 				edit.putString(DATA_SOURCE_TYPE, null);
 				edit.putBoolean(OWN_DATA_SOURCE, false);
 				edit.commit();
-				return DataSource.makler;
+				return DataSource.MAKLER;
 			}
 		}
 	}

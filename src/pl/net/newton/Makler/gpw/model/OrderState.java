@@ -2,7 +2,7 @@ package pl.net.newton.Makler.gpw.model;
 
 import android.content.Context;
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.common.LocaleUtil;
+import pl.net.newton.Makler.common.LocaleUtils;
 
 public class OrderState {
 	private String id;
@@ -38,7 +38,7 @@ public class OrderState {
 		if (state != null)
 			return state == State.WPROW || state == State.ZAKSIEG;
 		else if (customState != null)
-			return customState.toLowerCase(LocaleUtil.LOCALE).equals("przyjęte");
+			return customState.toLowerCase(LocaleUtils.LOCALE).equals("przyjęte");
 		else
 			return false;
 	}
@@ -73,6 +73,6 @@ public class OrderState {
 	}
 
 	private String formatState(String state) {
-		return state.toLowerCase(LocaleUtil.LOCALE);
+		return state.toLowerCase(LocaleUtils.LOCALE);
 	}
 }

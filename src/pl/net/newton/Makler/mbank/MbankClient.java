@@ -615,7 +615,7 @@ public class MbankClient {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String lastUpdated = prefs.getString(papersConfField, "0000-00-00");
 
-		if (!lastUpdated.equals(DateFormatUtils.formatYyyyMmDd()))
+		if (!lastUpdated.equals(DateFormatUtils.formatCurrentDate()))
 			return false;
 		try {
 			FileInputStream fis = ctx.openFileInput(papersFile);
@@ -655,7 +655,7 @@ public class MbankClient {
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		Editor edit = prefs.edit();
-		edit.putString(papersConfField, DateFormatUtils.formatYyyyMmDd());
+		edit.putString(papersConfField, DateFormatUtils.formatCurrentDate());
 		edit.commit();
 		Log.d(TAG, "zapisano papiero");
 	}

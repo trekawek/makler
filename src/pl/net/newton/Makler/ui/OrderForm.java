@@ -278,7 +278,7 @@ public class OrderForm extends AbstractActivity implements OnCheckedChangeListen
 		} else {
 			limitTypeStr = null;
 		}
-		if (dataSource == DataSource.mbank && orderId != null) {
+		if (dataSource == DataSource.MBANK && orderId != null) {
 			iloscMin.setEnabled(false);
 		}
 		if (limitTypeStr != null && !limitTypeStr.equals("PCR")) {
@@ -417,7 +417,7 @@ public class OrderForm extends AbstractActivity implements OnCheckedChangeListen
 			iloscMin.setText(o.getIloscMin().toString());
 		dodaj.setText("Modyfikuj");
 
-		if (dataSource == DataSource.mbank) {
+		if (dataSource == DataSource.MBANK) {
 			String[] waz = null;
 			if (o.getDoDnia() != null)
 				waz = o.getDoDnia().split(getString(R.string.minus));

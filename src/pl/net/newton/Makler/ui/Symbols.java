@@ -147,7 +147,7 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 				List<Symbol> symbols;
 				symbols = quotesReceiver.getSymbols();
 				if (symbols != null) {
-					config.setLastSymbolsUpdated(DateFormatUtils.formatYyyyMmDd());
+					config.setLastSymbolsUpdated(DateFormatUtils.formatCurrentDate());
 					symbolsDb.updateSymbols(symbols);
 					return true;
 				} else {

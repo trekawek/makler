@@ -6,13 +6,13 @@ import pl.net.newton.Makler.mbank.MbankGpwImpl;
 import android.content.Context;
 
 public enum DataSource {
-	makler("", false, false) {
+	MAKLER("", false, false) {
 		@Override
 		protected void init(Context ctx) {
 			recv = new DefaultQuotesReceiver(ctx);
 		}
 	},
-	mbank("www.mbank.com.pl", false, true) {
+	MBANK("www.mbank.com.pl", false, true) {
 		@Override
 		protected void init(Context ctx) {
 			recv = new MbankGpwImpl();
@@ -53,7 +53,7 @@ public enum DataSource {
 		return isEpromak;
 	}
 
-	public boolean isSupportTrades() {
+	public boolean doesSupportTrades() {
 		return supportTrades;
 	}
 }

@@ -73,7 +73,7 @@ public class QuotesAdapter extends BaseAdapter {
 		}
 
 		Quote quote = quotes.get(position);
-		holder.update.setText(DateFormatUtils.formatHhMmSs(quote.getUpdate()));
+		holder.update.setText(DateFormatUtils.formatTime(quote.getUpdate()));
 		holder.symbol.setText(quote.getSymbol());
 		if (quote.getSymbol().length() > 5) {
 			holder.symbol.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);

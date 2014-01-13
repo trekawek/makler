@@ -131,7 +131,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 
 		builder.setSymbol(a[0]).setName(a[1]);
 		try {
-			builder.setUpdate(DateFormatUtils.parseHhMmSs(a[2]));
+			builder.setUpdate(DateFormatUtils.parseTime(a[2]));
 		} catch (ParseException e) {
 		}
 		try {

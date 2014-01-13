@@ -3,30 +3,32 @@ package pl.net.newton.Makler.common;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
 
-public class NumberFormatUtils {
-	private static final NumberFormat nf;
+public final class NumberFormatUtils {
+	private static final NumberFormat NF;
 
 	static {
-		nf = NumberFormat.getInstance(new Locale("pl_PL"));
-		nf.setMaximumFractionDigits(2);
-		nf.setGroupingUsed(true);
+		NF = NumberFormat.getInstance(LocaleUtils.LOCALE);
+		NF.setMaximumFractionDigits(2);
+		NF.setGroupingUsed(true);
+	}
+
+	private NumberFormatUtils() {
 	}
 
 	public static String formatNumber(Double d) {
 		if (d == null) {
 			return "-";
 		} else {
-			return nf.format(d).replace('.', ',');
-		} 
+			return NF.format(d).replace('.', ',');
+		}
 	}
 
 	public static String formatNumber(BigDecimal n) {
 		if (n == null) {
 			return "-";
 		} else {
-			return nf.format(n).replace('.', ',');
+			return NF.format(n).replace('.', ',');
 		}
 	}
 
@@ -34,7 +36,7 @@ public class NumberFormatUtils {
 		if (n == null) {
 			return "-";
 		} else {
-			return nf.format(n).replace('.', ',');
+			return NF.format(n).replace('.', ',');
 		}
 	}
 
@@ -91,8 +93,7 @@ public class NumberFormatUtils {
 
 	public static double parseDoubleOrZero(String s) {
 		try {
-			return nf.parse(s).doubleValue();
-			// Double.parseDouble(s.replace(',', '.'));
+			return NF.parse(s).doubleValue();
 		} catch (ParseException e) {
 			return 0.0;
 		}

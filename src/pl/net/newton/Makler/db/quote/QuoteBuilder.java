@@ -48,7 +48,7 @@ public class QuoteBuilder {
 		this.sOfert = NumberFormatUtils.parseIntOrNull(c.getString(c.getColumnIndex("s_ofert")));
 
 		try {
-			this.update = DateFormatUtils.parseHhMmSs(c.getString(c.getColumnIndex("update")));
+			this.update = DateFormatUtils.parseTime(c.getString(c.getColumnIndex("update")));
 		} catch (NullPointerException e) {
 			this.update = null;
 		} catch (ParseException e) {

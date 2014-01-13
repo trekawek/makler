@@ -75,7 +75,7 @@ public class MbankQuote {
 		builder.setSymbol(paper.getSymbol()).setName(paper.getName());
 
 		if (paper.isIndex()) {
-			builder.setUpdate(DateFormatUtils.parseHhMmSsOrNull(get("czaspub1")))
+			builder.setUpdate(DateFormatUtils.safeParseTime(get("czaspub1")))
 					.setKurs(NumberFormatUtils.parseOrNull(get("wart")))
 					.setZmiana(NumberFormatUtils.parseOrNull(get("zmiana")))
 					.setKursOdn(NumberFormatUtils.parseOrNull(get("wartodn")))
@@ -83,7 +83,7 @@ public class MbankQuote {
 					.setKursMax(NumberFormatUtils.parseOrNull(get("wartmaks")))
 					.setWartosc(NumberFormatUtils.parseOrNull(get("wartobr")));
 		} else {
-			builder.setUpdate(DateFormatUtils.parseHhMmSsOrNull(get("czasost1")))
+			builder.setUpdate(DateFormatUtils.safeParseTime(get("czasost1")))
 					.setKurs(NumberFormatUtils.parseOrNull(get("kursost1")))
 					.setZmiana(NumberFormatUtils.parseOrNull(get("zmianaprocent")))
 					.setKursOdn(NumberFormatUtils.parseOrNull(get("kursodn")))
