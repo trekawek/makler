@@ -19,7 +19,7 @@ public class NumberFormatUtils {
 			return "-";
 		} else {
 			return nf.format(d).replace('.', ',');
-		}
+		} 
 	}
 
 	public static String formatNumber(BigDecimal n) {

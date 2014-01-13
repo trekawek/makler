@@ -38,7 +38,7 @@ public class DbHelper {
 
 		ContentValues cv = new ContentValues();
 		cv.put("position", currentPos);
-		sqlDb.update(table, cv, "id = ?", new String[] { prevId.toString() });
+		sqlDb.update(table, cv, "id = ?", new String[] { String.valueOf(prevId) });
 
 		cv = new ContentValues();
 		cv.put("position", prevPos);

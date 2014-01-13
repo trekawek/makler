@@ -32,7 +32,7 @@ public class DateFormatUtils {
 		if (date == null) {
 			return "-";
 		} else {
-			return HH_MM_SS.format(date);
+			return HH_MM_SS.format(date.getTime());
 		}
 	}
 

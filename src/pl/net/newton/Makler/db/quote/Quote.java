@@ -47,8 +47,12 @@ public class Quote {
 		this.sOfert = builder.getsOfert();
 		this.sWol = builder.getsWol();
 		this.wolumen = builder.getWolumen();
-		this.update = Calendar.getInstance();
-		this.update.setTime(builder.getUpdate());
+		if (builder.getUpdate() != null) {
+			this.update = Calendar.getInstance();
+			this.update.setTime(builder.getUpdate());
+		} else {
+			this.update = null;
+		}
 		this.index = builder.getIndex();
 	}
 
