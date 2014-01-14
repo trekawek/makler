@@ -9,19 +9,19 @@ import pl.net.newton.Makler.gpw.ex.GpwException;
 import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
 
 public interface QuotesReceiver {
-	public List<Symbol> getSymbols() throws InvalidPasswordException, GpwException;
+	List<Symbol> getSymbols() throws InvalidPasswordException, GpwException;
 
-	public List<Symbol> getSymbols(String lastUpdate) throws InvalidPasswordException, GpwException;
+	List<Symbol> getSymbols(String lastUpdate) throws InvalidPasswordException, GpwException;
 
-	public Quote getQuoteBySymbol(String symbol) throws InvalidPasswordException, GpwException;
+	Quote getQuoteBySymbol(String symbol) throws InvalidPasswordException, GpwException;
 
-	public List<Quote> getQuotesBySymbols(List<String> symbols) throws InvalidPasswordException, GpwException;
+	List<Quote> getQuotesBySymbols(List<String> symbols) throws InvalidPasswordException, GpwException;
 
-	public void startSession(Context ctx, SymbolsDb symbolsDb) throws InvalidPasswordException, GpwException;
+	void startSession(Context ctx, SymbolsDb symbolsDb) throws InvalidPasswordException, GpwException;
 
-	public void stopSession();
+	void stopSession();
 
-	public boolean supportTrades();
+	boolean supportTrades();
 
-	public Trades getTrades();
+	Trades getTrades();
 }

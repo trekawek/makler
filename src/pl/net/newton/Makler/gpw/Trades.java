@@ -8,19 +8,19 @@ import pl.net.newton.Makler.gpw.model.Order;
 import pl.net.newton.Makler.gpw.model.OrderState;
 
 public interface Trades {
-	public String trade(Order o) throws InvalidPasswordException, GpwException;
+	String trade(Order o) throws InvalidPasswordException, GpwException;
 
-	public void cancel(String id) throws InvalidPasswordException, GpwException;
+	void cancel(String id) throws InvalidPasswordException, GpwException;
 
-	public void changeOrder(String id, Order o) throws InvalidPasswordException, GpwException;
+	void changeOrder(String id, Order o) throws InvalidPasswordException, GpwException;
 
-	public List<OrderState> getOrderStates() throws InvalidPasswordException, GpwException;
+	List<OrderState> getOrderStates() throws InvalidPasswordException, GpwException;
 
-	public OrderState getOrderState(String id) throws InvalidPasswordException, GpwException;
+	OrderState getOrderState(String id) throws InvalidPasswordException, GpwException;
 
-	public Finances getFinances() throws InvalidPasswordException, GpwException;
+	Finances getFinances() throws InvalidPasswordException, GpwException;
 
-	public boolean disablePassword() throws InvalidPasswordException, GpwException;
+	boolean disablePassword() throws InvalidPasswordException, GpwException;
 
-	public boolean disablePassword(String code) throws InvalidPasswordException, GpwException;
+	boolean disablePassword(String code) throws InvalidPasswordException, GpwException;
 }

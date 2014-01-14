@@ -1,10 +1,12 @@
 package pl.net.newton.Makler.gpw;
 
 import java.io.BufferedReader;
-import java.text.ParseException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import android.content.Context;
 import android.provider.Settings.Secure;
@@ -20,7 +22,7 @@ import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class DefaultQuotesReceiver implements QuotesReceiver {
-	private static final String TAG = "Makler";
+	private static final String TAG = "MaklerDefaultQuotesReceiver";
 
 	private static final String URL = "http://makler.newton.net.pl:8080/";
 
@@ -35,44 +37,49 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 
 	public boolean isRegistered() {
 		String url = DefaultQuotesReceiver.URL + "registered_user/" + androidId();
+		BufferedReader reader = null;
+		boolean result = false;
 		try {
-			BufferedReader buffer = connector.readUrl(url);
-			String line = buffer.readLine();
-			if (line != null) {
-				return line.trim().equals("ok");
-			}
-		} catch (Exception e) {
-			return false;
+			reader = connector.readUrl(url);
+			String line = reader.readLine();
+			result = "ok".equals(StringUtils.trim(line));
+			reader.close();
+		} catch (IOException e) {
+			Log.e(TAG, "Can't check if user is registered", e);
+		} catch (URISyntaxException e) {
+			Log.e(TAG, "Can't check if user is registered", e);
 		}
-		return false;
+		return result;
 	}
 
 	public List<Quote> getQuotesBySymbols(List<String> symbols) {
 		List<Quote> quotes = new ArrayList<Quote>();
-		if (symbols.size() == 0)
+		if (symbols.size() == 0) {
 			return quotes;
-		String url = DefaultQuotesReceiver.URL + "quote/";
-		for (int i = 0; i < symbols.size() - 1; i++)
-			url += symbols.get(i) + ",";
-		url += symbols.get(symbols.size() - 1);
-		url += "/" + androidId();
+		}
+		StringBuilder url = new StringBuilder(DefaultQuotesReceiver.URL).append("quote/");
+		for (int i = 0; i < symbols.size() - 1; i++) {
+			url.append(symbols.get(i));
+			url.append(',');
+		}
+		url.append(symbols.get(symbols.size() - 1));
+		url.append("/").append(androidId());
 
+		BufferedReader reader = null;
 		try {
-			BufferedReader buffer = connector.readUrl(url);
+			reader = connector.readUrl(url.toString());
 			String line;
-			while ((line = buffer.readLine()) != null) {
-				Quote q = null;
-				try {
-					q = quoteFromLine(line);
-				} catch (Exception e) {
-					Log.e(TAG, "error parsing quote: " + q, e);
+			while ((line = reader.readLine()) != null) {
+				Quote q = quoteFromLine(line);
+				if (q != null) {
+					quotes.add(q);
 				}
-				quotes.add(q);
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return quotes;
+			reader.close();
+		} catch (IOException e) {
+			Log.e(TAG, "can't read quotes", e);
+		} catch (URISyntaxException e) {
+			Log.e(TAG, "can't read quotes", e);
 		}
 		return quotes;
 	}
@@ -89,41 +96,45 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 
 	public List<Symbol> getSymbols(String lastUpdate) {
 		List<Symbol> symbols = new ArrayList<Symbol>();
-		String url = DefaultQuotesReceiver.URL + "symbols";
-		url += "/" + lastUpdate;
-		url += "/" + androidId();
+		StringBuilder url = new StringBuilder(DefaultQuotesReceiver.URL).append("symbols");
+		url.append("/").append(lastUpdate);
+		url.append("/").append(androidId());
 
+		BufferedReader reader = null;
 		try {
-			BufferedReader buffer = connector.readUrl(url);
+			reader = connector.readUrl(url.toString());
 			String line;
-			while ((line = buffer.readLine()) != null) {
-				String[] a = line.split("\\|");
-
+			while ((line = reader.readLine()) != null) {
+				String[] a = StringUtils.split(line, '|');
 				SymbolBuilder builder = new SymbolBuilder();
-				builder.setSymbol(a[0]).setName(a[1]).setIsIndex(a[2].equals("1"))
-						.setDeleted(a[3].equals("1")).setCode(a[4]);
+				builder.setSymbol(a[0]).setName(a[1]).setIsIndex("1".equals(a[2]))
+						.setDeleted("1".equals(a[3])).setCode(a[4]);
 				symbols.add(builder.build());
 			}
-
-		} catch (Exception e) {
+			reader.close();
+		} catch (IOException e) {
 			Log.e(TAG, "can't get symbols", e);
-			return symbols;
+		} catch (URISyntaxException e) {
+			Log.e(TAG, "can't get symbols", e);
 		}
 		return symbols;
 	}
 
 	private String androidId() {
 		String id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-		if (id == null)
+		if (id == null) {
 			return "2fc89b9c332df4a6";
-		else
+		} else {
 			return id;
+		}
 	}
 
 	public void startSession(Context ctx, SymbolsDb symbolsDb) {
+		// there is no session for the default quotes receiver
 	}
 
 	public void stopSession() {
+		// there is no session for the default quotes receiver
 	}
 
 	private Quote quoteFromLine(String line) {
@@ -152,6 +163,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 						.setsOfert(NumberFormatUtils.parseIntOrNull(a[18]));
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
+			Log.e(TAG, "Can't parse quote", e);
 		}
 
 		if (Configuration.DEBUG_UPDATES) {
