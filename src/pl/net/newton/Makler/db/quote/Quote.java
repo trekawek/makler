@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import pl.net.newton.Makler.common.DateFormatUtils;
+import pl.net.newton.Makler.common.GpwUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class Quote {
@@ -166,8 +167,7 @@ public class Quote {
 	}
 
 	public BigDecimal chooseKurs() {
-		if (tko != null && update != null && update.get(Calendar.HOUR_OF_DAY) == 17
-				&& update.get(Calendar.MINUTE) >= 20 && update.get(Calendar.MINUTE) < 30) {
+		if (tko != null && GpwUtils.isOvertime(update)) {
 			return tko;
 		}
 		for (BigDecimal v : Arrays.asList(kurs, tko, kursOtw, kursOdn)) {
@@ -179,8 +179,7 @@ public class Quote {
 	}
 
 	public BigDecimal chooseZmiana() {
-		if (tkoProcent != null && update != null && update.get(Calendar.HOUR_OF_DAY) == 17
-				&& update.get(Calendar.MINUTE) >= 20 && update.get(Calendar.MINUTE) < 30) {
+		if (tkoProcent != null && GpwUtils.isOvertime(update)) {
 			return tkoProcent;
 		}
 		for (BigDecimal v : Arrays.asList(zmiana, tkoProcent)) {

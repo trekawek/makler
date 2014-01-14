@@ -59,8 +59,7 @@ public class QuotesDb {
 			if (!c.moveToFirst()) {
 				return null;
 			}
-			Quote q = new QuoteBuilder().setFromCursor(c).build();
-			return q;
+			return new QuoteBuilder().setFromCursor(c).build();
 		} finally {
 			c.close();
 		}
