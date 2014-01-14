@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import pl.net.newton.Makler.R;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,7 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class SymbolsDb {
-	private static final String TAG = "MaklerDb";
+	private static final String TAG = "MaklerSymbolsDb";
 
 	private final Context ctx;
 
@@ -35,8 +37,9 @@ public class SymbolsDb {
 	public Integer getSymbolId(String symbol) {
 		Cursor c = sqlDb.query("symbols", new String[] { "id" }, "symbols.symbol = ? COLLATE NOCASE",
 				new String[] { symbol }, null, null, null);
-		if (c.getCount() == 0)
+		if (c.getCount() == 0) {
 			return null;
+		}
 		c.moveToFirst();
 		Integer symbolId = c.getInt(0);
 		c.close();
@@ -46,16 +49,17 @@ public class SymbolsDb {
 	public List<Symbol> getSymbols(String name) {
 		ArrayList<Symbol> symbols = new ArrayList<Symbol>();
 		Cursor c;
-		if (name != null && !name.equals("")) {
+		if (StringUtils.isNoneBlank(name)) {
 			String n = "%" + name + "%";
 			c = sqlDb.query("symbols", null, "deleted = 0 AND (name LIKE ? OR symbol LIKE ?)", new String[] {
 					n, n }, null, null, "symbol");
-		} else
+		} else {
 			c = sqlDb.query("symbols", null, "deleted = 0", null, null, null, "symbol");
+		}
 		if (c.moveToFirst()) {
-			do
+			do {
 				symbols.add(new SymbolBuilder().setFromCursor(c).build());
-			while (c.moveToNext());
+			} while (c.moveToNext());
 		}
 		c.close();
 		return symbols;
@@ -66,8 +70,9 @@ public class SymbolsDb {
 		Symbol s = null;
 		c = sqlDb.query("symbols", null, "deleted = 0 AND symbol = ?", new String[] { symbol }, null, null,
 				null);
-		if (c.moveToFirst())
+		if (c.moveToFirst()) {
 			s = new SymbolBuilder().setFromCursor(c).build();
+		}
 		c.close();
 		return s;
 	}
@@ -76,8 +81,9 @@ public class SymbolsDb {
 		Cursor c;
 		Symbol s = null;
 		c = sqlDb.query("symbols", null, "deleted = 0 AND name = ?", new String[] { name }, null, null, null);
-		if (c.moveToFirst())
+		if (c.moveToFirst()) {
 			s = new SymbolBuilder().setFromCursor(c).build();
+		}
 		c.close();
 		return s;
 	}
@@ -88,8 +94,9 @@ public class SymbolsDb {
 		Symbol s = null;
 		c = sqlDb.query("symbols", null, "deleted = 0 AND name LIKE ?", new String[] { name }, null, null,
 				null);
-		if (c.moveToFirst())
+		if (c.moveToFirst()) {
 			s = new SymbolBuilder().setFromCursor(c).build();
+		}
 		c.close();
 		return s;
 	}
@@ -98,9 +105,9 @@ public class SymbolsDb {
 		sqlDb.beginTransaction();
 		Cursor c = sqlDb.query("symbols", new String[] { "id" }, "symbol = ?",
 				new String[] { s.getSymbol() }, null, null, null);
-		if (c.getCount() == 0)
+		if (c.getCount() == 0) {
 			sqlDb.insert("symbols", null, contentValues(s));
-		else {
+		} else {
 			c.moveToFirst();
 			Integer id = c.getInt(0);
 			sqlDb.update("symbols", contentValues(s), "id = ?", new String[] { id.toString() });
@@ -127,7 +134,6 @@ public class SymbolsDb {
 		c.close();
 		for (Symbol s : symbols) {
 			if (symbolToId.containsKey(s.getSymbol())) {
-				// System.out.println(s.contentValues());
 				sqlDb.update("symbols", contentValues(s), "id = ?",
 						new String[] { symbolToId.get(s.getSymbol()).toString() });
 			} else {
@@ -141,7 +147,7 @@ public class SymbolsDb {
 		sqlDb.beginTransaction();
 		String sql = ctx.getString(R.string.getSymbolDuplicates);
 		c = sqlDb.rawQuery(sql, null);
-		while(c.moveToNext()) {
+		while (c.moveToNext()) {
 			deleteSymbol(c.getInt(0), c.getInt(1));
 		}
 		c.close();

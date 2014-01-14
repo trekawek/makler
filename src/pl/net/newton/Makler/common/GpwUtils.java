@@ -19,6 +19,12 @@ public final class GpwUtils {
 		return !isWeekend(c) && workingHours(c);
 	}
 
+	public static boolean isOvertime(Calendar calendar) {
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+		return hour == 17 && minute >= 0 && minute < 5;
+	}
+
 	private static boolean isWeekend(Calendar calendar) {
 		int dayOfTheWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		return dayOfTheWeek == Calendar.SATURDAY || dayOfTheWeek == Calendar.SUNDAY;

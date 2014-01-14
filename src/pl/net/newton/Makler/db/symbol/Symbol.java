@@ -1,5 +1,7 @@
 package pl.net.newton.Makler.db.symbol;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 public class Symbol {
 	private final Integer id;
 
@@ -12,14 +14,6 @@ public class Symbol {
 	private boolean deleted;
 
 	private final String code;
-
-	/*
-	 * public Symbol(String symbol, String name, Boolean isIndex, String code) { this.symbol = symbol;
-	 * this.name = name; this.isIndex = isIndex; this.deleted = false; this.code = code; }
-	 * 
-	 * public Symbol(String s) { String[] a = s.split("\\|"); this.symbol = a[0]; this.name = a[1];
-	 * this.isIndex = a[2].equals("1"); this.deleted = a[3].equals("1"); this.code = a[4]; }
-	 */
 
 	Symbol(SymbolBuilder builder) {
 		this.id = builder.getId();
@@ -64,18 +58,19 @@ public class Symbol {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Symbol) {
-			Symbol s = (Symbol) o;
-			try {
-				return s.getDeleted() == getDeleted() && s.isIndex().equals(isIndex())
-						&& s.getCode().equals(getCode()) && s.getName().equals(getName())
-						&& s.getSymbol().equals(getSymbol());
-			} catch (NullPointerException e) {
-				return false;
-			}
-		} else {
+	public boolean equals(Object obj) {
+		if (obj == null) {
 			return false;
 		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		Symbol rhs = (Symbol) obj;
+		return new EqualsBuilder().append(symbol, rhs.symbol).append(name, rhs.name)
+				.append(isIndex, rhs.isIndex).append(deleted, rhs.deleted).append(code, rhs.code).isEquals();
 	}
+
 }
