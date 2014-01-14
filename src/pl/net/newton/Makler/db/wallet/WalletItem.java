@@ -10,7 +10,8 @@ public class WalletItem {
 
 	private String symbol, name;
 
-	private BigDecimal avgBuy, quote, totalCommision; // commision of already made transactions
+	// commision of already made transactions
+	private BigDecimal avgBuy, quote, totalCommision;
 
 	WalletItem(WalletItemBuilder builder) {
 		this.id = builder.getId();
@@ -55,8 +56,9 @@ public class WalletItem {
 	}
 
 	public void addTrans(Character type, Integer quantity, BigDecimal kurs, BigDecimal commison) {
-		if (quantity == 0)
+		if (quantity == 0) {
 			return;
+		}
 		if (type.equals('K')) {
 			BigDecimal currentCost = this.avgBuy.multiply(new BigDecimal(this.quantity));
 			BigDecimal transCost = kurs.multiply(new BigDecimal(quantity));
@@ -85,11 +87,9 @@ public class WalletItem {
 	}
 
 	public BigDecimal getZmiana() {
-		try {
-			return quote.subtract(avgBuy).multiply(new BigDecimal(100))
-					.divide(avgBuy, 3, RoundingMode.HALF_UP);
-		} catch (Exception e) {
+		if (quote == null || avgBuy == null) {
 			return null;
 		}
+		return quote.subtract(avgBuy).multiply(new BigDecimal(100)).divide(avgBuy, 3, RoundingMode.HALF_UP);
 	}
 }

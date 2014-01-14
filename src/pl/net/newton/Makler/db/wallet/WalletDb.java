@@ -68,15 +68,16 @@ public class WalletDb {
 					.simpleQueryForLong();
 			cv = getContentValues(w);
 			cv.put("position", size + 1);
-			// cv.put("symbol_id", s.getId());
 			cv.put("quote_id", quoteId);
 			Integer id = (int) sqlDb.insert("wallet_items", null, cv);
 			w.setId(id);
-		} else
+		} else {
 			sqlDb.update("wallet_items", getContentValues(w), "id = ?", new String[] { w.getId().toString() });
+		}
 
-		if (w.getQuantity() == 0)
+		if (w.getQuantity() == 0) {
 			sqlDb.delete("wallet_items", "id = ?", new String[] { w.getId().toString() });
+		}
 
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();

@@ -15,7 +15,8 @@ public class WalletItemBuilder {
 
 	private String symbol, name;
 
-	private BigDecimal avgBuy, quote, totalCommision; // commision of already made transactions
+	// commision of already made transactions
+	private BigDecimal avgBuy, quote, totalCommision;
 
 	private Quote quoteRef;
 
