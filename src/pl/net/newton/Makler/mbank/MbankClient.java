@@ -190,12 +190,12 @@ public class MbankClient {
 		if (page.contains("nie posiadasz aktywnej"))
 			throw new GpwException("Nie posiadasz aktywnej usługi notowań ciągłych.");
 
-		Pattern p = Pattern.compile("value=\"([^\"]+)\"\\>([^\\<]+)\\</option\\>");
+		Pattern p = Pattern.compile("value=\"GPW([^\"]+)\"\\>([^\\<]+)\\</option\\>");
 		Matcher m = p.matcher(page);
 		papers = new ArrayList<MbankPaper>();
 		while (m.find()) {
-			String code = m.group(1).substring(3);
-			String trimmedName = m.group(2).split(ctx.getString(R.string.minus))[0];
+			String code = m.group(1);
+			String trimmedName = m.group(2).split("-")[0];
 			if (symbolByCode.containsKey(code)) {
 				Symbol s = symbolByCode.get(code);
 				papers.add(new MbankPaper(s.getSymbol(), m.group(2), false, code));
