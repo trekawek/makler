@@ -1,5 +1,7 @@
 package pl.net.newton.Makler.gpw.model;
 
+import java.util.EnumSet;
+
 import android.content.Context;
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.common.LocaleUtils;
@@ -35,23 +37,26 @@ public class OrderState {
 	}
 
 	public boolean canBeModified() {
-		if (state != null)
-			return state == State.WPROW || state == State.ZAKSIEG;
-		else if (customState != null)
-			return customState.toLowerCase(LocaleUtils.LOCALE).equals("przyjęte");
-		else
+		if (state != null) {
+			return EnumSet.of(State.WPROW, State.ZAKSIEG).contains(state);
+		} else if (customState != null) {
+			return "przyjęte".equals(customState.toLowerCase(LocaleUtils.LOCALE));
+		} else {
 			return false;
+		}
 	}
 
 	public String getStateString(Context ctx) {
-		if (customState != null)
+		if (customState != null) {
 			return customState;
+		}
 
 		String[] states = ctx.getResources().getStringArray(R.array.order_states);
 		State[] statesEnum = State.values();
 		for (int i = 0; i < states.length; i++) {
-			if (statesEnum[i] == state)
+			if (statesEnum[i] == state) {
 				return states[i];
+			}
 		}
 		return null;
 	}

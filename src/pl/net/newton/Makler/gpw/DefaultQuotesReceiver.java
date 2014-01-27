@@ -54,7 +54,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 
 	public List<Quote> getQuotesBySymbols(List<String> symbols) {
 		List<Quote> quotes = new ArrayList<Quote>();
-		if (symbols.size() == 0) {
+		if (symbols.isEmpty()) {
 			return quotes;
 		}
 		StringBuilder url = new StringBuilder(DefaultQuotesReceiver.URL).append("quote/");

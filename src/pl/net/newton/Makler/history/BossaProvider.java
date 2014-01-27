@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
 import org.apache.http.HttpEntity;
+
 import android.content.Context;
 import android.util.Log;
 import pl.net.newton.Makler.db.symbol.Symbol;
@@ -47,9 +49,7 @@ public class BossaProvider implements HistoryProvider {
 
 		String query = String.format(QUERY, symbolName);
 		EntryList entries = getEntries(INTRADAY_PATH, query);
-		if (entries != null) {
-			intradayCache.addEntry(symbolName, entries);
-		}
+		intradayCache.addEntry(symbolName, entries);
 		return new EntryListWithIndexes(entries);
 	}
 
@@ -61,9 +61,7 @@ public class BossaProvider implements HistoryProvider {
 
 		String query = String.format(QUERY, symbolName);
 		EntryList entries = getEntries(HISTORY_PATH, query);
-		if (entries != null) {
-			historyCache.addEntry(symbolName, entries);
-		}
+		historyCache.addEntry(symbolName, entries);
 		return new EntryListWithIndexes(entries);
 	}
 
@@ -72,13 +70,12 @@ public class BossaProvider implements HistoryProvider {
 
 		boolean withTime = false;
 		byte[] byteArray;
-		EntryList list;
+		EntryList list = new EntryList(0, false);
 		int i = 0;
 		try {
 			Log.d(TAG, path);
 			en = conn.sendCommand(path, query, null, true, null);
 			ZipInputStream zis = new ZipInputStream(en.getContent());
-			// InputStream gis = new GZIPInputStream(en.getContent());
 			ByteArrayOutputStream bos = new ByteArrayOutputStream(150000);
 			Log.d(TAG, "history loaded");
 			ZipEntry entry = zis.getNextEntry();
@@ -92,11 +89,11 @@ public class BossaProvider implements HistoryProvider {
 			Log.d(TAG, "lines counted: " + lines);
 
 			i = ByteArrayUtils.nextLine(byteArray, 0);
-			withTime = ByteArrayUtils.search("<TIME>".getBytes(), byteArray, 0, i) != -1;
+			withTime = ByteArrayUtils.search("<TIME>".getBytes("en_US"), byteArray, 0, i) != -1;
 			list = new EntryList(lines, withTime);
 		} catch (Exception e) {
 			Log.e(TAG, "can't get entries", e);
-			return null;
+			return list;
 		}
 
 		Log.d(TAG, "parsing lines");
@@ -118,8 +115,9 @@ public class BossaProvider implements HistoryProvider {
 		int readChars = 0;
 		while ((readChars = is.read(c)) != -1) {
 			for (int i = 0; i < readChars; ++i) {
-				if (c[i] == '\n')
+				if (c[i] == '\n') {
 					++count;
+				}
 			}
 		}
 		return count;
@@ -128,11 +126,11 @@ public class BossaProvider implements HistoryProvider {
 	public boolean isRangeExist(final Symbol symbol, int range) {
 		String symbolName = symbol.getSymbol();
 
-		if (range >= 0 && range <= 2 && intradayCache.hasKey(symbolName) == false) {
+		if (range >= 0 && range <= 2 && !intradayCache.hasKey(symbolName)) {
 			return false;
 		}
 
-		if (range >= 3 && range <= 6 && historyCache.hasKey(symbolName) == false) {
+		if (range >= 3 && range <= 6 && !historyCache.hasKey(symbolName)) {
 			return false;
 		}
 

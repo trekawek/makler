@@ -9,6 +9,9 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
 public final class ChannelTools {
+	private ChannelTools() {
+	}
+
 	public static void fastChannelCopy(final ReadableByteChannel src, final WritableByteChannel dest)
 			throws IOException {
 		final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);

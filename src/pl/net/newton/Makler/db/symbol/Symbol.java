@@ -1,6 +1,7 @@
 package pl.net.newton.Makler.db.symbol;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Symbol {
 	private final Integer id;
@@ -71,6 +72,12 @@ public class Symbol {
 		Symbol rhs = (Symbol) obj;
 		return new EqualsBuilder().append(symbol, rhs.symbol).append(name, rhs.name)
 				.append(isIndex, rhs.isIndex).append(deleted, rhs.deleted).append(code, rhs.code).isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(symbol).append(name).append(isIndex).append(deleted).append(code)
+				.toHashCode();
 	}
 
 }

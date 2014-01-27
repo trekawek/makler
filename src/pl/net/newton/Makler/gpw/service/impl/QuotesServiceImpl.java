@@ -14,7 +14,6 @@ import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.service.SqlProvider;
 import pl.net.newton.Makler.db.service.impl.SqlProviderImpl;
 import pl.net.newton.Makler.gpw.ex.GpwException;
-import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
 import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.gpw.service.QuotesService;
@@ -34,7 +33,7 @@ public class QuotesServiceImpl extends Service {
 		DOWNLOAD_QUOTES, START_UPDATER_THREAD
 	}
 
-	private static final String TAG = "Makler";
+	private static final String TAG = "MaklerQuotesServiceImpl";
 
 	private final LocalBinder binder = new LocalBinder();
 
@@ -71,7 +70,7 @@ public class QuotesServiceImpl extends Service {
 	}
 
 	@Override
-	synchronized public int onStartCommand(Intent intent, int flags, int startId) {
+	public synchronized int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, this.getClass().getName() + " - onStart");
 		if (intent != null) {
 			String stringIntent = intent.getStringExtra(StartIntent.class.getName());
@@ -132,6 +131,7 @@ public class QuotesServiceImpl extends Service {
 				try {
 					Thread.sleep(1000 * freq);
 				} catch (InterruptedException e) {
+					Log.e(TAG, "Interrupted quote update loop", e);
 					return;
 				}
 			}
@@ -174,7 +174,7 @@ public class QuotesServiceImpl extends Service {
 			listeners.remove(listener);
 		}
 
-		public void updateQuotes() throws InvalidPasswordException, GpwException {
+		public void updateQuotes() throws GpwException {
 			if (gpw == null || !updatesEnabled) {
 				return;
 			}
@@ -242,7 +242,7 @@ public class QuotesServiceImpl extends Service {
 		}
 	};
 
-	private void servicesInitialized() {
+	private synchronized void servicesInitialized() {
 		if (sql != null && gpw != null) {
 			utilizeIntent();
 		}
@@ -261,7 +261,7 @@ public class QuotesServiceImpl extends Service {
 		});
 	}
 
-	synchronized private void utilizeIntent() {
+	private synchronized void utilizeIntent() {
 		StartIntent intent = startIntent;
 		startIntent = null;
 		if (intent != null) {
@@ -272,6 +272,10 @@ public class QuotesServiceImpl extends Service {
 
 				case START_UPDATER_THREAD:
 					updatingThread.startThread();
+					break;
+
+				default:
+					Log.e(TAG, "Invalid intent value: " + intent);
 					break;
 			}
 		}

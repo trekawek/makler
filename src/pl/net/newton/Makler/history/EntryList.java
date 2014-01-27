@@ -11,19 +11,17 @@ import java.util.Locale;
 public class EntryList implements Serializable {
 	private static final long serialVersionUID = -8335210038807291253L;
 
+	private static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+
 	private long[] date;
 
-	private int[] open;
-
 	private int[] close;
-
-	private int[] low;
-
-	private int[] high;
 
 	private int[] graphIndex;
 
 	private long[] vol;
+
+	private long[] tmp;
 
 	private boolean intraday;
 
@@ -31,19 +29,18 @@ public class EntryList implements Serializable {
 
 	private int i;
 
-	private static final DateFormat DATE_WITH_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+	private final DateFormat dateWithFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
 
-	private static final DateFormat DATE_WITHOUT_FORMAT = new SimpleDateFormat("yyyyMMdd", Locale.US);
+	private final DateFormat dateWithoutFormat = new SimpleDateFormat("yyyyMMdd", Locale.US);
 
-	private static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
-
-	private static final Calendar cal = Calendar.getInstance();
+	private final Calendar now = Calendar.getInstance();
 
 	public EntryList(int length, boolean intraday) {
 		date = new long[length];
 		close = new int[length];
 		graphIndex = new int[length];
 		vol = new long[length];
+		tmp = new long[2];
 		this.intraday = intraday;
 		this.i = 0;
 		this.length = length;
@@ -56,47 +53,43 @@ public class EntryList implements Serializable {
 
 		long[] result;
 		if (intraday) {
-			result = ByteArrayUtils.parseLong(array, from);
+			result = ByteArrayUtils.parseLong(array, from, tmp);
 			if (result[1] == from) {
 				return ByteArrayUtils.nextLine(array, (int) result[1]);
 			}
-			ByteArrayUtils.setDate(cal, result[0]);
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1);
-			ByteArrayUtils.setTime(cal, result[0]);
-			date[i] = cal.getTimeInMillis();
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2);
-			// open[i] = (int) result[0];
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2);
-			// high[i] = (int) result[0];
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2);
-			// low[i] = (int) result[0];
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2);
+			ByteArrayUtils.setDate(now, result[0]);
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, tmp);
+			ByteArrayUtils.setTime(now, result[0]);
+			date[i] = now.getTimeInMillis();
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2, tmp);
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2, tmp);
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2, tmp);
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2, tmp);
 			close[i] = (int) result[0];
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1);
-			if (result[0] <= Integer.MAX_VALUE)
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, tmp);
+			if (result[0] <= Integer.MAX_VALUE) {
 				vol[i] = (int) result[0];
-			else
+			} else {
 				vol[i] = Integer.MAX_VALUE;
+			}
 		} else {
-			result = ByteArrayUtils.parseLong(array, from);
+			result = ByteArrayUtils.parseLong(array, from, tmp);
 			if (result[1] == from) {
 				return ByteArrayUtils.nextLine(array, (int) result[1]);
 			}
-			ByteArrayUtils.setDate(cal, result[0]);
-			date[i] = cal.getTimeInMillis();
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2);
-			// open[i] = (int) result[0];
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2);
-			// high[i] = (int) result[0];
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2);
-			// low[i] = (int) result[0];
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2);
+			ByteArrayUtils.setDate(now, result[0]);
+			date[i] = now.getTimeInMillis();
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2, tmp);
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2, tmp);
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2, tmp);
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, 2, tmp);
 			close[i] = (int) result[0];
-			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1);
-			if (result[0] <= Integer.MAX_VALUE)
+			result = ByteArrayUtils.parseLong(array, (int) result[1] + 1, tmp);
+			if (result[0] <= Integer.MAX_VALUE) {
 				vol[i] = (int) result[0];
-			else
+			} else {
 				vol[i] = Integer.MAX_VALUE;
+			}
 		}
 		i++;
 		return ByteArrayUtils.nextLine(array, (int) result[1]);
@@ -107,21 +100,13 @@ public class EntryList implements Serializable {
 			throw new IndexOutOfBoundsException();
 		}
 
-		String s[] = row.split(",");
+		String[] s = row.split(",");
 		if (intraday) {
-			date[i] = DATE_WITH_FORMAT.parse(s[0] + "_" + s[1]).getTime();
-			// open[i] = new BigDecimal(s[2]).multiply(ONE_HUNDRED).intValue();
-			// high[i] = new BigDecimal(s[3]).multiply(ONE_HUNDRED).intValue();
-			// low[i] = new BigDecimal(s[4]).multiply(ONE_HUNDRED).intValue();
+			date[i] = dateWithFormat.parse(s[0] + "_" + s[1]).getTime();
 			close[i] = new BigDecimal(s[5]).multiply(ONE_HUNDRED).intValue();
-			// vol[i] = new BigDecimal(s[6]).longValue();
 		} else {
-			date[i] = DATE_WITHOUT_FORMAT.parse(s[0]).getTime();
-			// open[i] = new BigDecimal(s[1]).multiply(ONE_HUNDRED).intValue();
-			// high[i] = new BigDecimal(s[2]).multiply(ONE_HUNDRED).intValue();
-			// low[i] = new BigDecimal(s[3]).multiply(ONE_HUNDRED).intValue();
+			date[i] = dateWithoutFormat.parse(s[0]).getTime();
 			close[i] = new BigDecimal(s[4]).multiply(ONE_HUNDRED).intValue();
-			// vol[i] = new BigDecimal(s[5]).longValue();
 		}
 		return i++;
 	}
@@ -138,20 +123,8 @@ public class EntryList implements Serializable {
 		return date[i];
 	}
 
-	public int getOpen(int i) {
-		return open[i];
-	}
-
 	public int getClose(int i) {
 		return close[i];
-	}
-
-	public int getLow(int i) {
-		return low[i];
-	}
-
-	public int getHigh(int i) {
-		return high[i];
 	}
 
 	public long getVol(int i) {

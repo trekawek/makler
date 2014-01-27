@@ -37,8 +37,9 @@ public class Finances {
 
 	public BigDecimal getValue() {
 		BigDecimal v = BigDecimal.ZERO;
-		for (Paper p : papers)
+		for (Paper p : papers) {
 			v = v.add(p.getValue());
+		}
 		return v;
 	}
 

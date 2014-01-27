@@ -19,8 +19,9 @@ public class EntryListWithIndexes implements Serializable {
 	public EntryListWithIndexes(EntryList entryList) {
 		this.entryList = entryList;
 		this.indexes = new ArrayList<Integer>(entryList.getLength());
-		for (int i = 0; i < entryList.getLength(); i++)
+		for (int i = 0; i < entryList.getLength(); i++) {
 			this.indexes.add(i);
+		}
 	}
 
 	public EntryList getEntryList() {
@@ -47,20 +48,8 @@ public class EntryListWithIndexes implements Serializable {
 		return entryList.getDate(indexes.get(i));
 	}
 
-	public int getOpen(int i) {
-		return entryList.getOpen(indexes.get(i));
-	}
-
 	public int getClose(int i) {
 		return entryList.getClose(indexes.get(i));
-	}
-
-	public int getLow(int i) {
-		return entryList.getLow(indexes.get(i));
-	}
-
-	public int getHigh(int i) {
-		return entryList.getHigh(indexes.get(i));
 	}
 
 	public long getVol(int i) {

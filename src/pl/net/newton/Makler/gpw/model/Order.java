@@ -2,15 +2,29 @@ package pl.net.newton.Makler.gpw.model;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.StringUtils;
+
 import pl.net.newton.Makler.R;
+import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolBuilder;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
-
 import android.content.Context;
+import android.util.Log;
 
 public class Order {
-	private Character type; // K lub S
+	private static final String TAG = "MaklerOrder";
+
+	public static enum LimitType {
+		PEG, PKC, PCR
+	}
+
+	public static enum Validity {
+		DODN, WDC, WLA, WIA, WNF, WNZ
+	}
+
+	// K lub S
+	private Character type;
 
 	private Symbol symbol;
 
@@ -37,63 +51,44 @@ public class Order {
 	public Order(Context ctx, Character type, String symbol, String ilosc, String limit, String limitType,
 			String sesja, String validity, String doDnia, String limitAkt, String iloscUjawn,
 			String iloscMin, SymbolsDb symbolsDb, String wdc) {
-
 		this.type = type;
 		this.ilosc = Integer.parseInt(ilosc);
-
-		if (limit != null && !limit.equals("")) {
-			this.limit = new BigDecimal(limit);
-		}
+		this.limit = NumberFormatUtils.parseOrNull(limit);
 		if (limitType != null && !limitType.equals("---")) {
 			this.limitType = LimitType.valueOf(limitType);
 		}
-
 		this.sesja = sesja;
-
-		if (validity != null)
-			this.validity = validityFromString(ctx, validity);
-		try {
-			if (this.validity == null && validity != null)
-				this.validity = Validity.valueOf(validity);
-		} catch (Exception e) {
-		}
-
+		this.validity = validityFromString(ctx, validity);
 		this.doDnia = doDnia;
-
-		if (limitAkt != null && !limitAkt.equals("")) {
-			this.limitAkt = new BigDecimal(limitAkt);
-		}
-
-		try {
-			this.iloscUjawn = Integer.parseInt(iloscUjawn);
-		} catch (Exception e) {
-		}
-		try {
-			this.iloscMin = Integer.parseInt(iloscMin);
-		} catch (Exception e) {
-		}
-
+		this.limitAkt = NumberFormatUtils.parseOrNull(limitAkt);
+		this.iloscUjawn = NumberFormatUtils.parseIntOrNull(iloscUjawn);
+		this.iloscMin = NumberFormatUtils.parseIntOrNull(iloscMin);
 		this.symbol = symbolsDb.getSymbolBySymbol(symbol);
-		if (this.symbol == null)
+		if (this.symbol == null) {
 			this.symbol = new SymbolBuilder().setName(symbol).setSymbol(symbol).build();
-		
+		}
 		this.wdc = wdc;
 	}
 
 	public static Validity validityFromString(Context ctx, String s) {
+		if (StringUtils.isBlank(s)) {
+			return null;
+		}
+
 		String[] ar = ctx.getResources().getStringArray(R.array.order_form_waznosc);
-		for (int i = 0; i < ar.length; i++)
-			if (ar[i].equals(s))
+		for (int i = 0; i < ar.length; i++) {
+			if (ar[i].equals(s)) {
 				return Validity.values()[i];
+			}
+		}
+		if (s != null) {
+			try {
+				return Validity.valueOf(s);
+			} catch (IllegalArgumentException e) {
+				Log.e(TAG, "Illegal value for validity: " + s, e);
+			}
+		}
 		return null;
-	}
-
-	public static enum LimitType {
-		PEG, PKC, PCR
-	}
-
-	public static enum Validity {
-		DODN, WDC, WLA, WIA, WNF, WNZ
 	}
 
 	public Character getType() {

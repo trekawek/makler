@@ -21,7 +21,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class GpwProviderImpl extends Service implements ServiceConnection {
-	private static final String TAG = "Makler";
+	private static final String TAG = "MaklerGpwProviderImpl";
 
 	private final Binder binder = new LocalBinder();
 
@@ -34,7 +34,7 @@ public class GpwProviderImpl extends Service implements ServiceConnection {
 	private boolean initialized;
 
 	@Override
-	public void onCreate() {
+	public synchronized void onCreate() {
 		super.onCreate();
 		Log.d(TAG, this.getClass().getName() + " - onCreate");
 		config = new Configuration(this);
@@ -47,7 +47,7 @@ public class GpwProviderImpl extends Service implements ServiceConnection {
 		return START_NOT_STICKY;
 	}
 
-	synchronized private void setImpl() {
+	private synchronized void setImpl() {
 		DataSource dataSource = config.getDataSourceType();
 		quotesRecv = dataSource.getQuotesImpl(this);
 		initialized = false;
@@ -69,8 +69,8 @@ public class GpwProviderImpl extends Service implements ServiceConnection {
 		unbindService(this);
 	}
 
-	synchronized private void startSession() throws GpwException, InvalidPasswordException {
-		if(initialized) {
+	private synchronized void startSession() throws GpwException, InvalidPasswordException {
+		if (initialized) {
 			return;
 		}
 		try {
@@ -79,6 +79,7 @@ public class GpwProviderImpl extends Service implements ServiceConnection {
 				initialized = true;
 			}
 		} catch (InvalidPasswordException e) {
+			Log.e(TAG, "Can't start session", e);
 			config.disableOwnDataSource();
 			setImpl();
 			throw e;
@@ -86,13 +87,13 @@ public class GpwProviderImpl extends Service implements ServiceConnection {
 	}
 
 	private class LocalBinder extends Binder implements GpwProvider {
-		public QuotesReceiver getQuotesImpl() throws GpwException, InvalidPasswordException {
+		public QuotesReceiver getQuotesImpl() throws GpwException {
 			startSession();
 			return quotesRecv;
 		}
 
-		public void restart() throws GpwException, InvalidPasswordException {
-			if(symbolsDb != null) {
+		public void restart() throws GpwException {
+			if (symbolsDb != null) {
 				setImpl();
 				startSession();
 			}
@@ -100,7 +101,7 @@ public class GpwProviderImpl extends Service implements ServiceConnection {
 	}
 
 	public void onServiceConnected(ComponentName service, IBinder binder) {
-		if(binder instanceof SqlProvider) {
+		if (binder instanceof SqlProvider) {
 			SqlProvider sqlProvider = (SqlProvider) binder;
 			SQLiteDatabase sql = sqlProvider.getSql();
 			symbolsDb = new SymbolsDb(sql, this);
@@ -117,5 +118,6 @@ public class GpwProviderImpl extends Service implements ServiceConnection {
 	}
 
 	public void onServiceDisconnected(ComponentName service) {
+		// nothing to do when service is disconnected
 	}
 }

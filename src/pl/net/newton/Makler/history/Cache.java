@@ -3,12 +3,14 @@ package pl.net.newton.Makler.history;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -33,7 +35,7 @@ public class Cache {
 		this.filePrefix = filePrefix;
 	}
 
-	synchronized public void addEntry(String key, EntryList entry) {
+	public synchronized void addEntry(String key, EntryList entry) {
 		if (map.size() == capacity) {
 			removeOldest();
 		}
@@ -42,11 +44,13 @@ public class Cache {
 		saveToDisk(key);
 	}
 
-	synchronized public boolean hasKey(String key) {
-		if (!map.containsKey(key))
+	public synchronized boolean hasKey(String key) {
+		if (!map.containsKey(key)) {
 			getFromDisk(key);
-		if (!map.containsKey(key))
+		}
+		if (!map.containsKey(key)) {
 			return false;
+		}
 
 		CacheEntry cEntry = map.get(key);
 		if ((Calendar.getInstance().getTimeInMillis() - cEntry.calendar.getTimeInMillis()) > (validTime * 1000)) {
@@ -56,9 +60,10 @@ public class Cache {
 		return true;
 	}
 
-	synchronized public EntryList getEntry(String key) {
-		if (!hasKey(key))
+	public synchronized EntryList getEntry(String key) {
+		if (!hasKey(key)) {
 			return null;
+		}
 		return map.get(key).entry;
 	}
 
@@ -72,13 +77,15 @@ public class Cache {
 				oldestKey = key;
 			}
 		}
-		if (oldestKey != null)
+		if (oldestKey != null) {
 			map.remove(oldestKey);
+		}
 	}
 
 	private void saveToDisk(final String entry) {
-		if (!map.containsKey(entry))
+		if (!map.containsKey(entry)) {
 			return;
+		}
 
 		new Thread(new Runnable() {
 			public void run() {
@@ -99,7 +106,7 @@ public class Cache {
 
 	}
 
-	synchronized private void getFromDisk(String entry) {
+	private synchronized void getFromDisk(String entry) {
 		try {
 			Log.d(TAG, "loading " + entry + " from disk");
 			File f = ctx.getFileStreamPath(filePrefix + entry);
@@ -111,16 +118,24 @@ public class Cache {
 			cal.setTimeInMillis(f.lastModified());
 			if ((Calendar.getInstance().getTimeInMillis() - cal.getTimeInMillis()) > (validTime * 1000)) {
 				Log.d(TAG, entry + " out of date");
-				f.delete();
+				if (!f.delete()) {
+					Log.e(TAG, "Can't delete file " + f.getPath());
+				}
 				return;
 			}
 
 			FileInputStream fis = ctx.openFileInput(filePrefix + entry);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			CacheEntry e = (CacheEntry) ois.readObject();
-			map.put(entry, e);
+			try {
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				CacheEntry e = (CacheEntry) ois.readObject();
+				map.put(entry, e);
+			} catch (ClassNotFoundException e) {
+				Log.e(TAG, "Can't find class", e);
+			} finally {
+				fis.close();
+			}
 			Log.d(TAG, "loaded " + entry);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			Log.e(TAG, "error in loading history", e);
 		}
 	}

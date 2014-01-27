@@ -2,8 +2,9 @@ package pl.net.newton.Makler.history;
 
 import java.util.Calendar;
 
-public class ByteArrayUtils {
-	private static long[] result = new long[2];
+public final class ByteArrayUtils {
+	private ByteArrayUtils() {
+	}
 
 	public static int search(byte[] needle, byte[] haystack, int from, int to) {
 		for (int i = from; i < to - needle.length; i++) {
@@ -14,8 +15,9 @@ public class ByteArrayUtils {
 					break;
 				}
 			}
-			if (ok)
+			if (ok) {
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -25,17 +27,19 @@ public class ByteArrayUtils {
 	}
 
 	public static int findNext(byte needle, byte[] haystack, int offset) {
-		for (int i = offset; i < haystack.length; i++)
-			if (haystack[i] == needle)
+		for (int i = offset; i < haystack.length; i++) {
+			if (haystack[i] == needle) {
 				return i;
+			}
+		}
 		return -1;
 	}
 
-	public static long[] parseLong(byte[] array, int offset) {
-		return parseLong(array, offset, 0);
+	public static long[] parseLong(byte[] array, int offset, long[] result) {
+		return parseLong(array, offset, 0, result);
 	}
 
-	public static long[] parseLong(byte[] array, int offset, int multiplier) {
+	public static long[] parseLong(byte[] array, int offset, int multiplier, long[] result) {
 		result[0] = 0;
 
 		boolean decimal = false;
@@ -44,14 +48,17 @@ public class ByteArrayUtils {
 			if (array[i] == '.') {
 				decimal = true;
 				continue;
-			} else if (array[i] < '0' || array[i] > '9')
+			} else if (array[i] < '0' || array[i] > '9') {
 				break;
-			if (decimal == true && multiplier == 0)
+			}
+			if (decimal == true && multiplier == 0) {
 				break;
+			}
 			result[0] *= 10;
 			result[0] += array[i] - '0';
-			if (decimal)
+			if (decimal) {
 				multiplier--;
+			}
 		}
 		for (int j = 0; j < multiplier; j++) {
 			result[0] *= 10;
