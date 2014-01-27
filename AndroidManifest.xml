@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="pl.net.newton.Makler" android:versionCode="108"
-	android:versionName="2.6c" android:installLocation="auto">
+	package="pl.net.newton.Makler" android:versionCode="109"
+	android:versionName="2.6d" android:installLocation="auto">
 	
 	<uses-feature android:name="android.hardware.telephony" android:required="false" />
 	
