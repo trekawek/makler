@@ -77,8 +77,8 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="70px"
-                android:layout_height="30px"
+                android:layout_width="60dip"
+                android:layout_height="30dip"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="6dip"
                 android:background="@drawable/bluebox" >
@@ -87,11 +87,11 @@
                     android:id="@+id/quoteDetailZmiana"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:paddingLeft="5px"
-                    android:paddingTop="4px"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="4dip"
                     android:text="1,5%"
                     android:textColor="#FFFFFF"
-                    android:textSize="16px"
+                    android:textSize="16dip"
                     android:textStyle="bold" >
                 </TextView>
             </LinearLayout>
