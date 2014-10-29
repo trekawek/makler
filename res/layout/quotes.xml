@@ -8,12 +8,8 @@ xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads">
 
 <RelativeLayout android:layout_width="fill_parent"  android:layout_height="fill_parent">
 <ListView android:id="@+id/quotesListView" android:layout_width="fill_parent"
-android:layout_height="fill_parent" android:layout_marginBottom="51dip">
+android:layout_height="fill_parent">
 </ListView>
 </RelativeLayout>
-
-<com.google.ads.AdView android:id="@+id/ad" android:layout_height="wrap_content" android:layout_width="fill_parent"
-android:layout_below="@id/quotesListView" android:layout_marginTop="-51dip" ads:adUnitId="a14cb03ac5db23f"
-ads:adSize="BANNER" ads:loadAdOnCreate="false"/>
 
 </LinearLayout>

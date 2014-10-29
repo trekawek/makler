@@ -46,7 +46,7 @@ public abstract class AbstractActivity extends Activity {
 
 	protected ExecutorService executor = Executors.newCachedThreadPool();
 
-	private static final boolean ADS_ENABLED = true;
+	private static final boolean ADS_ENABLED = false;
 
 	private ProgressDialog progressWindow;
 

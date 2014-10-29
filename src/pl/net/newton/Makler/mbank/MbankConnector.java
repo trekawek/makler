@@ -49,12 +49,15 @@ public class MbankConnector extends pl.net.newton.Makler.httpClient.Connector {
 		List<NameValuePair> data = new ArrayList<NameValuePair>();
 		data.add(new BasicNameValuePair("seed", seed));
 		data.add(new BasicNameValuePair("localDT", new Date().toLocaleString()));
+		if (login == null || password == null || "".equals(login) || "".equals(password)) {
+			throw new InvalidPasswordException("Uzupełnij login i hasło");
+		}
 		data.add(new BasicNameValuePair("customer", login));
 		data.add(new BasicNameValuePair("password", password));
 
 		String page = sendCommand("/logon.aspx", null, data, false, null, false);
-		if (page.contains("Błąd logowania"))
-			throw new InvalidPasswordException("Nieprawidłowe hasło");
+		if (page.contains("Nieprawidłowy identyfikator lub hasło"))
+			throw new InvalidPasswordException("Nieprawidłowy identyfikator lub hasło");
 		event = null;
 		viewstate = "";
 		openQuotes();

@@ -87,8 +87,8 @@
 	</string-array>
 	
 	<string-array name="data_source">
-		<item>mBank</item>
-		<!--item>DM PKO BP</item>
+		<!--item>mBank</item>
+		<item>DM PKO BP</item>
 		<item>Millennium</item>
 		<item>BRE Bank</item>
 		<item>BDM (test)</item>

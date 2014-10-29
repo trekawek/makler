@@ -2,9 +2,6 @@ package pl.net.newton.Makler.ui;
 
 import java.util.List;
 
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
-
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.db.quote.Quote;
@@ -69,18 +66,6 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 
 		noQuotes = findViewById(R.id.noQuotes);
 		quotesList = (ListView) findViewById(R.id.quotesListView);
-		AdView ads = (AdView) findViewById(R.id.ad);
-
-		if (adsEnabled) {
-			ads.loadAd(new AdRequest());
-			// checkIfRegistered();
-		} else {
-			android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) quotesList
-					.getLayoutParams();
-			params.setMargins(0, 0, 0, 0);
-			quotesList.setLayoutParams(params);
-			ads.setVisibility(View.GONE);
-		}
 
 		quotesList.setOnCreateContextMenuListener(this);
 		quotesList.setOnItemClickListener(this);

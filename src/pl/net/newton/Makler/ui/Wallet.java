@@ -3,9 +3,6 @@ package pl.net.newton.Makler.ui;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
-
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 import pl.net.newton.Makler.db.wallet.WalletDb;
@@ -74,17 +71,6 @@ public class Wallet extends AbstractActivity implements QuotesListener,
 		walletGain = (TextView) findViewById(R.id.walletGain);
 
 		listView = (ListView) findViewById(R.id.walletListView);
-		AdView ads = (AdView) findViewById(R.id.ad);
-
-		if (adsEnabled) {
-			ads.loadAd(new AdRequest());
-		} else {
-			android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) listView
-					.getLayoutParams();
-			params.setMargins(0, 0, 0, 0);
-			listView.setLayoutParams(params);
-			ads.setVisibility(View.GONE);
-		}
 
 		listView.setOnCreateContextMenuListener(this);
 		listView.setOnItemClickListener(this);
