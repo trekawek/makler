@@ -25,7 +25,7 @@ public class AlertsDb {
 	}
 
 	public List<Alert> getAlerts() {
-		ArrayList<Alert> alerts = new ArrayList<Alert>();
+		List<Alert> alerts = new ArrayList<Alert>();
 		Cursor c = sqlDb.query("alerts", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
 			do {

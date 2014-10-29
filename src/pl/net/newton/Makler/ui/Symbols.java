@@ -86,13 +86,11 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.refreshSymbols:
-				updateSymbols();
-
-			default:
-				return super.onOptionsItemSelected(item);
+		if (item.getItemId() == R.id.refreshSymbols) {
+			updateSymbols();
 		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void refreshList() {

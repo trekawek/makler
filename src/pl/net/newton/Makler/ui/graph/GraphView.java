@@ -54,25 +54,25 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 
 	public class GraphRange {
 		// One day
-		final static int D1 = 0;
+		static final int D1 = 0;
 
 		// Five day
-		final static int D5 = 1;
+		static final int D5 = 1;
 
 		// One Month
-		final static int M1 = 2;
+		static final int M1 = 2;
 
 		// Three months
-		final static int M3 = 3;
+		static final int M3 = 3;
 
 		// One year
-		final static int Y1 = 4;
+		static final int Y1 = 4;
 
 		// Two years
-		final static int Y2 = 5;
+		static final int Y2 = 5;
 
 		// All
-		final static int ALL = 6;
+		static final int ALL = 6;
 	};
 
 	private int graphRange, newGraphRange;
@@ -100,7 +100,6 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 
 	private MaklerGraphicalView graphView = null;
 
-	// private Paint paint;
 	private boolean interActiveMode = false;
 
 	private static final int GRAPH_SWIPE_MIN_DISTANCE = 60;

@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class About extends AbstractActivity implements OnClickListener {
+	
+	private static final String TAG = "Makler";
+	
 	private ImageView taxity;
 
 	@Override
@@ -35,7 +38,7 @@ public class About extends AbstractActivity implements OnClickListener {
 			text.setText(getPackageManager().getPackageInfo(comp.getPackageName(), 0).versionName);
 		} catch (NameNotFoundException e) {
 			text.setText("1.0");
-			e.printStackTrace();
+			Log.e(TAG, "Can't get version", e);
 		}
 
 		taxity.setOnClickListener(this);
