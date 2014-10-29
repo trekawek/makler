@@ -22,7 +22,7 @@ public final class GpwUtils {
 	public static boolean isOvertime(Calendar calendar) {
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minute = calendar.get(Calendar.MINUTE);
-		return hour == 17 && minute >= 0 && minute < 5;
+		return hour == 17 && minute >= 20 && minute < 30;
 	}
 
 	private static boolean isWeekend(Calendar calendar) {
