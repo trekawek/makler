@@ -31,6 +31,8 @@ import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class QuoteDetails extends AbstractActivity implements QuotesListener, HistoryListener {
 
+	private static final String SYMBOL = "symbol";
+
 	private Quote quote;
 
 	private String quoteSymbol;
@@ -49,6 +51,16 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 
 	private LinearLayout graphLayout;
 
+	private QuotesDb quotesDb;
+
+	private SymbolsDb symbolsDb;
+
+	private final Runnable mRefreshList = new Runnable() {
+		public void run() {
+			refresh();
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,8 +71,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 		}
 
 		textViews = new SparseArray<TextView>();
-		quoteSymbol = getIntent().getStringExtra("symbol");
-		// isWalletItem = getIntent().getBooleanExtra("wallet_item", false);
+		quoteSymbol = getIntent().getStringExtra(SYMBOL);
 	}
 
 	@Override
@@ -95,16 +106,6 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 		}
 		super.onDestroy();
 	}
-
-	private final Runnable mRefreshList = new Runnable() {
-		public void run() {
-			refresh();
-		}
-	};
-
-	private QuotesDb quotesDb;
-
-	private SymbolsDb symbolsDb;
 
 	public void quotesUpdated() {
 		mHandler.post(mRefreshList);
@@ -154,18 +155,20 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 
 		Resources res = getResources();
 		View zmiana = findViewById(R.id.quoteDetailZmiana);
-		if (quote.chooseZmiana() != null)
+		if (quote.chooseZmiana() != null) {
 			switch (quote.chooseZmiana().compareTo(BigDecimal.ZERO)) {
-				case 0:
-					zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.bluebox));
-					break;
 				case -1:
 					zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.redbox));
 					break;
 				case 1:
 					zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.greenbox));
 					break;
+				default:
+				case 0:
+					zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.bluebox));
+					break;
 			}
+		}
 	}
 
 	private void setTextView(int id, String text) {
@@ -203,19 +206,23 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 
 			case R.id.showAlerts:
 				intent = new Intent(this, Alerts.class);
-				intent.putExtra("symbol", quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.getSymbol());
 				startActivity(intent);
 				break;
 
 			case R.id.addToWallet:
 				intent = new Intent(this, WalletForm.class);
-				intent.putExtra("symbol", quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.getSymbol());
 				intent.putExtra("quote", quote.chooseKurs());
 				startActivity(intent);
 				break;
 
 			case R.id.graphRange:
 				graphView.changeGraphRange();
+				break;
+
+			default:
+				// do nothing
 				break;
 		}
 		return super.onOptionsItemSelected(item);

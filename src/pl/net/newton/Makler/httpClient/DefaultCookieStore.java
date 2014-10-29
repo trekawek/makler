@@ -49,7 +49,7 @@ import org.apache.http.cookie.Cookie;
  */
 public class DefaultCookieStore implements CookieStore {
 
-	private final ArrayList<Cookie> cookies;
+	private final List<Cookie> cookies;
 
 	private final Comparator<Cookie> cookieComparator;
 

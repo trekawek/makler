@@ -52,27 +52,30 @@ import android.widget.Toast;
 @SuppressLint("ViewConstructor")
 public class GraphView extends LinearLayout implements OnGestureListener, OnTouchListener {
 
-	public class GraphRange {
+	public static final class GraphRange {
 		// One day
-		final static int D1 = 0;
+		static final int D1 = 0;
 
 		// Five day
-		final static int D5 = 1;
+		static final int D5 = 1;
 
 		// One Month
-		final static int M1 = 2;
+		static final int M1 = 2;
 
 		// Three months
-		final static int M3 = 3;
+		static final int M3 = 3;
 
 		// One year
-		final static int Y1 = 4;
+		static final int Y1 = 4;
 
 		// Two years
-		final static int Y2 = 5;
+		static final int Y2 = 5;
 
 		// All
-		final static int ALL = 6;
+		static final int ALL = 6;
+
+		private GraphRange() {
+		}
 	};
 
 	private int graphRange, newGraphRange;
@@ -100,7 +103,6 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 
 	private MaklerGraphicalView graphView = null;
 
-	// private Paint paint;
 	private boolean interActiveMode = false;
 
 	private static final int GRAPH_SWIPE_MIN_DISTANCE = 60;
@@ -134,13 +136,14 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		prepareDialog();
 	}
 
-	public void setGraphRange(int graphRange) {
-		if (graphRange > GraphRange.ALL) {
-			graphRange = GraphRange.D1;
-		} else if (graphRange < GraphRange.D1) {
-			graphRange = GraphRange.ALL;
+	public void setGraphRange(int newGraphRange) {
+		int graphRangeToSet = newGraphRange;
+		if (newGraphRange > GraphRange.ALL) {
+			graphRangeToSet = GraphRange.D1;
+		} else if (newGraphRange < GraphRange.D1) {
+			graphRangeToSet = GraphRange.ALL;
 		}
-		this.graphRange = graphRange;
+		this.graphRange = graphRangeToSet;
 		mHandler.post(new Runnable() {
 			public void run() {
 				rangeSpinner.setSelection(GraphView.this.graphRange);
@@ -164,20 +167,16 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		Symbol symbol = symbolsDb.getSymbolBySymbol(quote.getSymbol());
 
 		try {
-			if (historyService.isRangeExist(symbol, graphRange) == false) {
+			if (!historyService.isRangeExist(symbol, graphRange)) {
 				showSpinner();
 			}
-
 			historyService.historyByInt(graphRange, symbol, force);
 		} catch (NullPointerException e) {
-			// TODO: handle exception
-			// e.printStackTrace();
 			Log.e(TAG, "npe during refreshing graph", e);
 		}
 	}
 
 	public void gotEntries(final EntryListWithIndexes entries) {
-
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				final LineChart xyChart = buildGraphView(entries);
@@ -258,8 +257,9 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 	}
 
 	private LineChart buildGraphView(EntryListWithIndexes entries) {
-		if (entries == null || entries.getLength() == 0)
+		if (entries == null || entries.getLength() == 0) {
 			return null;
+		}
 
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 		XYSeries series = new XYSeries(quote.getSymbol());
@@ -268,10 +268,12 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 			double value = ((double) entries.getClose(i)) / 100;
 			series.add(entries.getGraphIndex(i), value);
 
-			if (min == -1 || min > value)
+			if (min == -1 || min > value) {
 				min = value;
-			if (max == -1 || max < value)
+			}
+			if (max == -1 || max < value) {
 				max = value;
+			}
 		}
 		dataset.addSeries(series);
 
@@ -336,6 +338,9 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 			case GraphRange.ALL:
 				addLabels(6, entries, renderer, "MM.yyyy");
 				renderer.setChartTitle(context.getString(R.string.all));
+				break;
+			default:
+				// do nothing
 				break;
 		}
 
@@ -406,10 +411,12 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 			}
 		}
 
-		if (labels > days.size())
+		if (labels > days.size()) {
 			labels = days.size();
-		if (labels == 0)
+		}
+		if (labels == 0) {
 			return;
+		}
 
 		DateFormat sdf = new SimpleDateFormat(format, Locale.US);
 		int d = days.size() / labels;
@@ -493,19 +500,23 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		interActiveMode = !interActiveMode;
 	}
 
+	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 		return false;
 	}
 
+	@Override
 	public void onShowPress(MotionEvent e) {
+		// do nothing
 	}
 
+	@Override
 	public boolean onDown(MotionEvent e) {
 		return true;
 	}
 
+	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-
 		// don't allow to start full screen graph in FullScreenGraph activity
 		if (context instanceof FullScreenGraph) {
 			return false;
@@ -563,5 +574,4 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 			}
 		});
 	}
-
 }

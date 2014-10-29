@@ -4,11 +4,9 @@ import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
-
 import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.history.service.HistoryListener;
 import pl.net.newton.Makler.history.service.HistoryService;
-
 import pl.net.newton.Makler.ui.graph.GraphView;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -18,6 +16,10 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 public class FullScreenGraph extends AbstractActivity implements HistoryListener {
+	private static final String GRAPH_TYPE = "graphType";
+
+	private static final String GRAPH_RANGE = "graphRange";
+
 	private Quote quote;
 
 	private String quoteSymbol;
@@ -34,11 +36,11 @@ public class FullScreenGraph extends AbstractActivity implements HistoryListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		graphRange = getIntent().getIntExtra("graphRange", 0);
-		graphType = getIntent().getIntExtra("graphType", 0);
+		graphRange = getIntent().getIntExtra(GRAPH_RANGE, 0);
+		graphType = getIntent().getIntExtra(GRAPH_TYPE, 0);
 		if (savedInstanceState != null) {
-			graphRange = savedInstanceState.getInt("graphRange", graphRange);
-			graphType = savedInstanceState.getInt("graphType", graphType);
+			graphRange = savedInstanceState.getInt(GRAPH_RANGE, graphRange);
+			graphType = savedInstanceState.getInt(GRAPH_TYPE, graphType);
 		}
 
 		quoteSymbol = getIntent().getStringExtra("symbol");
@@ -48,16 +50,17 @@ public class FullScreenGraph extends AbstractActivity implements HistoryListener
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
 		if (graphView != null) {
-			state.putInt("graphRange", graphView.getGraphRange());
-			state.putInt("graphType", graphView.getGraphType());
+			state.putInt(GRAPH_RANGE, graphView.getGraphRange());
+			state.putInt(GRAPH_TYPE, graphView.getGraphType());
 		}
 		super.onSaveInstanceState(state);
 	}
 
 	@Override
 	public void onDestroy() {
-		if (historyService != null)
+		if (historyService != null) {
 			historyService.unregister(this);
+		}
 		super.onDestroy();
 	}
 
@@ -90,10 +93,8 @@ public class FullScreenGraph extends AbstractActivity implements HistoryListener
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.graphRange:
-				graphView.changeGraphRange();
-				break;
+		if (item.getItemId() == R.id.graphRange) {
+			graphView.changeGraphRange();
 		}
 		return super.onOptionsItemSelected(item);
 	}

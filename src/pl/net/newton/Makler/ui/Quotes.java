@@ -37,6 +37,8 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class Quotes extends AbstractActivity implements QuotesListener, OnItemClickListener {
+	private static final String SYMBOL = "symbol";
+
 	private static final String TAG = "Makler";
 
 	static final int GET_SYMBOL_FROM_LIST = 1, SHOW_PREFERENCES = 2;
@@ -52,6 +54,12 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 	private QuotesDb quotesDb;
 
 	private SymbolsDb symbolsDb;
+
+	private final Runnable mRefreshList = new Runnable() {
+		public void run() {
+			refreshList();
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -126,25 +134,33 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		switch (requestCode) {
 			case GET_SYMBOL_FROM_LIST:
 				if (resultCode == Activity.RESULT_OK) {
-					String symbol = data.getStringExtra("symbol");
-					if (addQuoteSymbols == null)
+					String symbol = data.getStringExtra(SYMBOL);
+					if (addQuoteSymbols == null) {
 						return;
+					}
 					String symbols = addQuoteSymbols.getText().toString();
-					if (symbols.endsWith(" ") || symbols.length() == 0)
+					if (symbols.endsWith(" ") || symbols.length() == 0) {
 						addQuoteSymbols.append(symbol);
-					else
+					} else {
 						addQuoteSymbols.append(" " + symbol);
+					}
 					break;
 				}
 				break;
 			case SHOW_PREFERENCES:
 				Log.d(TAG, "preferences set");
 				break;
+			default:
+				// do nothing
+				break;
 		}
 	}
 
-	private static class ContextMenuItem {
-		final static int DETAILS = 0, ALERTS = 1, WALLET = 5, DELETE = 2, UP = 3, DOWN = 4;
+	private final static class ContextMenuItem {
+		static final int DETAILS = 0, ALERTS = 1, WALLET = 5, DELETE = 2, UP = 3, DOWN = 4;
+
+		private ContextMenuItem() {
+		}
 	}
 
 	@Override
@@ -167,19 +183,19 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		switch (item.getItemId()) {
 			case ContextMenuItem.DETAILS:
 				intent = new Intent(this, QuoteDetails.class);
-				intent.putExtra("symbol", quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.getSymbol());
 				startActivity(intent);
 				break;
 
 			case ContextMenuItem.ALERTS:
 				intent = new Intent(this, Alerts.class);
-				intent.putExtra("symbol", quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.getSymbol());
 				startActivity(intent);
 				break;
 
 			case ContextMenuItem.WALLET:
 				intent = new Intent(this, WalletForm.class);
-				intent.putExtra("symbol", quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.getSymbol());
 				intent.putExtra("quote", quote.chooseKurs());
 				startActivity(intent);
 				break;
@@ -198,6 +214,10 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 				quotesDb.deleteQuote(quote.getId());
 				refreshList();
 				break;
+
+			default:
+				// do nothing
+				break;
 		}
 		return true;
 	}
@@ -206,7 +226,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		Quote quote = quotes.get(position);
 
 		Intent intent = new Intent(quotesList.getContext(), QuoteDetails.class);
-		intent.putExtra("symbol", quote.getSymbol());
+		intent.putExtra(SYMBOL, quote.getSymbol());
 		startActivity(intent);
 	}
 
@@ -248,6 +268,10 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 				intent = new Intent(quotesList.getContext(), Wallet.class);
 				startActivity(intent);
 				break;
+
+			default:
+				// do nothing
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -257,19 +281,13 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 			return;
 		}
 		quotes = quotesDb.getQuotes(false);
-		if (quotes.size() == 0) {
+		if (quotes.isEmpty()) {
 			noQuotes.setVisibility(View.VISIBLE);
 		} else {
 			noQuotes.setVisibility(View.GONE);
 		}
 		quotesList.setAdapter(new QuotesAdapter(this, quotes));
 	}
-
-	private final Runnable mRefreshList = new Runnable() {
-		public void run() {
-			refreshList();
-		}
-	};
 
 	private void updateQuotes() {
 		perform(new ProcessPerformer() {
@@ -314,13 +332,13 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 			public boolean perform(QuotesReceiver quotesReceiver) throws GpwException {
 				DefaultQuotesReceiver q = new DefaultQuotesReceiver(Quotes.this);
 				List<Symbol> symbols;
-				if (finalSinceDate.equals("")) {
+				if ("".equals(finalSinceDate)) {
 					symbols = q.getSymbols();
 				} else {
 					symbols = q.getSymbols(finalSinceDate);
 				}
 
-				if (symbols.size() == 0) {
+				if (symbols.isEmpty()) {
 					Log.d(TAG, "brak nowych papierów od " + finalSinceDate);
 					config.setLastSymbolsUpdated(date);
 				} else {

@@ -49,6 +49,38 @@ public abstract class AbstractActivity extends Activity {
 
 	private AtomicBoolean uiInitialized = new AtomicBoolean(false);
 
+	private final ServiceConnection quotesConnection = new ServiceConnection() {
+		public void onServiceDisconnected(ComponentName name) {
+			quotesService = null;
+		}
+
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			quotesService = (QuotesService) service;
+			if (AbstractActivity.this instanceof QuotesListener) {
+				QuotesListener listener = (QuotesListener) AbstractActivity.this;
+				quotesService.register(listener);
+			}
+			quotesService.setUpdates(updatesEnabled());
+			quotesService.setForeground(true);
+			servicesInitialized();
+		}
+	};
+
+	private final ServiceConnection historyConnection = new ServiceConnection() {
+		public void onServiceDisconnected(ComponentName name) {
+			historyService = null;
+		}
+
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			historyService = (HistoryService) service;
+			if (AbstractActivity.this instanceof HistoryListener) {
+				HistoryListener listener = (HistoryListener) AbstractActivity.this;
+				historyService.register(listener);
+			}
+			servicesInitialized();
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -119,8 +151,9 @@ public abstract class AbstractActivity extends Activity {
 	public void showProgressWindow() {
 		mHandler.post(new Runnable() {
 			public void run() {
-				if (progressWindow != null && progressWindow.isShowing())
+				if (progressWindow != null && progressWindow.isShowing()) {
 					return;
+				}
 				Log.d(TAG, "pokazywanie okna - prosimy czekać");
 				try {
 					progressWindow = ProgressDialog.show(AbstractActivity.this, "Proszę czekać.",
@@ -161,23 +194,6 @@ public abstract class AbstractActivity extends Activity {
 		});
 	}
 
-	private ServiceConnection quotesConnection = new ServiceConnection() {
-		public void onServiceDisconnected(ComponentName name) {
-			quotesService = null;
-		}
-
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			quotesService = (QuotesService) service;
-			if (AbstractActivity.this instanceof QuotesListener) {
-				QuotesListener listener = (QuotesListener) AbstractActivity.this;
-				quotesService.register(listener);
-			}
-			quotesService.setUpdates(updatesEnabled());
-			quotesService.setForeground(true);
-			servicesInitialized();
-		}
-	};
-
 	protected boolean updatesEnabled() {
 		return true;
 	}
@@ -194,22 +210,7 @@ public abstract class AbstractActivity extends Activity {
 		}
 	};
 
-	private ServiceConnection historyConnection = new ServiceConnection() {
-		public void onServiceDisconnected(ComponentName name) {
-			historyService = null;
-		}
-
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			historyService = (HistoryService) service;
-			if (AbstractActivity.this instanceof HistoryListener) {
-				HistoryListener listener = (HistoryListener) AbstractActivity.this;
-				historyService.register(listener);
-			}
-			servicesInitialized();
-		}
-	};
-
-	synchronized private void servicesInitialized() {
+	private synchronized void servicesInitialized() {
 		if (sqlDb != null && historyService != null && !uiInitialized.getAndSet(true)) {
 			mHandler.post(new Runnable() {
 				public void run() {

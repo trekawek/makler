@@ -1,8 +1,10 @@
 package pl.net.newton.Makler.ui.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.symbol.Symbol;
@@ -19,20 +21,21 @@ public class SymbolsAdapter extends BaseAdapter implements SectionIndexer {
 
 	private List<Symbol> symbols;
 
-	private Hashtable<Character, Integer> sectionBegins;
+	private Map<Character, Integer> sectionBegins;
 
-	private ArrayList<Character> sections;
+	private List<Character> sections;
 
 	public SymbolsAdapter(Context context, List<Symbol> symbols) {
 		mInflater = LayoutInflater.from(context);
 		this.symbols = symbols;
-		sectionBegins = new Hashtable<Character, Integer>();
+		sectionBegins = new HashMap<Character, Integer>();
 		sections = new ArrayList<Character>();
 		Character c = null;
 		for (int i = 0; i < symbols.size(); i++) {
 			Symbol s = symbols.get(i);
-			if (s.getSymbol().length() == 0)
+			if (s.getSymbol().length() == 0) {
 				continue;
+			}
 			Character d = s.getSymbol().charAt(0);
 			if (d != c) {
 				sectionBegins.put(d, i);
@@ -68,10 +71,11 @@ public class SymbolsAdapter extends BaseAdapter implements SectionIndexer {
 
 		Symbol symbol = symbols.get(position);
 		holder.symbol.setText(symbol.getSymbol());
-		if (symbol.isIndex())
+		if (symbol.isIndex()) {
 			holder.name.setText("");
-		else
+		} else {
 			holder.name.setText(symbol.getName());
+		}
 		return convertView;
 	}
 
@@ -88,14 +92,14 @@ public class SymbolsAdapter extends BaseAdapter implements SectionIndexer {
 	public int getSectionForPosition(int i) {
 		for (int j = 0; j < sections.size(); j++) {
 			int pos = getPositionForSection(j);
-			if (pos > i)
+			if (pos > i) {
 				return j - 1;
+			}
 		}
 		return sections.size() - 1;
 	}
 
 	public Object[] getSections() {
-		// Log.d(TAG, sections.toString());
 		return sections.toArray();
 	}
 }

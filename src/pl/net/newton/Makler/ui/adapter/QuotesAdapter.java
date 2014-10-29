@@ -24,11 +24,11 @@ public class QuotesAdapter extends BaseAdapter {
 
 		TextView name;
 
-		TextView kurs_min;
+		TextView kursMin;
 
 		TextView kurs;
 
-		TextView kurs_max;
+		TextView kursMax;
 
 		TextView zmiana;
 	}
@@ -63,9 +63,9 @@ public class QuotesAdapter extends BaseAdapter {
 			holder.update = (TextView) convertView.findViewById(R.id.quoteItemUpdate);
 			holder.symbol = (TextView) convertView.findViewById(R.id.quoteItemSymbol);
 			holder.name = (TextView) convertView.findViewById(R.id.quoteItemName);
-			holder.kurs_min = (TextView) convertView.findViewById(R.id.quoteItemKursMin);
+			holder.kursMin = (TextView) convertView.findViewById(R.id.quoteItemKursMin);
 			holder.kurs = (TextView) convertView.findViewById(R.id.quoteItemKurs);
-			holder.kurs_max = (TextView) convertView.findViewById(R.id.quoteItemKursMax);
+			holder.kursMax = (TextView) convertView.findViewById(R.id.quoteItemKursMax);
 			holder.zmiana = (TextView) convertView.findViewById(R.id.quoteItemZmiana);
 			convertView.setTag(holder);
 		} else {
@@ -85,10 +85,10 @@ public class QuotesAdapter extends BaseAdapter {
 			holder.name.setVisibility(View.VISIBLE);
 			holder.name.setText(quote.getName());
 		}
-		holder.kurs_min.setText(NumberFormatUtils.formatNumber(quote.getKursMin()));
+		holder.kursMin.setText(NumberFormatUtils.formatNumber(quote.getKursMin()));
 		holder.kurs.setText(NumberFormatUtils.formatNumber(quote.chooseKurs()));
 		holder.zmiana.setText(NumberFormatUtils.formatNumber(quote.chooseZmiana()) + "%");
-		holder.kurs_max.setText(NumberFormatUtils.formatNumber(quote.getKursMax()));
+		holder.kursMax.setText(NumberFormatUtils.formatNumber(quote.getKursMax()));
 
 		Resources res = convertView.getResources();
 		if (quote.chooseZmiana() != null)

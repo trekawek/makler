@@ -12,13 +12,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 public class WalletForm extends AbstractActivity implements OnClickListener {
-	private RadioButton kupno, sprzedaż;
+	private static final String TAG = "Makler";
+	
+	private RadioButton kupno, sprzedaz;
 
 	private EditText walor, ilosc, kurs;
 
@@ -36,7 +39,7 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 		setContentView(R.layout.wallet_trans);
 
 		kupno = (RadioButton) findViewById(R.id.transTypeK);
-		sprzedaż = (RadioButton) findViewById(R.id.transTypeS);
+		sprzedaz = (RadioButton) findViewById(R.id.transTypeS);
 		ilosc = (EditText) findViewById(R.id.transIlosc);
 		walor = (EditText) findViewById(R.id.transWalor);
 		kurs = (EditText) findViewById(R.id.transKurs);
@@ -46,7 +49,7 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 				Intent intent = new Intent(v.getContext(), Symbols.class);
 				if (kupno.isChecked()) {
 					startActivityForResult(intent, GET_SYMBOL_K);
-				} else if (sprzedaż.isChecked()) {
+				} else if (sprzedaz.isChecked()) {
 					intent.putExtra("forWalletSell", true);
 					startActivityForResult(intent, GET_SYMBOL_S);
 				}
@@ -57,19 +60,19 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 
 		String symbol = getIntent().getStringExtra("symbol");
 		String quote = getIntent().getStringExtra("quote");
-		if (symbol != null)
+		if (symbol != null) {
 			this.walor.setText(symbol);
-		if (quote != null)
+		}
+		if (quote != null) {
 			this.kurs.setText(quote.replace(',', '.').replaceAll("[^0-9\\.]", ""));
+		}
 
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case GET_SYMBOL_K:
-			case GET_SYMBOL_S:
+		if (requestCode == GET_SYMBOL_K || requestCode == GET_SYMBOL_S) {
 				if (resultCode == Activity.RESULT_OK) {
 					String symbol = data.getStringExtra("symbol");
 					walor.setText(symbol);
@@ -78,26 +81,32 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		String walor, ilosc, kurs;
+		String walor, ilosc, quote;
 		Character type = null;
-		if (kupno.isChecked())
+		if (kupno.isChecked()) {
 			type = 'K';
-		else if (sprzedaż.isChecked())
+		} else if (sprzedaz.isChecked()) {
 			type = 'S';
+		}
 		walor = this.walor.getText().toString();
 		ilosc = this.ilosc.getText().toString();
-		kurs = this.kurs.getText().toString();
-		if (walor.length() == 0)
+		quote = this.kurs.getText().toString();
+		if (walor.length() == 0) {
 			return;
-		if (ilosc.length() == 0)
+		}
+		if (ilosc.length() == 0) {
 			return;
-		if (kurs.length() == 0)
+		}
+		if (quote.length() == 0) {
 			return;
-		if (type == null)
+		}
+		if (type == null) {
 			return;
+		}
 		Symbol s = symbolsDb.getSymbolBySymbol(walor);
-		if (s == null)
+		if (s == null) {
 			return;
+		}
 
 		if (s.isIndex()) {
 			showMessage("Nie możesz przeprowadzić transakcji z indeksem");
@@ -115,27 +124,32 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 		try {
 			commision = config.getCommision();
 		} catch (Exception e) {
+			Log.e(TAG, "Can't get commision", e);
 		}
 		try {
 			minCommision = config.getMinCommision();
 		} catch (Exception e) {
+			Log.e(TAG, "Can't get min commision", e);
 		}
 		try {
 			account = config.getWalletAccount();
 		} catch (Exception e) {
+			Log.e(TAG, "Can't get wallet account", e);
 		}
 
-		BigDecimal value = new BigDecimal(kurs).multiply(new BigDecimal(ilosc));
+		BigDecimal value = new BigDecimal(quote).multiply(new BigDecimal(ilosc));
 		BigDecimal com = value.divide(new BigDecimal(100)).multiply(commision);
-		if (com.compareTo(minCommision) < 0)
+		if (com.compareTo(minCommision) < 0) {
 			com = minCommision;
+		}
 		account = account.subtract(com);
-		if (type == 'K')
+		if (type == 'K') {
 			account = account.subtract(value);
-		else
+		} else {
 			account = account.add(value);
+		}
 
-		item.addTrans(type, Integer.parseInt(ilosc), new BigDecimal(kurs.replace(" ", "")), com);
+		item.addTrans(type, Integer.parseInt(ilosc), new BigDecimal(quote.replace(" ", "")), com);
 		walletDb.updateWalletItem(item);
 
 		config.setWalletAccount(account.toString());

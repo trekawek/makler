@@ -8,6 +8,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -15,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class About extends AbstractActivity implements OnClickListener {
+
+	private static final String TAG = "Makler";
+
 	private ImageView taxity;
 
 	@Override
@@ -35,7 +39,7 @@ public class About extends AbstractActivity implements OnClickListener {
 			text.setText(getPackageManager().getPackageInfo(comp.getPackageName(), 0).versionName);
 		} catch (NameNotFoundException e) {
 			text.setText("1.0");
-			e.printStackTrace();
+			Log.e(TAG, "Can't get version", e);
 		}
 
 		taxity.setOnClickListener(this);
@@ -43,12 +47,10 @@ public class About extends AbstractActivity implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.taxity:
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(Uri.parse("market://details?id=com.taxity"));
-				startActivity(intent);
-				break;
+		if (v.getId() == R.id.taxity) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse("market://details?id=com.taxity"));
+			startActivity(intent);
 		}
 	}
 

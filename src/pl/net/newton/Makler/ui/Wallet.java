@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,11 +35,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class Wallet extends AbstractActivity implements QuotesListener, OnItemClickListener {
+	private static final String SYMBOL = "symbol";
+
+	private static final int NEW_TRANS = 400;
+
+	private static final String TAG = "Makler";
+
 	private List<WalletItem> items;
 
 	private ListView listView;
-
-	private final int NEW_TRANS = 400;
 
 	private TextView walletAccount, walletGain;
 
@@ -55,10 +60,12 @@ public class Wallet extends AbstractActivity implements QuotesListener, OnItemCl
 		try {
 			commision = config.getCommision();
 		} catch (Exception e) {
+			Log.e(TAG, "Can't get comission", e);
 		}
 		try {
 			minCommision = config.getMinCommision();
 		} catch (Exception e) {
+			Log.e(TAG, "Can't get min comission", e);
 		}
 
 		setContentView(R.layout.wallet);
@@ -103,12 +110,19 @@ public class Wallet extends AbstractActivity implements QuotesListener, OnItemCl
 			case R.id.setWalletState:
 				setAccount();
 				break;
+
+			default:
+				// do nothing
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	private static class ContextMenuItem {
-		final static int TRANSACTION = 0, DELETE = 1, UP = 2, DOWN = 3, DETAILS = 4, CALCULATOR = 5;
+	private static final class ContextMenuItem {
+		static final int TRANSACTION = 0, DELETE = 1, UP = 2, DOWN = 3, DETAILS = 4, CALCULATOR = 5;
+
+		private ContextMenuItem() {
+		}
 	}
 
 	@Override
@@ -129,17 +143,17 @@ public class Wallet extends AbstractActivity implements QuotesListener, OnItemCl
 		Intent intent;
 
 		switch (item.getItemId()) {
-			case ContextMenuItem.CALCULATOR: {
+			case ContextMenuItem.CALCULATOR:
 				showCalculator(walletItem);
 				break;
-			}
+
 			case ContextMenuItem.DETAILS:
 				showDetails(walletItem);
 				break;
 
 			case ContextMenuItem.TRANSACTION:
 				intent = new Intent(this, WalletForm.class);
-				intent.putExtra("symbol", walletItem.getSymbol());
+				intent.putExtra(SYMBOL, walletItem.getSymbol());
 				intent.putExtra("quote", NumberFormatUtils.formatNumber(walletItem.getQuote()));
 				startActivityForResult(intent, NEW_TRANS);
 				break;
@@ -164,14 +178,13 @@ public class Wallet extends AbstractActivity implements QuotesListener, OnItemCl
 
 	private void showCalculator(WalletItem walletItem) {
 		Intent intent = new Intent(this, WalletItemCalculator.class);
-		intent.putExtra("symbol", walletItem.getSymbol());
-		// intent.putExtra("wallet_item", true);
+		intent.putExtra(SYMBOL, walletItem.getSymbol());
 		startActivity(intent);
 	}
 
 	private void showDetails(WalletItem item) {
 		Intent intent = new Intent(this, QuoteDetails.class);
-		intent.putExtra("symbol", item.getSymbol());
+		intent.putExtra(SYMBOL, item.getSymbol());
 		intent.putExtra("wallet_item", true);
 		startActivity(intent);
 	}
@@ -191,8 +204,9 @@ public class Wallet extends AbstractActivity implements QuotesListener, OnItemCl
 		}
 		BigDecimal gain = BigDecimal.ZERO;
 
-		for (WalletItem i : items)
+		for (WalletItem i : items) {
 			gain = gain.add(i.gainWithCommision(commision, minCommision));
+		}
 		walletAccount.setText(NumberFormatUtils.formatNumber(acc));
 		walletGain.setText(NumberFormatUtils.formatNumber(gain));
 	}
@@ -208,14 +222,8 @@ public class Wallet extends AbstractActivity implements QuotesListener, OnItemCl
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case NEW_TRANS:
-				if (resultCode == Activity.RESULT_OK) {
-					if (quotesService != null) {
-						updateQuotes();
-					}
-				}
-				break;
+		if (requestCode == NEW_TRANS && resultCode == Activity.RESULT_OK && quotesService != null) {
+			updateQuotes();
 		}
 	}
 
@@ -241,17 +249,18 @@ public class Wallet extends AbstractActivity implements QuotesListener, OnItemCl
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
 		input.setKeyListener(DigitsKeyListener.getInstance(false, true));
-		BigDecimal walletAccount = config.getWalletAccount();
-		walletAccount = walletAccount.setScale(2, BigDecimal.ROUND_HALF_UP);
-		input.setText(walletAccount.toString());
+		BigDecimal newWalletAccount = config.getWalletAccount();
+		newWalletAccount = newWalletAccount.setScale(2, BigDecimal.ROUND_HALF_UP);
+		input.setText(newWalletAccount.toString());
 
 		alert.setView(input);
 
 		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String value = input.getText().toString();
-				if (value.length() == 0)
+				if (value.length() == 0) {
 					value = getString(R.string.zero);
+				}
 				config.setWalletAccount(value);
 				refreshList();
 			}

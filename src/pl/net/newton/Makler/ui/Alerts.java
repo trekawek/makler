@@ -126,36 +126,35 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		String value = valueEditText.getText().toString();
 		Boolean percent = percentCheckBox.isChecked();
 
-		switch (button.getId()) {
-			case R.id.addAlert:
-				if (value.length() == 0)
-					return;
+		if (button.getId() == R.id.addAlert) {
+			if (value.length() == 0) {
+				return;
+			}
 
-				AlertBuilder builder = new AlertBuilder();
-				builder.setQuote(quote).setSubject(subject).setEvent(event).setValue(new BigDecimal(value))
-						.setPercent(percent);
-				if (event.isBaseValueRequired()) {
-					builder.setBaseValue(subject.getValue(quote));
-				}
-				if (this.alertId != 0) {
-					builder.setId(alertId).setUsed(false);
-					Alert alert = builder.build();
-					alertsDb.updateAlert(alert);
-					finish();
-					return;
+			AlertBuilder builder = new AlertBuilder();
+			builder.setQuote(quote).setSubject(subject).setEvent(event).setValue(new BigDecimal(value))
+					.setPercent(percent);
+			if (event.isBaseValueRequired()) {
+				builder.setBaseValue(subject.getValue(quote));
+			}
+			if (this.alertId != 0) {
+				builder.setId(alertId).setUsed(false);
+				Alert newAlert = builder.build();
+				alertsDb.updateAlert(newAlert);
+				finish();
+				return;
+			} else {
+				Alert newAlert = builder.build();
+				if (alertsDb.addAlert(newAlert)) {
+					subjectSpinner.setSelection(0);
+					eventSpinner.setSelection(0);
+					valueEditText.setText("");
+					percentCheckBox.setChecked(false);
 				} else {
-					Alert alert = builder.build();
-					if (alertsDb.addAlert(alert)) {
-						subjectSpinner.setSelection(0);
-						eventSpinner.setSelection(0);
-						valueEditText.setText("");
-						percentCheckBox.setChecked(false);
-					} else {
-						showMessage("Nie udało się dodać alertu");
-					}
+					showMessage("Nie udało się dodać alertu");
 				}
-				refreshList();
-				break;
+			}
+			refreshList();
 		}
 	}
 
@@ -163,10 +162,11 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		alerts = alertsDb.alertsByQuote(quote);
 		alertList.setAdapter(new AlertsAdapter(this, alerts));
 		View label = findViewById(R.id.alertListLabel);
-		if (alerts.size() == 0)
+		if (alerts.isEmpty()) {
 			label.setVisibility(View.INVISIBLE);
-		else
+		} else {
 			label.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -177,20 +177,18 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-		Alert alert = alerts.get(info.position);
+		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		final Alert selectedAlert = alerts.get(info.position);
+		final int id = item.getItemId();
 
-		switch (item.getItemId()) {
-			case ContextMenuItem.EDIT:
-				Intent intent = new Intent(this, getClass());
-				intent.putExtra("alertId", alert.getId());
-				startActivityForResult(intent, EDIT_RESULT);
-				break;
-
-			case ContextMenuItem.DELETE:
-				alertsDb.deleteAlert(alert.getId());
-				refreshList();
-				break;
+		if (id == ContextMenuItem.EDIT) {
+			Intent intent = new Intent(this, getClass());
+			intent.putExtra("alertId", selectedAlert.getId());
+			startActivityForResult(intent, EDIT_RESULT);
+		} else if (id == ContextMenuItem.DELETE) {
+			alertsDb.deleteAlert(selectedAlert.getId());
+			refreshList();
 		}
 		return true;
 	}
@@ -201,10 +199,13 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		}
 	}
 
-	private static class ContextMenuItem {
-		final static int DELETE = 0;
+	private final static class ContextMenuItem {
+		static final int DELETE = 0;
 
-		final static int EDIT = 1;
+		static final int EDIT = 1;
+
+		private ContextMenuItem() {
+		}
 	}
 
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -234,7 +235,9 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		}
 	}
 
-	public void onNothingSelected(AdapterView<?> arg0) {
+	@Override
+	public void onNothingSelected(AdapterView<?> view) {
+		// do nothing
 	}
 
 	private void populateQuoteItem() {

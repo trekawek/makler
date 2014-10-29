@@ -26,7 +26,7 @@ public class QuotesDb {
 	}
 
 	public List<Quote> getQuotes(boolean all) {
-		ArrayList<Quote> quotes = new ArrayList<Quote>();
+		List<Quote> quotes = new ArrayList<Quote>();
 		String sql;
 		if (all) {
 			sql = ctx.getString(R.string.getAllQuotes);

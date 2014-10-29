@@ -62,15 +62,19 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 
 		EditText findSymbolName = (EditText) findViewById(R.id.findSymbolName);
 		findSymbolName.addTextChangedListener(new TextWatcher() {
-
+			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				refreshList();
 			}
 
+			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				// do nothing
 			}
 
+			@Override
 			public void afterTextChanged(Editable s) {
+				// do nothing
 			}
 		});
 
@@ -86,13 +90,11 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.refreshSymbols:
-				updateSymbols();
-
-			default:
-				return super.onOptionsItemSelected(item);
+		if (item.getItemId() == R.id.refreshSymbols) {
+			updateSymbols();
 		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void refreshList() {
@@ -129,11 +131,11 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 			}
 
 			public boolean perform(QuotesReceiver quotesReceiver) throws GpwException {
-				List<Symbol> symbols;
-				symbols = quotesReceiver.getSymbols();
-				if (symbols != null) {
+				List<Symbol> updatedSymbols;
+				updatedSymbols = quotesReceiver.getSymbols();
+				if (updatedSymbols != null) {
 					config.setLastSymbolsUpdated(DateFormatUtils.formatCurrentDate());
-					symbolsDb.updateSymbols(symbols);
+					symbolsDb.updateSymbols(updatedSymbols);
 					return true;
 				} else {
 					return false;

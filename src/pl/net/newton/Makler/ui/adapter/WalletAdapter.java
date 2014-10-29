@@ -87,7 +87,7 @@ public class WalletAdapter extends BaseAdapter {
 		holder.quantity.setText(NumberFormatUtils.formatNumber(item.getQuantity()));
 
 		Resources res = convertView.getResources();
-		if (item.getZmiana() != null)
+		if (item.getZmiana() != null) {
 			switch (item.getZmiana().compareTo(BigDecimal.ZERO)) {
 				case 0:
 					holder.zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.bluebox));
@@ -99,6 +99,7 @@ public class WalletAdapter extends BaseAdapter {
 					holder.zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.greenbox));
 					break;
 			}
+		}
 		return convertView;
 	}
 }
