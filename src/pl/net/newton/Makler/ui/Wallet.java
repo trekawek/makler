@@ -3,17 +3,11 @@ package pl.net.newton.Makler.ui;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
-
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.wallet.WalletDb;
 import pl.net.newton.Makler.db.wallet.WalletItem;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
-import pl.net.newton.Makler.gpw.Trades;
 import pl.net.newton.Makler.gpw.ex.GpwException;
-import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.WalletAdapter;
@@ -39,8 +33,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class Wallet extends AbstractActivity implements QuotesListener,
-		OnItemClickListener {
+public class Wallet extends AbstractActivity implements QuotesListener, OnItemClickListener {
 	private List<WalletItem> items;
 
 	private ListView listView;
@@ -52,7 +45,7 @@ public class Wallet extends AbstractActivity implements QuotesListener,
 	BigDecimal commision = BigDecimal.ZERO;
 
 	BigDecimal minCommision = BigDecimal.ZERO;
-	
+
 	private WalletDb walletDb;
 
 	@Override
@@ -73,17 +66,6 @@ public class Wallet extends AbstractActivity implements QuotesListener,
 		walletGain = (TextView) findViewById(R.id.walletGain);
 
 		listView = (ListView) findViewById(R.id.walletListView);
-		AdView ads = (AdView) findViewById(R.id.ad);
-
-		if (adsEnabled) {
-			ads.loadAd(new AdRequest());
-		} else {
-			android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) listView
-					.getLayoutParams();
-			params.setMargins(0, 0, 0, 0);
-			listView.setLayoutParams(params);
-			ads.setVisibility(View.GONE);
-		}
 
 		listView.setOnCreateContextMenuListener(this);
 		listView.setOnItemClickListener(this);
@@ -195,10 +177,10 @@ public class Wallet extends AbstractActivity implements QuotesListener,
 	}
 
 	public void refreshList() {
-		if(walletDb == null) {
+		if (walletDb == null) {
 			return;
 		}
-		
+
 		items = walletDb.getWalletItems();
 		listView.setAdapter(new WalletAdapter(this, items, commision, minCommision));
 
@@ -243,8 +225,7 @@ public class Wallet extends AbstractActivity implements QuotesListener,
 				refreshList();
 			}
 
-			public boolean perform(QuotesReceiver quotesReceiver, Trades trades) throws GpwException,
-					InvalidPasswordException {
+			public boolean perform(QuotesReceiver quotesReceiver) throws GpwException {
 				quotesService.updateQuotes();
 				return true;
 			}
@@ -286,7 +267,7 @@ public class Wallet extends AbstractActivity implements QuotesListener,
 	}
 
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.walletDb = new WalletDb(sqlDb, this);
 		refreshList();
 	}

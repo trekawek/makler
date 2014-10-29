@@ -13,8 +13,9 @@ import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.service.SqlProvider;
 import pl.net.newton.Makler.db.service.impl.SqlProviderImpl;
+import pl.net.newton.Makler.gpw.DefaultQuotesReceiver;
+import pl.net.newton.Makler.gpw.QuotesReceiver;
 import pl.net.newton.Makler.gpw.ex.GpwException;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.gpw.service.QuotesService;
 import pl.net.newton.Makler.common.Configuration;
@@ -37,23 +38,23 @@ public class QuotesServiceImpl extends Service {
 
 	private final LocalBinder binder = new LocalBinder();
 
+	private QuotesReceiver quotesReceiver;
+
 	private List<QuotesListener> listeners = Collections.synchronizedList(new ArrayList<QuotesListener>());
 
 	private Configuration config;
-
-	private GpwProvider gpw;
 
 	private UpdatingThread updatingThread = new UpdatingThread();
 
 	private SQLiteDatabase sql;
 
-	private QuotesDb quotesDb;
-
-	private AlertChecker alertChecker;
-
 	private StartIntent startIntent;
 
 	private Executor executor = Executors.newFixedThreadPool(1);
+
+	private QuotesDb quotesDb;
+
+	private AlertChecker alertChecker;
 
 	private volatile boolean updatesEnabled = true;
 
@@ -64,8 +65,8 @@ public class QuotesServiceImpl extends Service {
 		super.onCreate();
 		Log.d(TAG, this.getClass().getName() + " - onCreate");
 		config = new Configuration(this);
+		quotesReceiver = new DefaultQuotesReceiver(this);
 
-		bindService(new Intent(this, GpwProviderImpl.class), gpwConnection, BIND_AUTO_CREATE);
 		bindService(new Intent(this, SqlProviderImpl.class), sqlConnection, BIND_AUTO_CREATE);
 	}
 
@@ -80,7 +81,7 @@ public class QuotesServiceImpl extends Service {
 				startIntent = null;
 			}
 
-			if (sql != null && gpw != null) {
+			if (sql != null) {
 				utilizeIntent();
 			}
 		}
@@ -98,13 +99,9 @@ public class QuotesServiceImpl extends Service {
 		Log.d(TAG, this.getClass().getName() + " - onDestroy");
 		try {
 			updatingThread.stopThread();
-			if (gpw != null) {
-				gpw.getQuotesImpl().stopSession();
-			}
 		} catch (Exception e) {
 			Log.e(TAG, "error in destroying QuotesService", e);
 		}
-		unbindService(gpwConnection);
 		unbindService(sqlConnection);
 	}
 
@@ -175,10 +172,10 @@ public class QuotesServiceImpl extends Service {
 		}
 
 		public void updateQuotes() throws GpwException {
-			if (gpw == null || !updatesEnabled) {
+			if (!updatesEnabled) {
 				return;
 			}
-			synchronized (gpw) {
+			synchronized (quotesReceiver) {
 				Log.d(TAG, "updating quotes");
 				List<Quote> quotes = quotesDb.getQuotes(true);
 				List<String> symbols = new ArrayList<String>();
@@ -186,7 +183,7 @@ public class QuotesServiceImpl extends Service {
 					symbols.add(q.getSymbol());
 				}
 
-				List<Quote> newQuotes = gpw.getQuotesImpl().getQuotesBySymbols(symbols);
+				List<Quote> newQuotes = quotesReceiver.getQuotesBySymbols(symbols);
 				if (newQuotes != null) {
 					int qSize = quotes.size();
 					int nSize = newQuotes.size();
@@ -227,23 +224,8 @@ public class QuotesServiceImpl extends Service {
 		}
 	};
 
-	private ServiceConnection gpwConnection = new ServiceConnection() {
-		public void onServiceDisconnected(ComponentName name) {
-			gpw = null;
-		}
-
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			synchronized (QuotesServiceImpl.this) {
-				if (service instanceof GpwProvider) {
-					gpw = (GpwProvider) service;
-				}
-				servicesInitialized();
-			}
-		}
-	};
-
 	private synchronized void servicesInitialized() {
-		if (sql != null && gpw != null) {
+		if (sql != null) {
 			utilizeIntent();
 		}
 	}

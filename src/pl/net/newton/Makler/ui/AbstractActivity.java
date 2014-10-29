@@ -7,10 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import pl.net.newton.Makler.db.service.SqlProvider;
 import pl.net.newton.Makler.gpw.DefaultQuotesReceiver;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
-import pl.net.newton.Makler.gpw.Trades;
 import pl.net.newton.Makler.gpw.ex.GpwException;
-import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.gpw.service.QuotesService;
 import pl.net.newton.Makler.history.service.HistoryListener;
@@ -36,17 +33,11 @@ public abstract class AbstractActivity extends Activity {
 
 	protected Configuration config;
 
-	protected boolean adsEnabled = ADS_ENABLED;
-
-	protected GpwProvider gpwProviderService;
-
 	protected QuotesService quotesService;
 
 	private HistoryService historyService;
 
 	protected ExecutorService executor = Executors.newCachedThreadPool();
-
-	private static final boolean ADS_ENABLED = true;
 
 	private ProgressDialog progressWindow;
 
@@ -62,16 +53,14 @@ public abstract class AbstractActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, this.getClass().getName() + " - onCreate");
-		
+
 		serviceManager = new ServiceManager(this);
-		
-		bindService(serviceManager.getGpwProviderIntent(), gpwConnection, BIND_AUTO_CREATE);
+
 		bindService(serviceManager.getQuotesServiceIntent(), quotesConnection, BIND_AUTO_CREATE);
 		bindService(serviceManager.getSqlProviderIntent(), sqlConnection, BIND_AUTO_CREATE);
 		bindService(serviceManager.getHistoryServiceIntent(), historyConnection, BIND_AUTO_CREATE);
 
 		config = new Configuration(this);
-		adsEnabled = !config.isUserRegistered();
 
 		mHandler = new Handler();
 	}
@@ -83,7 +72,6 @@ public abstract class AbstractActivity extends Activity {
 		if (historyService != null && this instanceof HistoryListener) {
 			historyService.unregister((HistoryListener) this);
 		}
-		unbindService(gpwConnection);
 		unbindService(quotesConnection);
 		unbindService(sqlConnection);
 		unbindService(historyConnection);
@@ -100,7 +88,7 @@ public abstract class AbstractActivity extends Activity {
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, this.getClass().getName() + " - onPause");
-		if(quotesService != null) {
+		if (quotesService != null) {
 			quotesService.setUpdates(true);
 			quotesService.setForeground(false);
 		}
@@ -110,24 +98,23 @@ public abstract class AbstractActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, this.getClass().getName() + " - onResume");
-		if(quotesService != null) {
+		if (quotesService != null) {
 			quotesService.setUpdates(updatesEnabled());
 			quotesService.setForeground(true);
 		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
 		Log.d(TAG, this.getClass().getName() + " - onStart");
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();
 		Log.d(TAG, this.getClass().getName() + " - onStop");
 	}
-
 
 	public void showProgressWindow() {
 		mHandler.post(new Runnable() {
@@ -173,28 +160,6 @@ public abstract class AbstractActivity extends Activity {
 			}
 		});
 	}
-
-	protected void checkIfRegistered() {
-		new Thread(new Runnable() {
-			public void run() {
-				DefaultQuotesReceiver newton = new DefaultQuotesReceiver(AbstractActivity.this);
-				if (newton.isRegistered()) {
-					config.registerUser();
-				}
-			}
-		}).start();
-	}
-
-	private ServiceConnection gpwConnection = new ServiceConnection() {
-		public void onServiceDisconnected(ComponentName name) {
-			gpwProviderService = null;
-		}
-
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			gpwProviderService = (GpwProvider) service;
-			servicesInitialized();
-		}
-	};
 
 	private ServiceConnection quotesConnection = new ServiceConnection() {
 		public void onServiceDisconnected(ComponentName name) {
@@ -245,11 +210,10 @@ public abstract class AbstractActivity extends Activity {
 	};
 
 	synchronized private void servicesInitialized() {
-		if (sqlDb != null && gpwProviderService != null && historyService != null
-				&& !uiInitialized.getAndSet(true)) {
+		if (sqlDb != null && historyService != null && !uiInitialized.getAndSet(true)) {
 			mHandler.post(new Runnable() {
 				public void run() {
-					initUi(gpwProviderService, sqlDb, historyService);
+					initUi(sqlDb, historyService);
 				}
 			});
 		}
@@ -263,8 +227,6 @@ public abstract class AbstractActivity extends Activity {
 			} else if (e.getCause() != null) {
 				message = String.format("Wystąpił błąd z powodu " + e.getCause().toString());
 			}
-		} else if (e instanceof InvalidPasswordException) {
-			message = "Nieprawidłowy login lub hasło";
 		}
 		showMessage(message);
 		Log.e(TAG, "exception", e);
@@ -277,15 +239,7 @@ public abstract class AbstractActivity extends Activity {
 				boolean result = false;
 				showProgressWindow();
 				try {
-					QuotesReceiver receiver = null;
-					Trades trades = null;
-					if (setGpwProvider) {
-						receiver = gpwProviderService.getQuotesImpl();
-						if (receiver.supportTrades()) {
-							trades = receiver.getTrades();
-						}
-					}
-					result = performer.perform(receiver, trades);
+					result = performer.perform(new DefaultQuotesReceiver(AbstractActivity.this));
 					success = true;
 				} catch (Exception e) {
 					handleException(e);
@@ -305,8 +259,7 @@ public abstract class AbstractActivity extends Activity {
 	}
 
 	protected static interface ProcessPerformer {
-		public boolean perform(QuotesReceiver quotesReceiver, Trades trades) throws GpwException,
-				InvalidPasswordException;
+		public boolean perform(QuotesReceiver quotesReceiver) throws GpwException;
 
 		public void showResults(boolean result);
 	}
@@ -314,6 +267,5 @@ public abstract class AbstractActivity extends Activity {
 	public void onServiceDisconnected(ComponentName name) {
 	}
 
-	protected abstract void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb,
-			HistoryService historyService);
+	protected abstract void initUi(SQLiteDatabase sqlDb, HistoryService historyService);
 }

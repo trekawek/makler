@@ -30,7 +30,6 @@ import pl.net.newton.Makler.db.alert.Event;
 import pl.net.newton.Makler.db.alert.Subject;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.AlertsAdapter;
 import pl.net.newton.Makler.ui.adapter.QuotesAdapter;
@@ -38,7 +37,7 @@ import pl.net.newton.Makler.ui.adapter.QuotesAdapter;
 public class Alerts extends AbstractActivity implements OnClickListener, OnItemSelectedListener {
 
 	private static final int EDIT_RESULT = 100;
-	
+
 	private ListView alertList;
 
 	private List<Alert> alerts;
@@ -60,9 +59,9 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 	private EditText valueEditText;
 
 	private CheckBox percentCheckBox;
-	
+
 	private ArrayAdapter<CharSequence> eventQuoteAdapter, eventNonQuoteAdapter;
-	
+
 	private boolean eventInitialized;
 
 	private Alert alert;
@@ -78,7 +77,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 
 		Button btn = (Button) findViewById(R.id.addAlert);
 		btn.setOnClickListener(this);
-		if(alertId != 0) {
+		if (alertId != 0) {
 			btn.setText("Modyfikuj");
 		}
 		alertList = (ListView) findViewById(R.id.alertList);
@@ -88,7 +87,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		eventSpinner = (Spinner) findViewById(R.id.alertEvent);
 		valueEditText = (EditText) findViewById(R.id.alertValue);
 		percentCheckBox = (CheckBox) findViewById(R.id.alertPercent);
-		
+
 		eventQuoteAdapter = ArrayAdapter.createFromResource(this, R.array.alert_events_quote_strings,
 				android.R.layout.simple_spinner_item);
 		eventQuoteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -116,8 +115,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		Subject subject = Subject.getFromLabel(this, (String) subjectSpinner.getSelectedItem());
 		if (subject == Subject.KURS) {
 			eventSpinner.setAdapter(eventQuoteAdapter);
-		}
-		else {
+		} else {
 			eventSpinner.setAdapter(eventNonQuoteAdapter);
 		}
 	}
@@ -188,7 +186,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 				intent.putExtra("alertId", alert.getId());
 				startActivityForResult(intent, EDIT_RESULT);
 				break;
-				
+
 			case ContextMenuItem.DELETE:
 				alertsDb.deleteAlert(alert.getId());
 				refreshList();
@@ -196,25 +194,26 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		}
 		return true;
 	}
-	
-	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-		if(requestCode == EDIT_RESULT) {
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == EDIT_RESULT) {
 			refreshList();
 		}
 	}
 
 	private static class ContextMenuItem {
 		final static int DELETE = 0;
+
 		final static int EDIT = 1;
 	}
 
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		if (parent.getId() == R.id.alertSubject) {
 			populateEventsSpinner();
-		
-			if(alertId != 0 && !eventInitialized) {
+
+			if (alertId != 0 && !eventInitialized) {
 				int eventPos;
-				if(alert.getSubject() == Subject.KURS) {
+				if (alert.getSubject() == Subject.KURS) {
 					eventPos = eventQuoteAdapter.getPosition(alert.getEvent().getLabel(this));
 				} else {
 					eventPos = eventNonQuoteAdapter.getPosition(alert.getEvent().getLabel(this));
@@ -225,13 +224,12 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		}
 		setCheckboxEnabled();
 	}
-	
+
 	private void setCheckboxEnabled() {
 		Event event = Event.getFromLabel(this, (String) eventSpinner.getSelectedItem());
 		if (event == Event.SPA_O || event == Event.WZR_O) {
 			percentCheckBox.setEnabled(true);
-		}
-		else {
+		} else {
 			percentCheckBox.setEnabled(false);
 		}
 	}
@@ -248,7 +246,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 	}
 
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.quotesDb = new QuotesDb(sqlDb, this);
 		this.alertsDb = new AlertsDb(sqlDb, this);
 		if (alertId != 0) {
@@ -257,7 +255,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 			setSymbolData(symbol);
 		}
 		populateQuoteItem();
-		if(alertId == 0) {
+		if (alertId == 0) {
 			refreshList();
 		} else {
 			findViewById(R.id.alertListLabel).setVisibility(View.GONE);

@@ -68,14 +68,4 @@
             android:layout_marginBottom="51dip" >
         </ListView>
     </RelativeLayout>
-
-    <com.google.ads.AdView
-        android:id="@+id/ad"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-51dip"
-        ads:adSize="BANNER"
-        ads:adUnitId="a14cb03ac5db23f"
-        ads:loadAdOnCreate="false" />
-
 </LinearLayout>

@@ -6,11 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public final class Configuration {
-	private static final String TAG = "MaklerConfiguration";
-
 	private static final String FREQ_BACKGROUND = "frequencyBackground";
 
 	private static final String FREQ_FOREGROUND = "frequencyForeground";
@@ -25,16 +22,6 @@ public final class Configuration {
 
 	private static final String MIN_COMMISION = "minCommision";
 
-	private static final String OWN_DATA_SOURCE = "ownDataSource";
-
-	private static final String DATA_SOURCE_TYPE = "dataSourceType";
-
-	private static final String DATA_SOURCE_LOGIN = "dataSourceLogin";
-
-	private static final String DATA_SOURCE_PASSWORD = "dataSourcePassword";
-
-	private static final String REGISTERED = "userRegistered";
-
 	private static final String LAST_SYMBOLS_UPDATE = "lastSymbolsUpdated";
 
 	private static final String WALLET_ACCOUNT = "walletAccount";
@@ -45,19 +32,9 @@ public final class Configuration {
 
 	private Editor edit;
 
-	private boolean cachedOwnDataSource;
-
-	private DataSource cachedType;
-
-	private String cachedLogin, cachedPassword;
-
 	public Configuration(Context ctx) {
 		pref = PreferenceManager.getDefaultSharedPreferences(ctx);
 		edit = pref.edit();
-		cachedOwnDataSource = getOwnDataSource();
-		cachedType = getDataSourceType();
-		cachedLogin = getDataSourceLogin();
-		cachedPassword = getDataSourcePassword();
 	}
 
 	public int getFreqBackground() {
@@ -86,69 +63,6 @@ public final class Configuration {
 
 	public BigDecimal getMinCommision() {
 		return new BigDecimal(pref.getString(MIN_COMMISION, "0"));
-	}
-
-	public boolean dataSourceChanged() {
-		boolean newOwnDataSource = getOwnDataSource();
-		DataSource newType = getDataSourceType();
-		String newLogin = getDataSourceLogin();
-		String newPassword = getDataSourcePassword();
-
-		boolean changed = false;
-		changed = changed || (newOwnDataSource != cachedOwnDataSource);
-		changed = changed || (newType != cachedType);
-		changed = changed || !newLogin.equals(cachedLogin);
-		changed = changed || !newPassword.equals(cachedPassword);
-
-		cachedOwnDataSource = newOwnDataSource;
-		cachedType = newType;
-		cachedLogin = newLogin;
-		cachedPassword = newPassword;
-
-		return changed;
-	}
-
-	public boolean getOwnDataSource() {
-		return pref.getBoolean(OWN_DATA_SOURCE, false);
-	}
-
-	public void disableOwnDataSource() {
-		edit.putBoolean(OWN_DATA_SOURCE, false);
-		edit.commit();
-	}
-
-	public DataSource getDataSourceType() {
-		String type = pref.getString(DATA_SOURCE_TYPE, null);
-		if (type == null || !getOwnDataSource()) {
-			return DataSource.MAKLER;
-		} else {
-			try {
-				return DataSource.valueOf(type);
-			} catch (IllegalArgumentException e) {
-				Log.e(TAG, "Unknown data source type", e);
-				edit.putString(DATA_SOURCE_TYPE, null);
-				edit.putBoolean(OWN_DATA_SOURCE, false);
-				edit.commit();
-				return DataSource.MAKLER;
-			}
-		}
-	}
-
-	public String getDataSourceLogin() {
-		return pref.getString(DATA_SOURCE_LOGIN, "");
-	}
-
-	public String getDataSourcePassword() {
-		return pref.getString(DATA_SOURCE_PASSWORD, "");
-	}
-
-	public void registerUser() {
-		edit.putBoolean(REGISTERED, true);
-		edit.commit();
-	}
-
-	public boolean isUserRegistered() {
-		return pref.getBoolean(REGISTERED, false);
 	}
 
 	public String getLastSymbolsUpdated() {

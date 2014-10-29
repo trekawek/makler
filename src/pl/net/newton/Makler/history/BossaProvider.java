@@ -89,7 +89,7 @@ public class BossaProvider implements HistoryProvider {
 			Log.d(TAG, "lines counted: " + lines);
 
 			i = ByteArrayUtils.nextLine(byteArray, 0);
-			withTime = ByteArrayUtils.search("<TIME>".getBytes("en_US"), byteArray, 0, i) != -1;
+			withTime = ByteArrayUtils.search("<TIME>".getBytes("UTF-8"), byteArray, 0, i) != -1;
 			list = new EntryList(lines, withTime);
 		} catch (Exception e) {
 			Log.e(TAG, "can't get entries", e);

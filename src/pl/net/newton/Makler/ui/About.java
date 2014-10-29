@@ -1,7 +1,6 @@
 package pl.net.newton.Makler.ui;
 
 import pl.net.newton.Makler.R;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.service.HistoryService;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -54,7 +53,7 @@ public class About extends AbstractActivity implements OnClickListener {
 	}
 
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		// do nothing
 	}
 }

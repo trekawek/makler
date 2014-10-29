@@ -5,7 +5,6 @@ import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.history.service.HistoryListener;
 import pl.net.newton.Makler.history.service.HistoryService;
@@ -28,7 +27,7 @@ public class FullScreenGraph extends AbstractActivity implements HistoryListener
 	private GraphView graphView;
 
 	private int graphType, graphRange;
-	
+
 	private SymbolsDb symbolsDb;
 
 	@Override
@@ -67,12 +66,12 @@ public class FullScreenGraph extends AbstractActivity implements HistoryListener
 	}
 
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		QuotesDb quotesDb = new QuotesDb(sqlDb, this);
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
 		quote = quotesDb.getQuoteBySymbol(quoteSymbol);
 		setTitle(quote.getName());
-		
+
 		graphView = new GraphView(this, quote, mHandler, historyService, symbolsDb);
 		graphView.setGraphRange(graphRange);
 		graphView.setGraphType(graphType);

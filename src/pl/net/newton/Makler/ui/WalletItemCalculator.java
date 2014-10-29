@@ -1,6 +1,3 @@
-/**
- * Change log: 07-02-2012 - initial version
- */
 package pl.net.newton.Makler.ui;
 
 import java.math.BigDecimal;
@@ -10,7 +7,6 @@ import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.db.wallet.WalletDb;
 import pl.net.newton.Makler.db.wallet.WalletItem;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.QuotesAdapter;
 import pl.net.newton.Makler.R;
@@ -72,11 +68,11 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 	private EditText editTextSprzedaz;
 
 	private Handler handler = new Handler();
-	
+
 	private String quoteSymbol;
-	
+
 	private WalletDb walletDb;
-	
+
 	private SymbolsDb symbolsDb;
 
 	/**
@@ -151,7 +147,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 		editTextKupno.removeTextChangedListener(this);
 		editTextSprzedaz.removeTextChangedListener(this);
 
-		//editTextIlosc.setText(walletItem.getQuantity().toString());
+		// editTextIlosc.setText(walletItem.getQuantity().toString());
 		editTextIlosc.setText(NumberFormatUtils.formatNumber(quantity));
 		editTextKupno.setText(NumberFormatUtils.formatNumber(kupno));
 		editTextSprzedaz.setText(NumberFormatUtils.formatNumber(sprzedaz));
@@ -359,9 +355,8 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 	}
 
-
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.walletDb = new WalletDb(sqlDb, this);
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
 		QuotesDb quotesDb = new QuotesDb(sqlDb, this);

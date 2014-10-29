@@ -85,25 +85,7 @@
 		<item>modyfikowanie</item>
 		<item>redukowanie</item>
 	</string-array>
-	
-	<string-array name="data_source">
-		<item>mBank</item>
-		<!--item>DM PKO BP</item>
-		<item>Millennium</item>
-		<item>BRE Bank</item>
-		<item>BDM (test)</item>
-		<item>DMBH (test)</item-->
-	</string-array>
-	
-	<string-array name="data_source_values">
-		<item>mbank</item>
-		<!--item>pkobp</item>
-		<item>millennium</item>
-		<item>bre</item>
-		<item>bdm</item>
-		<item>dmbh</item-->
-	</string-array>
-	
+
 	<string-array name="graph_ranges">
 		<item>1 dzień</item>
 		<item>5 dni</item>

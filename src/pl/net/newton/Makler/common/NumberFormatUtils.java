@@ -7,8 +7,6 @@ import java.text.ParseException;
 import android.util.Log;
 
 public final class NumberFormatUtils {
-	private static final String TAG = "MaklerNumberFormat";
-	
 	private static final NumberFormat NF;
 
 	static {
@@ -58,7 +56,6 @@ public final class NumberFormatUtils {
 		try {
 			return parse(s);
 		} catch (NumberFormatException e) {
-			Log.e(TAG, "Can't parse number", e);
 			return null;
 		}
 	}
@@ -85,7 +82,6 @@ public final class NumberFormatUtils {
 		try {
 			return parseInt(s);
 		} catch (NumberFormatException e) {
-			Log.e(TAG, "Can't parse number", e);
 			return null;
 		}
 	}
@@ -103,7 +99,6 @@ public final class NumberFormatUtils {
 		try {
 			return NF.parse(s).doubleValue();
 		} catch (ParseException e) {
-			Log.e(TAG, "Can't parse number", e);
 			return 0.0;
 		}
 	}

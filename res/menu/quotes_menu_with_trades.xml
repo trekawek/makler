@@ -7,18 +7,6 @@
         android:title="@string/add_symbols">
     </item>
     <item
-        android:id="@+id/showOrders"
-        android:icon="@drawable/orders"
-        android:showAsAction="ifRoom"
-        android:title="@string/orders">
-    </item>
-    <item
-        android:id="@+id/showAccount"
-        android:icon="@drawable/account_state"
-        android:showAsAction="always"
-        android:title="@string/account_state">
-    </item>
-    <item
         android:id="@+id/showWallet"
         android:icon="@drawable/wallet"
         android:showAsAction="always"

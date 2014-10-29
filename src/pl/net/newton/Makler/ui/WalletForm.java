@@ -7,7 +7,6 @@ import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.db.wallet.WalletDb;
 import pl.net.newton.Makler.db.wallet.WalletItem;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.service.HistoryService;
 import android.app.Activity;
 import android.content.Intent;
@@ -147,7 +146,7 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 	}
 
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.walletDb = new WalletDb(sqlDb, this);
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
 	}

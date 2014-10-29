@@ -15,7 +15,6 @@ import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuoteBuilder;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolBuilder;
-import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.httpClient.Connector;
 import pl.net.newton.Makler.common.Configuration;
 import pl.net.newton.Makler.common.DateFormatUtils;
@@ -129,14 +128,6 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 		}
 	}
 
-	public void startSession(Context ctx, SymbolsDb symbolsDb) {
-		// there is no session for the default quotes receiver
-	}
-
-	public void stopSession() {
-		// there is no session for the default quotes receiver
-	}
-
 	private Quote quoteFromLine(String line) {
 		String[] a = line.split("\\|");
 		QuoteBuilder builder = new QuoteBuilder();
@@ -170,13 +161,5 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 			builder.setUpdate(DateFormatUtils.formatCurrentTime());
 		}
 		return builder.build();
-	}
-
-	public boolean supportTrades() {
-		return false;
-	}
-
-	public Trades getTrades() {
-		return null;
 	}
 }

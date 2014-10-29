@@ -9,12 +9,7 @@ import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.db.wallet.WalletDb;
 import pl.net.newton.Makler.db.wallet.WalletItem;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
-import pl.net.newton.Makler.gpw.Trades;
 import pl.net.newton.Makler.gpw.ex.GpwException;
-import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
-import pl.net.newton.Makler.gpw.model.Finances;
-import pl.net.newton.Makler.gpw.model.Paper;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.SymbolsAdapter;
 import pl.net.newton.Makler.common.DateFormatUtils;
@@ -38,14 +33,14 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 
 	private ListView symbolsList;
 
-	private boolean forSell = false, forWalletSell = false;
-	
+	private boolean forWalletSell = false;
+
 	private boolean forceUpdate;
-	
+
 	private boolean refreshList;
-	
+
 	private WalletDb walletDb;
-	
+
 	private SymbolsDb symbolsDb;
 
 	@Override
@@ -58,9 +53,6 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 
 		if (getIntent().getBooleanExtra("update", false)) {
 			forceUpdate = true;
-		} else if (getIntent().getBooleanExtra("forSell", false)) {
-			forSell = true;
-			findViewById(R.id.symbolsSearchRow).setVisibility(View.GONE);
 		} else if (getIntent().getBooleanExtra("forWalletSell", false)) {
 			forWalletSell = true;
 			findViewById(R.id.symbolsSearchRow).setVisibility(View.GONE);
@@ -87,10 +79,8 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!forSell) {
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.symbols_menu, menu);
-		}
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.symbols_menu, menu);
 		return true;
 	}
 
@@ -98,11 +88,7 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.refreshSymbols:
-				if (forSell) {
-					getFinances();
-				} else {
-					updateSymbols();
-				}
+				updateSymbols();
 
 			default:
 				return super.onOptionsItemSelected(item);
@@ -110,10 +96,10 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 	}
 
 	public void refreshList() {
-		if(walletDb == null || symbolsDb == null) {
+		if (walletDb == null || symbolsDb == null) {
 			return;
 		}
-		
+
 		EditText findSymbolName = (EditText) findViewById(R.id.findSymbolName);
 		String name = findSymbolName.getText().toString();
 
@@ -122,7 +108,7 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 			for (WalletItem item : walletDb.getWalletItems()) {
 				symbols.add(symbolsDb.getSymbolBySymbol(item.getSymbol()));
 			}
-		} else if (!forSell) {
+		} else {
 			symbols = symbolsDb.getSymbols(name);
 		}
 
@@ -142,8 +128,7 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 				refreshList();
 			}
 
-			public boolean perform(QuotesReceiver quotesReceiver, Trades trades) throws GpwException,
-					InvalidPasswordException {
+			public boolean perform(QuotesReceiver quotesReceiver) throws GpwException {
 				List<Symbol> symbols;
 				symbols = quotesReceiver.getSymbols();
 				if (symbols != null) {
@@ -157,36 +142,16 @@ public class Symbols extends AbstractActivity implements OnItemClickListener {
 		}, true);
 	}
 
-	private void getFinances() {
-		perform(new ProcessPerformer() {
-			public void showResults(boolean result) {
-				refreshList();
-			}
-
-			public boolean perform(QuotesReceiver quotesReceiver, Trades trades) throws GpwException,
-					InvalidPasswordException {
-				Finances finances = trades.getFinances();
-				symbols = new ArrayList<Symbol>();
-				for (Paper p : finances.getPapers())
-					symbols.add(p.getSymbol());
-				return true;
-			}
-		}, true);
-	}
-
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
 		this.walletDb = new WalletDb(sqlDb, this);
-		
-		if(forceUpdate) {
+
+		if (forceUpdate) {
 			updateSymbols();
 		}
-		if(refreshList || forWalletSell) {
+		if (refreshList || forWalletSell) {
 			refreshList();
-		}		
-		if (forSell) {
-			getFinances();
 		}
 	}
 

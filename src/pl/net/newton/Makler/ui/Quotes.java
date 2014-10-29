@@ -2,9 +2,6 @@ package pl.net.newton.Makler.ui;
 
 import java.util.List;
 
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
-
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
@@ -12,10 +9,7 @@ import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.gpw.DefaultQuotesReceiver;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
-import pl.net.newton.Makler.gpw.Trades;
 import pl.net.newton.Makler.gpw.ex.GpwException;
-import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.receivers.QuotesAlarmReceiver;
@@ -69,19 +63,6 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 
 		noQuotes = findViewById(R.id.noQuotes);
 		quotesList = (ListView) findViewById(R.id.quotesListView);
-		AdView ads = (AdView) findViewById(R.id.ad);
-
-		if (adsEnabled) {
-			ads.loadAd(new AdRequest());
-			// checkIfRegistered();
-		} else {
-			android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) quotesList
-					.getLayoutParams();
-			params.setMargins(0, 0, 0, 0);
-			quotesList.setLayoutParams(params);
-			ads.setVisibility(View.GONE);
-		}
-
 		quotesList.setOnCreateContextMenuListener(this);
 		quotesList.setOnItemClickListener(this);
 		registerForContextMenu(quotesList);
@@ -158,9 +139,6 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 				break;
 			case SHOW_PREFERENCES:
 				Log.d(TAG, "preferences set");
-				if (config.dataSourceChanged()) {
-					restartServices();
-				}
 				break;
 		}
 	}
@@ -241,13 +219,6 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (config.getDataSourceType().doesSupportTrades()) {
-			menu.getItem(1).setVisible(true);
-			menu.getItem(2).setVisible(true);
-		} else {
-			menu.getItem(1).setVisible(false);
-			menu.getItem(2).setVisible(false);
-		}
 		return true;
 	}
 
@@ -273,16 +244,6 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 				startActivity(intent);
 				break;
 
-			case R.id.showOrders:
-				intent = new Intent(this, Orders.class);
-				startActivity(intent);
-				break;
-
-			case R.id.showAccount:
-				intent = new Intent(quotesList.getContext(), AccountState.class);
-				startActivity(intent);
-				break;
-
 			case R.id.showWallet:
 				intent = new Intent(quotesList.getContext(), Wallet.class);
 				startActivity(intent);
@@ -298,8 +259,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		quotes = quotesDb.getQuotes(false);
 		if (quotes.size() == 0) {
 			noQuotes.setVisibility(View.VISIBLE);
-		}
-		else {
+		} else {
 			noQuotes.setVisibility(View.GONE);
 		}
 		quotesList.setAdapter(new QuotesAdapter(this, quotes));
@@ -317,8 +277,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 				refreshList();
 			}
 
-			public boolean perform(QuotesReceiver quotesReceiver, Trades trades) throws GpwException,
-					InvalidPasswordException {
+			public boolean perform(QuotesReceiver quotesReceiver) throws GpwException {
 				quotesService.updateQuotes();
 				return true;
 			}
@@ -327,7 +286,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 
 	private void areSymbolsUpToDate() {
 		boolean doUpdate = false;
-		
+
 		final String lastSymbolsUpdated = config.getLastSymbolsUpdated();
 		final String date = DateFormatUtils.formatCurrentDate();
 		String sinceDate = "";
@@ -335,25 +294,24 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 			doUpdate = true;
 			sinceDate = lastSymbolsUpdated;
 		}
-		
+
 		Symbol s = symbolsDb.getSymbolBySymbol("PKN");
 		if (s == null || s.getCode() == null) {
 			doUpdate = true;
 			sinceDate = "";
 		}
-		
-		if(!doUpdate) {
+
+		if (!doUpdate) {
 			return;
 		}
-		
+
 		final String finalSinceDate = sinceDate;
 		perform(new ProcessPerformer() {
 			public void showResults(boolean result) {
 				refreshList();
 			}
 
-			public boolean perform(QuotesReceiver quotesReceiver, Trades trades) throws GpwException,
-					InvalidPasswordException {
+			public boolean perform(QuotesReceiver quotesReceiver) throws GpwException {
 				DefaultQuotesReceiver q = new DefaultQuotesReceiver(Quotes.this);
 				List<Symbol> symbols;
 				if (finalSinceDate.equals("")) {
@@ -373,7 +331,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		}, true);
 	}
 
-	private void updateSymbols(QuotesReceiver quotesReceiver) throws InvalidPasswordException, GpwException {
+	private void updateSymbols(QuotesReceiver quotesReceiver) throws GpwException {
 		List<Symbol> symbols;
 		symbols = quotesReceiver.getSymbols();
 		if (symbols != null) {
@@ -382,31 +340,16 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		}
 	}
 
-	private void restartServices() {
-		perform(new ProcessPerformer() {
-			public void showResults(boolean result) {
-				refreshList();
-			}
-
-			public boolean perform(QuotesReceiver quotesReceiver, Trades trades) throws GpwException,
-					InvalidPasswordException {
-				gpwProviderService.restart();
-				updateSymbols(gpwProviderService.getQuotesImpl());
-				return true;
-			}
-		}, false);
-	}
-
 	public void quotesUpdated() {
 		Log.d(TAG, "Aktualizacja listy notowań");
 		mHandler.post(mRefreshList);
 	}
 
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.quotesDb = new QuotesDb(sqlDb, this);
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
-		
+
 		areSymbolsUpToDate();
 		refreshList();
 	}

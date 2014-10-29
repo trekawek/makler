@@ -19,10 +19,7 @@ import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
-import pl.net.newton.Makler.gpw.Trades;
 import pl.net.newton.Makler.gpw.ex.GpwException;
-import pl.net.newton.Makler.gpw.ex.InvalidPasswordException;
-import pl.net.newton.Makler.gpw.service.GpwProvider;
 import pl.net.newton.Makler.gpw.service.QuotesListener;
 import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.history.service.HistoryListener;
@@ -230,8 +227,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 				refresh();
 			}
 
-			public boolean perform(QuotesReceiver quotesReceiver, Trades trades) throws GpwException,
-					InvalidPasswordException {
+			public boolean perform(QuotesReceiver quotesReceiver) throws GpwException {
 				quotesService.updateQuotes();
 				return true;
 			}
@@ -243,7 +239,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 	}
 
 	@Override
-	protected void initUi(GpwProvider gpwProvider, SQLiteDatabase sqlDb, HistoryService historyService) {
+	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
 		this.quotesDb = new QuotesDb(sqlDb, this);
 
