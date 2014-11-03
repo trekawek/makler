@@ -201,6 +201,7 @@ public class Wallet extends AbstractActivity implements QuotesListener, OnItemCl
 		try {
 			acc = config.getWalletAccount();
 		} catch (Exception e) {
+			Log.e(TAG, "Can't get wallet", e);
 		}
 		BigDecimal gain = BigDecimal.ZERO;
 

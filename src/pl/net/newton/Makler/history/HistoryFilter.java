@@ -7,32 +7,42 @@ import java.util.List;
 import pl.net.newton.Makler.db.symbol.Symbol;
 
 public class HistoryFilter {
-	private HistoryProvider provider;
 
-	public final static int MINUTES_IN_DAY = (17 - 9) * 60 + 35;
+	public static final int MINUTES_IN_DAY = (17 - 9) * 60 + 35;
+
+	private HistoryProvider provider;
 
 	public HistoryFilter(HistoryProvider provider) {
 		this.provider = provider;
 	}
 
 	public EntryListWithIndexes historyByInt(int graphRange, Symbol symbol, boolean force) {
+		final EntryListWithIndexes list;
 		switch (graphRange) {
 			case 1:
-				return intraday5Days(symbol, force);
+				list = intraday5Days(symbol, force);
+				break;
 			case 2:
-				return history1Month(symbol, force);
+				list = history1Month(symbol, force);
+				break;
 			case 3:
-				return history3Month(symbol, force);
+				list = history3Month(symbol, force);
+				break;
 			case 4:
-				return history1Year(symbol, force);
+				list = history1Year(symbol, force);
+				break;
 			case 5:
-				return history2Years(symbol, force);
+				list = history2Years(symbol, force);
+				break;
 			case 6:
-				return history(symbol, force);
+				list = history(symbol, force);
+				break;
 			case 0:
 			default:
-				return intradayToday(symbol, force);
+				list = intradayToday(symbol, force);
+				break;
 		}
+		return list;
 	}
 
 	public EntryListWithIndexes intradayToday(Symbol symbol, boolean force) {
@@ -80,13 +90,16 @@ public class HistoryFilter {
 	}
 
 	private EntryListWithIndexes sinceDate(EntryListWithIndexes entries, Date since, int resolutionIdDays) {
-		if (entries == null)
+		if (entries == null) {
 			return null;
+		}
 
 		int i, l = entries.getLength();
-		for (i = 0; i < l; i++)
-			if (!new Date(entries.getDate(i)).before(since))
+		for (i = 0; i < l; i++) {
+			if (!new Date(entries.getDate(i)).before(since)) {
 				break;
+			}
+		}
 		return setGraphIndex(entries.subList(i, l), resolutionIdDays * MINUTES_IN_DAY);
 	}
 
@@ -104,12 +117,13 @@ public class HistoryFilter {
 					d++;
 					lastDay = day;
 				}
-				if (d == days)
+				if (d == days) {
 					break;
+				}
 			}
 		}
-		entriesWithIndexes = entriesWithIndexes.subList(i + 1, l);
-		return setGraphIndex(entriesWithIndexes, resolutionInMinutes);
+		EntryListWithIndexes sublist = entriesWithIndexes.subList(i + 1, l);
+		return setGraphIndex(sublist, resolutionInMinutes);
 	}
 
 	private EntryListWithIndexes setGraphIndex(EntryListWithIndexes entriesWithIndexes,
@@ -138,8 +152,9 @@ public class HistoryFilter {
 				dayBeginning = cal.getTimeInMillis();
 			}
 			int minuteOfTheDay = (int) (entries.getDate(i) - dayBeginning) / (60 * 1000);
-			if (minuteOfTheDay < 0)
+			if (minuteOfTheDay < 0) {
 				minuteOfTheDay = 0;
+			}
 			int currentMinute = day * MINUTES_IN_DAY + minuteOfTheDay;
 			if (lastMinute == -1 || (currentMinute - lastMinute) >= resolutionInMinutes) {
 				lastMinute = currentMinute;
@@ -151,7 +166,6 @@ public class HistoryFilter {
 	}
 
 	public boolean isRangeExist(Symbol symbol, int graphRange) {
-		// TODO Auto-generated method stub
 		return provider.isRangeExist(symbol, graphRange);
 	}
 }

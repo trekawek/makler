@@ -78,7 +78,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 	/**
 	 * speed counter used to increase or decrease value step
 	 */
-	private int speed_counter = 0;
+	private int speedCounter = 0;
 
 	private double mValueStep = 0.01;
 
@@ -87,13 +87,13 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 		public void run() {
 			buttonPressed();
 			handler.postDelayed(this, COUNTER_TIME_INTERVAL);
-			speed_counter += 1;
+			speedCounter += 1;
 
-			if (speed_counter == 10) {
+			if (speedCounter == 10) {
 				mValueStep = 0.2;
-			} else if (speed_counter == 10) {
+			} else if (speedCounter == 10) {
 				mValueStep = 0.5;
-			} else if (speed_counter == 10) {
+			} else if (speedCounter == 10) {
 				mValueStep = 1.0;
 			}
 		}
@@ -122,11 +122,6 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
 	private void reset() {
 		walletItemQuantity.setText(NumberFormatUtils.formatNumber(walletItem.getQuantity()));
 		walletItemKurs.setText(NumberFormatUtils.formatNumber(quote.getKurs()));
@@ -142,31 +137,17 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 		} else {
 			sprzedaz = quote.getKurs().doubleValue();
 		}
-
-		editTextIlosc.removeTextChangedListener(this);
-		editTextKupno.removeTextChangedListener(this);
-		editTextSprzedaz.removeTextChangedListener(this);
-
-		// editTextIlosc.setText(walletItem.getQuantity().toString());
-		editTextIlosc.setText(NumberFormatUtils.formatNumber(quantity));
-		editTextKupno.setText(NumberFormatUtils.formatNumber(kupno));
-		editTextSprzedaz.setText(NumberFormatUtils.formatNumber(sprzedaz));
-
-		editTextIlosc.addTextChangedListener(this);
-		editTextKupno.addTextChangedListener(this);
-		editTextSprzedaz.addTextChangedListener(this);
-
-		updateZysk();
+		updateFields();
 	}
 
 	private void setView() {
-		String quoteSymbol = getIntent().getStringExtra("symbol");
-		walletItem = walletDb.getWalletItem(symbolsDb.getSymbolBySymbol(quoteSymbol));
+		String symbolName = getIntent().getStringExtra("symbol");
+		walletItem = walletDb.getWalletItem(symbolsDb.getSymbolBySymbol(symbolName));
 
 		if (quote.getSymbol().length() > 5) {
-			TextView symbol = (TextView) findViewById(R.id.quoteDetailSymbol);
-			symbol.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-			symbol.setPadding(0, QuotesAdapter.dpToPx(this, 14), 0, 0);
+			TextView symbolField = (TextView) findViewById(R.id.quoteDetailSymbol);
+			symbolField.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+			symbolField.setPadding(0, QuotesAdapter.dpToPx(this, 14), 0, 0);
 		}
 
 		TextView walletItemSymbol = (TextView) findViewById(R.id.walletItemSymbol);
@@ -226,7 +207,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 		Resources res = getResources();
 		View zmiana = findViewById(R.id.quoteDetailZmiana);
 
-		if (value != null)
+		if (value != null) {
 			switch (quote.chooseZmiana().compareTo(BigDecimal.ZERO)) {
 				case 0:
 					zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.bluebox));
@@ -238,6 +219,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 					zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.greenbox));
 					break;
 			}
+		}
 	}
 
 	private void updateZysk() {
@@ -256,7 +238,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 			commisionSprzedaz = minCommision;
 		}
 
-		BigDecimal z = (costSprzedaz.subtract(costKupno).subtract(commisionSprzedaz).subtract(commisionKupno));
+		BigDecimal z = costSprzedaz.subtract(costKupno).subtract(commisionSprzedaz).subtract(commisionKupno);
 
 		int compare = z.compareTo(BigDecimal.ZERO);
 		if (compare > 0) {
@@ -272,7 +254,6 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 	}
 
 	private void updateFields() {
-
 		editTextIlosc.removeTextChangedListener(this);
 		editTextKupno.removeTextChangedListener(this);
 		editTextSprzedaz.removeTextChangedListener(this);
@@ -326,7 +307,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 				currentButtonPressed.setPressed(false);
 			}
 			currentButtonPressed = null;
-			speed_counter = 0;
+			speedCounter = 0;
 			mValueStep = 0.01;
 			v = true;
 		}

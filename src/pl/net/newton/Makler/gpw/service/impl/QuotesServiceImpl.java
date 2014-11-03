@@ -60,6 +60,24 @@ public class QuotesServiceImpl extends Service {
 
 	private volatile boolean foreground = false;
 
+	private ServiceConnection sqlConnection = new ServiceConnection() {
+		public void onServiceDisconnected(ComponentName name) {
+			sql = null;
+		}
+
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			synchronized (QuotesServiceImpl.this) {
+				if (service instanceof SqlProvider) {
+					sql = ((SqlProvider) service).getSql();
+					quotesDb = new QuotesDb(sql, QuotesServiceImpl.this);
+					alertChecker = new AlertChecker(QuotesServiceImpl.this, new AlertsDb(sql,
+							QuotesServiceImpl.this), config);
+				}
+				servicesInitialized();
+			}
+		}
+	};
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -117,9 +135,7 @@ public class QuotesServiceImpl extends Service {
 				if (GpwUtils.gpwActive() && freq != 0 && foreground) {
 					try {
 						binder.updateQuotes();
-						for (QuotesListener listener : listeners) {
-							listener.quotesUpdated();
-						}
+						notifyListeners();
 					} catch (Exception e) {
 						Log.e(TAG, "can't update quotes", e);
 					}
@@ -131,6 +147,12 @@ public class QuotesServiceImpl extends Service {
 					Log.e(TAG, "Interrupted quote update loop", e);
 					return;
 				}
+			}
+		}
+
+		private void notifyListeners() {
+			for (QuotesListener listener : listeners) {
+				listener.quotesUpdated();
 			}
 		}
 
@@ -205,24 +227,6 @@ public class QuotesServiceImpl extends Service {
 			foreground = enabled;
 		}
 	}
-
-	private ServiceConnection sqlConnection = new ServiceConnection() {
-		public void onServiceDisconnected(ComponentName name) {
-			sql = null;
-		}
-
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			synchronized (QuotesServiceImpl.this) {
-				if (service instanceof SqlProvider) {
-					sql = ((SqlProvider) service).getSql();
-					quotesDb = new QuotesDb(sql, QuotesServiceImpl.this);
-					alertChecker = new AlertChecker(QuotesServiceImpl.this, new AlertsDb(sql,
-							QuotesServiceImpl.this), config);
-				}
-				servicesInitialized();
-			}
-		}
-	};
 
 	private synchronized void servicesInitialized() {
 		if (sql != null) {

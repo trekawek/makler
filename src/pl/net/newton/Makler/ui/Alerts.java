@@ -199,7 +199,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 		}
 	}
 
-	private final static class ContextMenuItem {
+	private static final class ContextMenuItem {
 		static final int DELETE = 0;
 
 		static final int EDIT = 1;

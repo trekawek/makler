@@ -155,6 +155,10 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 
 		Resources res = getResources();
 		View zmiana = findViewById(R.id.quoteDetailZmiana);
+		setBackground(res, zmiana);
+	}
+
+	private void setBackground(Resources res, View zmiana) {
 		if (quote.chooseZmiana() != null) {
 			switch (quote.chooseZmiana().compareTo(BigDecimal.ZERO)) {
 				case -1:
@@ -163,8 +167,8 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 				case 1:
 					zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.greenbox));
 					break;
-				default:
 				case 0:
+				default:
 					zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.bluebox));
 					break;
 			}

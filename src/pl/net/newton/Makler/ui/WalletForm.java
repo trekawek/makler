@@ -20,7 +20,7 @@ import android.widget.RadioButton;
 
 public class WalletForm extends AbstractActivity implements OnClickListener {
 	private static final String TAG = "Makler";
-	
+
 	private RadioButton kupno, sprzedaz;
 
 	private EditText walor, ilosc, kurs;
@@ -72,38 +72,30 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == GET_SYMBOL_K || requestCode == GET_SYMBOL_S) {
-				if (resultCode == Activity.RESULT_OK) {
-					String symbol = data.getStringExtra("symbol");
-					walor.setText(symbol);
-				}
+		if ((requestCode == GET_SYMBOL_K || requestCode == GET_SYMBOL_S) && resultCode == Activity.RESULT_OK) {
+			String symbol = data.getStringExtra("symbol");
+			walor.setText(symbol);
 		}
 	}
 
 	public void onClick(View v) {
-		String walor, ilosc, quote;
+		String name, quantity, quote;
 		Character type = null;
 		if (kupno.isChecked()) {
 			type = 'K';
 		} else if (sprzedaz.isChecked()) {
 			type = 'S';
 		}
-		walor = this.walor.getText().toString();
-		ilosc = this.ilosc.getText().toString();
+		name = this.walor.getText().toString();
+		quantity = this.ilosc.getText().toString();
 		quote = this.kurs.getText().toString();
-		if (walor.length() == 0) {
-			return;
-		}
-		if (ilosc.length() == 0) {
-			return;
-		}
-		if (quote.length() == 0) {
+		if (name.length() == 0 || quantity.length() == 0 || quote.length() == 0) {
 			return;
 		}
 		if (type == null) {
 			return;
 		}
-		Symbol s = symbolsDb.getSymbolBySymbol(walor);
+		Symbol s = symbolsDb.getSymbolBySymbol(name);
 		if (s == null) {
 			return;
 		}
@@ -114,8 +106,8 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 		}
 
 		WalletItem item = walletDb.getWalletItem(s);
-		if (type == 'S' && item.getQuantity() < Integer.parseInt(ilosc)) {
-			ilosc = item.getQuantity().toString();
+		if (type == 'S' && item.getQuantity() < Integer.parseInt(quantity)) {
+			quantity = item.getQuantity().toString();
 		}
 
 		BigDecimal commision = BigDecimal.ZERO;
@@ -137,7 +129,7 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 			Log.e(TAG, "Can't get wallet account", e);
 		}
 
-		BigDecimal value = new BigDecimal(quote).multiply(new BigDecimal(ilosc));
+		BigDecimal value = new BigDecimal(quote).multiply(new BigDecimal(quantity));
 		BigDecimal com = value.divide(new BigDecimal(100)).multiply(commision);
 		if (com.compareTo(minCommision) < 0) {
 			com = minCommision;
@@ -149,7 +141,7 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 			account = account.add(value);
 		}
 
-		item.addTrans(type, Integer.parseInt(ilosc), new BigDecimal(quote.replace(" ", "")), com);
+		item.addTrans(type, Integer.parseInt(quantity), new BigDecimal(quote.replace(" ", "")), com);
 		walletDb.updateWalletItem(item);
 
 		config.setWalletAccount(account.toString());

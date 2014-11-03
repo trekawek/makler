@@ -2,7 +2,8 @@ package pl.net.newton.Makler.gpw;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,6 @@ import pl.net.newton.Makler.common.NumberFormatUtils;
 public class DefaultQuotesReceiver implements QuotesReceiver {
 	private static final String TAG = "MaklerDefaultQuotesReceiver";
 
-	private static final String URL = "http://makler.newton.net.pl:8080/";
-
 	private Context context;
 
 	private Connector connector;
@@ -35,17 +34,15 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 	}
 
 	public boolean isRegistered() {
-		String url = DefaultQuotesReceiver.URL + "registered_user/" + androidId();
+		String url = "/registered_user/" + androidId();
 		BufferedReader reader = null;
 		boolean result = false;
 		try {
-			reader = connector.readUrl(url);
+			reader = get(url);
 			String line = reader.readLine();
 			result = "ok".equals(StringUtils.trim(line));
 			reader.close();
 		} catch (IOException e) {
-			Log.e(TAG, "Can't check if user is registered", e);
-		} catch (URISyntaxException e) {
 			Log.e(TAG, "Can't check if user is registered", e);
 		}
 		return result;
@@ -56,7 +53,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 		if (symbols.isEmpty()) {
 			return quotes;
 		}
-		StringBuilder url = new StringBuilder(DefaultQuotesReceiver.URL).append("quote/");
+		StringBuilder url = new StringBuilder("/quote/");
 		for (int i = 0; i < symbols.size() - 1; i++) {
 			url.append(symbols.get(i));
 			url.append(',');
@@ -66,7 +63,7 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 
 		BufferedReader reader = null;
 		try {
-			reader = connector.readUrl(url.toString());
+			reader = get(url.toString());
 			String line;
 			while ((line = reader.readLine()) != null) {
 				Quote q = quoteFromLine(line);
@@ -76,8 +73,6 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 			}
 			reader.close();
 		} catch (IOException e) {
-			Log.e(TAG, "can't read quotes", e);
-		} catch (URISyntaxException e) {
 			Log.e(TAG, "can't read quotes", e);
 		}
 		return quotes;
@@ -95,13 +90,13 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 
 	public List<Symbol> getSymbols(String lastUpdate) {
 		List<Symbol> symbols = new ArrayList<Symbol>();
-		StringBuilder url = new StringBuilder(DefaultQuotesReceiver.URL).append("symbols");
+		StringBuilder url = new StringBuilder("/symbols");
 		url.append("/").append(lastUpdate);
 		url.append("/").append(androidId());
 
 		BufferedReader reader = null;
 		try {
-			reader = connector.readUrl(url.toString());
+			reader = get(url.toString());
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] a = StringUtils.split(line, '|');
@@ -112,8 +107,6 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 			}
 			reader.close();
 		} catch (IOException e) {
-			Log.e(TAG, "can't get symbols", e);
-		} catch (URISyntaxException e) {
 			Log.e(TAG, "can't get symbols", e);
 		}
 		return symbols;
@@ -162,4 +155,10 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 		}
 		return builder.build();
 	}
+
+	private BufferedReader get(String path) throws IOException {
+		final InputStream is = connector.get(path, null);
+		return new BufferedReader(new InputStreamReader(is));
+	}
+
 }

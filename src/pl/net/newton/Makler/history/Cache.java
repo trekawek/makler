@@ -124,19 +124,23 @@ public class Cache {
 				return;
 			}
 
-			FileInputStream fis = ctx.openFileInput(filePrefix + entry);
-			try {
-				ObjectInputStream ois = new ObjectInputStream(fis);
-				CacheEntry e = (CacheEntry) ois.readObject();
-				map.put(entry, e);
-			} catch (ClassNotFoundException e) {
-				Log.e(TAG, "Can't find class", e);
-			} finally {
-				fis.close();
-			}
+			loadCacheEntry(entry);
 			Log.d(TAG, "loaded " + entry);
 		} catch (IOException e) {
 			Log.e(TAG, "error in loading history", e);
+		}
+	}
+
+	private void loadCacheEntry(String entry) throws IOException {
+		FileInputStream fis = ctx.openFileInput(filePrefix + entry);
+		try {
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			CacheEntry e = (CacheEntry) ois.readObject();
+			map.put(entry, e);
+		} catch (ClassNotFoundException e) {
+			Log.e(TAG, "Can't find class", e);
+		} finally {
+			fis.close();
 		}
 	}
 

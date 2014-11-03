@@ -2,7 +2,6 @@ package pl.net.newton.Makler.ui.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -57,8 +56,9 @@ public class SymbolsAdapter extends BaseAdapter implements SectionIndexer {
 		return position;
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View view, ViewGroup parent) {
 		ViewHolder holder;
+		View convertView = view;
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.symbol_item, null);
 			holder = new ViewHolder();

@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.http.HttpEntity;
-
 import android.content.Context;
 import android.util.Log;
 import pl.net.newton.Makler.db.symbol.Symbol;
@@ -36,7 +34,7 @@ public class BossaProvider implements HistoryProvider {
 	private static final String INTRADAY_FILE_PREFIX = "intraday_cache_v2_";
 
 	public BossaProvider(Context ctx) {
-		conn = new Connector(HOST, 80, true);
+		conn = new Connector(HOST, 80);
 		intradayCache = new Cache(INTRADAY_FILE_PREFIX, 5, 15 * 60, ctx);
 		historyCache = new Cache(HISTORY_FILE_PREFIX, 5, 24 * 60 * 60, ctx);
 	}
@@ -66,16 +64,14 @@ public class BossaProvider implements HistoryProvider {
 	}
 
 	private EntryList getEntries(String path, String query) {
-		HttpEntity en;
-
 		boolean withTime = false;
 		byte[] byteArray;
 		EntryList list = new EntryList(0, false);
 		int i = 0;
 		try {
 			Log.d(TAG, path);
-			en = conn.sendCommand(path, query, null, true, null);
-			ZipInputStream zis = new ZipInputStream(en.getContent());
+			InputStream is = conn.get(path, query);
+			ZipInputStream zis = new ZipInputStream(is);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream(150000);
 			Log.d(TAG, "history loaded");
 			ZipEntry entry = zis.getNextEntry();

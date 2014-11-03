@@ -11,8 +11,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import static pl.net.newton.Makler.db.Constants.ALERTS;
+import static pl.net.newton.Makler.db.Constants.ID_EQUALS;
 
 public class AlertsDb {
+	private static final String CAN_T_GET_ALERT = "Can't get alert";
+
 	private static final String TAG = "MaklerAlertsDb";
 
 	private final SQLiteDatabase sqlDb;
@@ -26,13 +30,13 @@ public class AlertsDb {
 
 	public List<Alert> getAlerts() {
 		List<Alert> alerts = new ArrayList<Alert>();
-		Cursor c = sqlDb.query("alerts", null, null, null, null, null, null);
+		Cursor c = sqlDb.query(ALERTS, null, null, null, null, null, null);
 		if (c.moveToFirst()) {
 			do {
 				try {
 					alerts.add(new AlertBuilder().setFromCursor(c, quotesDb).build());
 				} catch (GpwException e) {
-					Log.e(TAG, "Can't get alert", e);
+					Log.e(TAG, CAN_T_GET_ALERT, e);
 				}
 			} while (c.moveToNext());
 		}
@@ -44,21 +48,21 @@ public class AlertsDb {
 		sqlDb.beginTransaction();
 		ContentValues cv = new ContentValues();
 		cv.put("used", 1);
-		sqlDb.update("alerts", cv, "id = ?", new String[] { String.valueOf(alert.getId()) });
+		sqlDb.update(ALERTS, cv, "id = ?", new String[] { String.valueOf(alert.getId()) });
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();
 	}
 
 	public List<Alert> alertsByQuote(Quote quote) {
-		ArrayList<Alert> alerts = new ArrayList<Alert>();
-		Cursor c = sqlDb.query("alerts", null, "quote_id = ?", new String[] { quote.getId().toString() },
-				null, null, null);
+		List<Alert> alerts = new ArrayList<Alert>();
+		Cursor c = sqlDb.query(ALERTS, null, "quote_id = ?", new String[] { quote.getId().toString() }, null,
+				null, null);
 		if (c.moveToFirst()) {
 			do {
 				try {
 					alerts.add(new AlertBuilder().setFromCursor(c, quotesDb).build());
 				} catch (GpwException e) {
-					Log.e(TAG, "Can't get alert", e);
+					Log.e(TAG, CAN_T_GET_ALERT, e);
 				}
 			} while (c.moveToNext());
 		}
@@ -68,7 +72,7 @@ public class AlertsDb {
 
 	public void deleteAlert(Integer id) {
 		sqlDb.beginTransaction();
-		sqlDb.delete("alerts", "id = ?", new String[] { id.toString() });
+		sqlDb.delete(ALERTS, "id = ?", new String[] { id.toString() });
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();
 	}
@@ -79,7 +83,7 @@ public class AlertsDb {
 			return false;
 		} else {
 			sqlDb.beginTransaction();
-			sqlDb.insert("alerts", null, cv);
+			sqlDb.insert(ALERTS, null, cv);
 			sqlDb.setTransactionSuccessful();
 			sqlDb.endTransaction();
 			return true;
@@ -87,13 +91,13 @@ public class AlertsDb {
 	}
 
 	public Alert getAlertById(int id) {
-		Cursor c = sqlDb.query("alerts", null, "id=?", new String[] { String.valueOf(id) }, null, null, null);
+		Cursor c = sqlDb.query(ALERTS, null, ID_EQUALS, new String[] { String.valueOf(id) }, null, null, null);
 		Alert alert = null;
 		if (c.moveToFirst()) {
 			try {
 				alert = new AlertBuilder().setFromCursor(c, quotesDb).build();
 			} catch (GpwException e) {
-				Log.e(TAG, "Can't get alert", e);
+				Log.e(TAG, CAN_T_GET_ALERT, e);
 			}
 		}
 		c.close();
@@ -104,7 +108,7 @@ public class AlertsDb {
 		ContentValues cv = getContentValues(a);
 		if (cv != null) {
 			sqlDb.beginTransaction();
-			sqlDb.update("alerts", cv, "id=?", new String[] { String.valueOf(a.getId()) });
+			sqlDb.update(ALERTS, cv, ID_EQUALS, new String[] { String.valueOf(a.getId()) });
 			sqlDb.setTransactionSuccessful();
 			sqlDb.endTransaction();
 		}

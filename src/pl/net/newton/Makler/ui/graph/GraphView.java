@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart;
 import org.achartengine.chart.BarChart.Type;
@@ -16,6 +18,7 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
+
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.symbol.Symbol;
@@ -52,6 +55,10 @@ import android.widget.Toast;
 @SuppressLint("ViewConstructor")
 public class GraphView extends LinearLayout implements OnGestureListener, OnTouchListener {
 
+	private static final String DD_MM = "dd.MM";
+
+	private static final String MM_YYYY = "MM.yyyy";
+
 	public static final class GraphRange {
 		// One day
 		static final int D1 = 0;
@@ -76,7 +83,7 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 
 		private GraphRange() {
 		}
-	};
+	}
 
 	private int graphRange, newGraphRange;
 
@@ -177,48 +184,18 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 	}
 
 	public void gotEntries(final EntryListWithIndexes entries) {
-		Thread t = new Thread(new Runnable() {
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			public void run() {
 				final LineChart xyChart = buildGraphView(entries);
 				final BarChart volChart = buildVolGraphView(entries);
 
 				mHandler.post(new Runnable() {
 					public void run() {
-						if (xyChart != null && volChart != null) {
-
-							removeAllViews();
-
-							graphView = new MaklerGraphicalView(context, xyChart, entries, quote, graphRange);
-							GraphicalView graphViewVol = new GraphicalView(context, volChart);
-
-							addView(graphView);
-							addView(graphViewVol);
-
-							LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) graphView
-									.getLayoutParams();
-							params.weight = 0.1f;
-							graphView.setLayoutParams(params);
-
-							params = (LinearLayout.LayoutParams) graphViewVol.getLayoutParams();
-							params.weight = 0.9f;
-							graphViewVol.setLayoutParams(params);
-						} else {
-
-							removeAllViews();
-
-							TextView errorView = new TextView(context);
-							errorView.setText(context.getString(R.string.graph_error_when_downloading));
-							errorView.setGravity(Gravity.CENTER);
-							errorView.setPadding(0, 20, 0, 0);
-
-							addView(errorView);
-						}
+						drawChart(entries, xyChart, volChart);
 					}
-
 				});
 			}
 		});
-		t.start();
 	}
 
 	private BarChart buildVolGraphView(EntryListWithIndexes entries) {
@@ -256,6 +233,36 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		return new BarChart(dataset, renderer, Type.STACKED);
 	}
 
+	private void drawChart(final EntryListWithIndexes entries, final LineChart xyChart,
+			final BarChart volChart) {
+		if (xyChart != null && volChart != null) {
+
+			removeAllViews();
+
+			graphView = new MaklerGraphicalView(context, xyChart, entries, quote, graphRange);
+			GraphicalView graphViewVol = new GraphicalView(context, volChart);
+
+			addView(graphView);
+			addView(graphViewVol);
+
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) graphView.getLayoutParams();
+			params.weight = 0.1f;
+			graphView.setLayoutParams(params);
+
+			params = (LinearLayout.LayoutParams) graphViewVol.getLayoutParams();
+			params.weight = 0.9f;
+			graphViewVol.setLayoutParams(params);
+		} else {
+			removeAllViews();
+			TextView errorView = new TextView(context);
+			errorView.setText(context.getString(R.string.graph_error_when_downloading));
+			errorView.setGravity(Gravity.CENTER);
+			errorView.setPadding(0, 20, 0, 0);
+
+			addView(errorView);
+		}
+	}
+
 	private LineChart buildGraphView(EntryListWithIndexes entries) {
 		if (entries == null || entries.getLength() == 0) {
 			return null;
@@ -278,10 +285,7 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		dataset.addSeries(series);
 
 		boolean kursOdn = false;
-		if (graphRange == GraphRange.D1 && quote != null && quote.getKursOdn() != null
-				&& quote.getKursOdn().compareTo(BigDecimal.ZERO) > 0 && quote.getUpdate() != null
-				&& quote.getUpdate().get(Calendar.HOUR_OF_DAY) >= 9) {
-
+		if (displayReferenceQuote()) {
 			double kursOdnDouble = quote.getKursOdn().doubleValue();
 			series = new XYSeries("Kurs odn.");
 			series.add(0, kursOdnDouble);
@@ -295,7 +299,6 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 			if (max < kursOdnDouble) {
 				max = kursOdnDouble;
 			}
-
 		}
 
 		XYMultipleSeriesRenderer renderer = getRenderer(kursOdn, min, max);
@@ -309,42 +312,58 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 			renderer.setXAxisMax(entries.getGraphIndex(entries.getLength() - 1));
 		}
 		renderer.setXAxisMin(entries.getGraphIndex(0));
+		renderLabels(entries, renderer);
 
+		return new LineChart(dataset, renderer);
+	}
+
+	private void renderLabels(EntryListWithIndexes entries, XYMultipleSeriesRenderer renderer) {
 		switch (graphRange) {
 			case GraphRange.D1:
 				addDailyLabels(renderer);
 				renderer.setChartTitle(context.getString(R.string.d1));
 				break;
 			case GraphRange.D5:
-				addLabels(5, entries, renderer, "dd.MM");
+				addLabels(5, entries, renderer, DD_MM);
 				renderer.setChartTitle(context.getString(R.string.d5));
 				break;
 			case GraphRange.M1:
-				addLabels(6, entries, renderer, "dd.MM");
+				addLabels(6, entries, renderer, DD_MM);
 				renderer.setChartTitle(context.getString(R.string.m1));
 				break;
 			case GraphRange.M3:
-				addLabels(7, entries, renderer, "dd.MM");
+				addLabels(7, entries, renderer, DD_MM);
 				renderer.setChartTitle(context.getString(R.string.m3));
 				break;
 			case GraphRange.Y1:
-				addLabels(6, entries, renderer, "MM.yyyy");
+				addLabels(6, entries, renderer, MM_YYYY);
 				renderer.setChartTitle(context.getString(R.string.r1));
 				break;
 			case GraphRange.Y2:
-				addLabels(6, entries, renderer, "MM.yyyy");
+				addLabels(6, entries, renderer, MM_YYYY);
 				renderer.setChartTitle(context.getString(R.string.r2));
 				break;
 			case GraphRange.ALL:
-				addLabels(6, entries, renderer, "MM.yyyy");
+				addLabels(6, entries, renderer, MM_YYYY);
 				renderer.setChartTitle(context.getString(R.string.all));
 				break;
 			default:
 				// do nothing
 				break;
 		}
+	}
 
-		return new LineChart(dataset, renderer);
+	private boolean displayReferenceQuote() {
+		if (graphRange != GraphRange.D1) {
+			return false;
+		}
+		if (quote == null || quote.getKursOdn() == null || quote.getKursOdn().compareTo(BigDecimal.ZERO) <= 0) {
+			return false;
+		}
+		if (quote.getUpdate() == null || quote.getUpdate().get(Calendar.HOUR_OF_DAY) < 9) {
+			return false;
+		}
+		return true;
 	}
 
 	private XYMultipleSeriesRenderer getRenderer(boolean kursOdn, double min, double max) {
@@ -411,16 +430,17 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 			}
 		}
 
-		if (labels > days.size()) {
-			labels = days.size();
+		int cappedLabels = labels;
+		if (cappedLabels > days.size()) {
+			cappedLabels = days.size();
 		}
-		if (labels == 0) {
+		if (cappedLabels == 0) {
 			return;
 		}
 
 		DateFormat sdf = new SimpleDateFormat(format, Locale.US);
-		int d = days.size() / labels;
-		for (int i = 0; i < labels; i++) {
+		int d = days.size() / cappedLabels;
+		for (int i = 0; i < cappedLabels; i++) {
 			int j = i * d;
 			renderer.addXTextLabel(daysIndexes.get(j), sdf.format(days.get(j)));
 		}
@@ -429,28 +449,32 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 	private void showSpinner() {
 		mHandler.post(new Runnable() {
 			public void run() {
-				RelativeLayout layout = new RelativeLayout(context);
-
-				removeAllViews();
-
-				addView(layout);
-
-				LayoutParams params = (LayoutParams) layout.getLayoutParams();
-				params.width = LayoutParams.MATCH_PARENT;
-				params.height = LayoutParams.MATCH_PARENT;
-				layout.setLayoutParams(params);
-
-				ProgressBar spinner = new ProgressBar(context);
-				layout.addView(spinner);
-				spinner.setIndeterminate(true);
-				RelativeLayout.LayoutParams spinnerParams = (android.widget.RelativeLayout.LayoutParams) spinner
-						.getLayoutParams();
-				spinnerParams.width = LayoutParams.WRAP_CONTENT;
-				spinnerParams.height = LayoutParams.WRAP_CONTENT;
-				spinnerParams.addRule(RelativeLayout.CENTER_IN_PARENT, -1);
-				spinner.setLayoutParams(spinnerParams);
+				doShowSpinner();
 			}
 		});
+	}
+
+	private void doShowSpinner() {
+		RelativeLayout layout = new RelativeLayout(context);
+
+		removeAllViews();
+
+		addView(layout);
+
+		LayoutParams params = (LayoutParams) layout.getLayoutParams();
+		params.width = LayoutParams.MATCH_PARENT;
+		params.height = LayoutParams.MATCH_PARENT;
+		layout.setLayoutParams(params);
+
+		ProgressBar spinner = new ProgressBar(context);
+		layout.addView(spinner);
+		spinner.setIndeterminate(true);
+		RelativeLayout.LayoutParams spinnerParams = (android.widget.RelativeLayout.LayoutParams) spinner
+				.getLayoutParams();
+		spinnerParams.width = LayoutParams.WRAP_CONTENT;
+		spinnerParams.height = LayoutParams.WRAP_CONTENT;
+		spinnerParams.addRule(RelativeLayout.CENTER_IN_PARENT, -1);
+		spinner.setLayoutParams(spinnerParams);
 	}
 
 	/**

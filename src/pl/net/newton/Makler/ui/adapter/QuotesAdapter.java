@@ -55,8 +55,9 @@ public class QuotesAdapter extends BaseAdapter {
 	}
 
 	@SuppressWarnings("deprecation")
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View view, ViewGroup parent) {
 		ViewHolder holder;
+		View convertView = view;
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.quotes_item, null);
 			holder = new ViewHolder();
@@ -79,9 +80,9 @@ public class QuotesAdapter extends BaseAdapter {
 			holder.symbol.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 			holder.symbol.setPadding(0, dpToPx(convertView.getContext(), 14), 0, 0);
 		}
-		if (quote.isIndex())
+		if (quote.isIndex()) {
 			holder.name.setVisibility(View.INVISIBLE);
-		else {
+		} else {
 			holder.name.setVisibility(View.VISIBLE);
 			holder.name.setText(quote.getName());
 		}
@@ -91,7 +92,7 @@ public class QuotesAdapter extends BaseAdapter {
 		holder.kursMax.setText(NumberFormatUtils.formatNumber(quote.getKursMax()));
 
 		Resources res = convertView.getResources();
-		if (quote.chooseZmiana() != null)
+		if (quote.chooseZmiana() != null) {
 			switch (quote.chooseZmiana().compareTo(BigDecimal.ZERO)) {
 				case 0:
 					holder.zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.bluebox));
@@ -103,12 +104,13 @@ public class QuotesAdapter extends BaseAdapter {
 					holder.zmiana.setBackgroundDrawable(res.getDrawable(R.drawable.greenbox));
 					break;
 			}
+		}
 
 		return convertView;
 	}
 
-	public static int dpToPx(Context ctx, int padding_in_dp) {
+	public static int dpToPx(Context ctx, int paddingInDp) {
 		final float scale = ctx.getResources().getDisplayMetrics().density;
-		return (int) (padding_in_dp * scale + 0.5f);
+		return (int) (paddingInDp * scale + 0.5f);
 	}
 }

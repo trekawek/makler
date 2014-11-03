@@ -15,8 +15,12 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import static pl.net.newton.Makler.db.Constants.ID_EQUALS;
+import static pl.net.newton.Makler.db.Constants.QUOTES;
+import static pl.net.newton.Makler.db.Constants.SYMBOL_ID;
 
 public class SqlConnection extends SQLiteOpenHelper {
+
 	private static final String TAG = "MaklerSql";
 
 	private static final int DATABASE_VERSION = 7;
@@ -82,12 +86,12 @@ public class SqlConnection extends SQLiteOpenHelper {
 
 			int i = 1;
 			db.beginTransaction();
-			Cursor c = db.query("quotes", new String[] { "id" }, null, null, null, null, "id ASC");
+			Cursor c = db.query(QUOTES, new String[] { "id" }, null, null, null, null, "id ASC");
 			if (c.moveToFirst()) {
 				do {
 					ContentValues cv = new ContentValues();
 					cv.put("position", i++);
-					db.update("quotes", cv, "id = ?", new String[] { String.valueOf(c.getInt(0)) });
+					db.update(QUOTES, cv, ID_EQUALS, new String[] { String.valueOf(c.getInt(0)) });
 				} while (c.moveToNext());
 			}
 			c.close();
@@ -109,14 +113,14 @@ public class SqlConnection extends SQLiteOpenHelper {
 			}
 
 			db.beginTransaction();
-			Cursor c = db.query("wallet_items", new String[] { "id", "symbol_id" }, null, null, null, null,
+			Cursor c = db.query("wallet_items", new String[] { "id", SYMBOL_ID }, null, null, null, null,
 					"id ASC");
 			if (c.moveToFirst()) {
 				do {
 					ContentValues cv = new ContentValues();
-					cv.put("symbol_id", c.getInt(c.getColumnIndex("symbol_id")));
+					cv.put(SYMBOL_ID, c.getInt(c.getColumnIndex(SYMBOL_ID)));
 					cv.put("from_wallet", 1);
-					long quoteId = db.insert("quotes", null, cv);
+					long quoteId = db.insert(QUOTES, null, cv);
 
 					cv = new ContentValues();
 					cv.put("quote_id", quoteId);

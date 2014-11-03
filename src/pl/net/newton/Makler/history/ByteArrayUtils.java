@@ -43,24 +43,22 @@ public final class ByteArrayUtils {
 		result[0] = 0;
 
 		boolean decimal = false;
-		int i;
+		int i, m = multiplier;
 		for (i = offset; i < array.length; i++) {
-			if (array[i] == '.') {
+			final byte digit = array[i];
+			if (digit == '.') {
 				decimal = true;
-				continue;
-			} else if (array[i] < '0' || array[i] > '9') {
+			} else if ((digit < '0' || digit > '9') || (decimal && m == 0)) {
 				break;
-			}
-			if (decimal == true && multiplier == 0) {
-				break;
-			}
-			result[0] *= 10;
-			result[0] += array[i] - '0';
-			if (decimal) {
-				multiplier--;
+			} else {
+				result[0] *= 10;
+				result[0] += array[i] - '0';
+				if (decimal) {
+					m--;
+				}
 			}
 		}
-		for (int j = 0; j < multiplier; j++) {
+		for (int j = 0; j < m; j++) {
 			result[0] *= 10;
 		}
 		result[1] = i;

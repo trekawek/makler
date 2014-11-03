@@ -13,6 +13,7 @@ import pl.net.newton.Makler.gpw.service.QuotesService;
 import pl.net.newton.Makler.history.service.HistoryListener;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.service.ServiceManager;
+import pl.net.newton.Makler.ui.AbstractActivity.ProcessPerformer;
 import pl.net.newton.Makler.common.Configuration;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -77,6 +78,18 @@ public abstract class AbstractActivity extends Activity {
 				HistoryListener listener = (HistoryListener) AbstractActivity.this;
 				historyService.register(listener);
 			}
+			servicesInitialized();
+		}
+	};
+
+	private ServiceConnection sqlConnection = new ServiceConnection() {
+		public void onServiceDisconnected(ComponentName name) {
+			sqlDb = null;
+		}
+
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			SqlProvider sqlProvider = (SqlProvider) service;
+			sqlDb = sqlProvider.getSql();
 			servicesInitialized();
 		}
 	};
@@ -198,18 +211,6 @@ public abstract class AbstractActivity extends Activity {
 		return true;
 	}
 
-	private ServiceConnection sqlConnection = new ServiceConnection() {
-		public void onServiceDisconnected(ComponentName name) {
-			sqlDb = null;
-		}
-
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			SqlProvider sqlProvider = (SqlProvider) service;
-			sqlDb = sqlProvider.getSql();
-			servicesInitialized();
-		}
-	};
-
 	private synchronized void servicesInitialized() {
 		if (sqlDb != null && historyService != null && !uiInitialized.getAndSet(true)) {
 			mHandler.post(new Runnable() {
@@ -234,38 +235,47 @@ public abstract class AbstractActivity extends Activity {
 	}
 
 	protected void perform(final ProcessPerformer performer, final boolean setGpwProvider) {
-		executor.execute(new Runnable() {
-			public void run() {
-				boolean success = false;
-				boolean result = false;
-				showProgressWindow();
-				try {
-					result = performer.perform(new DefaultQuotesReceiver(AbstractActivity.this));
-					success = true;
-				} catch (Exception e) {
-					handleException(e);
-				}
-				hideProgressWindow();
+		executor.execute(new PerformerRunnable(performer));
+	}
 
-				final boolean finalResult = result;
-				if (success) {
-					mHandler.post(new Runnable() {
-						public void run() {
-							performer.showResults(finalResult);
-						}
-					});
-				}
+	protected void onServiceDisconnected(ComponentName name) {
+		// do nothing
+	}
+
+	private final class PerformerRunnable implements Runnable {
+		private final ProcessPerformer performer;
+
+		private PerformerRunnable(ProcessPerformer performer) {
+			this.performer = performer;
+		}
+
+		public void run() {
+			boolean success = false;
+			boolean result = false;
+			showProgressWindow();
+			try {
+				result = performer.perform(new DefaultQuotesReceiver(AbstractActivity.this));
+				success = true;
+			} catch (Exception e) {
+				handleException(e);
 			}
-		});
+			hideProgressWindow();
+
+			final boolean finalResult = result;
+			if (success) {
+				mHandler.post(new Runnable() {
+					public void run() {
+						performer.showResults(finalResult);
+					}
+				});
+			}
+		}
 	}
 
 	protected static interface ProcessPerformer {
 		public boolean perform(QuotesReceiver quotesReceiver) throws GpwException;
 
 		public void showResults(boolean result);
-	}
-
-	public void onServiceDisconnected(ComponentName name) {
 	}
 
 	protected abstract void initUi(SQLiteDatabase sqlDb, HistoryService historyService);

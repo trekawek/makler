@@ -40,7 +40,7 @@ public class HistoryServiceImpl extends Service {
 	public IBinder onBind(Intent arg0) {
 		return binder;
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -50,18 +50,16 @@ public class HistoryServiceImpl extends Service {
 	private class LocalBinder extends Binder implements HistoryService {
 		List<HistoryListener> listeners = new ArrayList<HistoryListener>();
 
-		synchronized public void register(HistoryListener listener) {
+		public synchronized void register(HistoryListener listener) {
 			listeners.add(listener);
 		}
 
-		synchronized public void unregister(HistoryListener listener) {
+		public synchronized void unregister(HistoryListener listener) {
 			listeners.remove(listener);
 		}
 
-		synchronized public List<HistoryListener> getListeners() {
-			List<HistoryListener> listeners = new ArrayList<HistoryListener>();
-			listeners.addAll(this.listeners);
-			return listeners;
+		public synchronized List<HistoryListener> getListeners() {
+			return new ArrayList<HistoryListener>(listeners);
 		}
 
 		public void historyByInt(final int graphRange, final Symbol symbol, final boolean force) {
@@ -73,12 +71,13 @@ public class HistoryServiceImpl extends Service {
 					} catch (NullPointerException e) {
 						Log.e(TAG, "npe during history getting", e);
 					}
-					for (HistoryListener l : getListeners())
+					for (HistoryListener l : getListeners()) {
 						try {
 							l.gotEntries(entries);
 						} catch (Exception e) {
 							Log.e(TAG, "Can't inform about entries", e);
 						}
+					}
 				}
 			}).start();
 		}

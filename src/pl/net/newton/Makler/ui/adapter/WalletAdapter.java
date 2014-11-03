@@ -60,8 +60,9 @@ public class WalletAdapter extends BaseAdapter {
 	}
 
 	@SuppressWarnings("deprecation")
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View view, ViewGroup parent) {
 		ViewHolder holder;
+		View convertView = view;
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.wallet_item, null);
 			holder = new ViewHolder();

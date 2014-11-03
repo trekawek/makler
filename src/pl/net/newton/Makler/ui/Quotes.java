@@ -2,6 +2,8 @@ package pl.net.newton.Makler.ui;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
 import pl.net.newton.Makler.db.quote.QuotesDb;
@@ -131,35 +133,21 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case GET_SYMBOL_FROM_LIST:
-				if (resultCode == Activity.RESULT_OK) {
-					String symbol = data.getStringExtra(SYMBOL);
-					if (addQuoteSymbols == null) {
-						return;
-					}
-					String symbols = addQuoteSymbols.getText().toString();
-					if (symbols.endsWith(" ") || symbols.length() == 0) {
-						addQuoteSymbols.append(symbol);
-					} else {
-						addQuoteSymbols.append(" " + symbol);
-					}
-					break;
-				}
-				break;
-			case SHOW_PREFERENCES:
-				Log.d(TAG, "preferences set");
-				break;
-			default:
-				// do nothing
-				break;
+		if (requestCode == GET_SYMBOL_FROM_LIST && resultCode == Activity.RESULT_OK) {
+			String symbol = data.getStringExtra(SYMBOL);
+			appendSymbol(symbol);
 		}
 	}
 
-	private final static class ContextMenuItem {
-		static final int DETAILS = 0, ALERTS = 1, WALLET = 5, DELETE = 2, UP = 3, DOWN = 4;
-
-		private ContextMenuItem() {
+	private void appendSymbol(String symbol) {
+		if (addQuoteSymbols == null) {
+			return;
+		}
+		String symbols = addQuoteSymbols.getText().toString();
+		if (symbols.endsWith(" ") || symbols.length() == 0) {
+			addQuoteSymbols.append(symbol);
+		} else {
+			addQuoteSymbols.append(" " + symbol);
 		}
 	}
 
@@ -330,16 +318,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 			}
 
 			public boolean perform(QuotesReceiver quotesReceiver) throws GpwException {
-				DefaultQuotesReceiver q = new DefaultQuotesReceiver(Quotes.this);
-				List<Symbol> symbols;
-				if ("".equals(finalSinceDate)) {
-					symbols = q.getSymbols();
-				} else {
-					symbols = q.getSymbols(finalSinceDate);
-				}
-
-				if (symbols.isEmpty()) {
-					Log.d(TAG, "brak nowych papierów od " + finalSinceDate);
+				if (getSymbols(finalSinceDate).isEmpty()) {
 					config.setLastSymbolsUpdated(date);
 				} else {
 					updateSymbols(quotesReceiver);
@@ -347,6 +326,11 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 				return true;
 			}
 		}, true);
+	}
+
+	private List<Symbol> getSymbols(String sinceDate) {
+		final DefaultQuotesReceiver q = new DefaultQuotesReceiver(this);
+		return StringUtils.isEmpty(sinceDate) ? q.getSymbols() : q.getSymbols(sinceDate);
 	}
 
 	private void updateSymbols(QuotesReceiver quotesReceiver) throws GpwException {
@@ -371,4 +355,12 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		areSymbolsUpToDate();
 		refreshList();
 	}
+
+	private static final class ContextMenuItem {
+		static final int DETAILS = 0, ALERTS = 1, WALLET = 5, DELETE = 2, UP = 3, DOWN = 4;
+
+		private ContextMenuItem() {
+		}
+	}
+
 }

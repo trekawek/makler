@@ -12,8 +12,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import static pl.net.newton.Makler.db.Constants.ID_EQUALS;
+import static pl.net.newton.Makler.db.Constants.WALLET_ITEMS;
 
 public class WalletDb {
+
 	private final Context ctx;
 
 	private final SQLiteDatabase sqlDb;
@@ -69,14 +72,14 @@ public class WalletDb {
 			cv = getContentValues(w);
 			cv.put("position", size + 1);
 			cv.put("quote_id", quoteId);
-			Integer id = (int) sqlDb.insert("wallet_items", null, cv);
+			Integer id = (int) sqlDb.insert(WALLET_ITEMS, null, cv);
 			w.setId(id);
 		} else {
-			sqlDb.update("wallet_items", getContentValues(w), "id = ?", new String[] { w.getId().toString() });
+			sqlDb.update(WALLET_ITEMS, getContentValues(w), ID_EQUALS, new String[] { w.getId().toString() });
 		}
 
 		if (w.getQuantity() == 0) {
-			sqlDb.delete("wallet_items", "id = ?", new String[] { w.getId().toString() });
+			sqlDb.delete(WALLET_ITEMS, ID_EQUALS, new String[] { w.getId().toString() });
 		}
 
 		sqlDb.setTransactionSuccessful();
@@ -85,18 +88,18 @@ public class WalletDb {
 
 	public void deleteWalletItem(Integer id) {
 		sqlDb.beginTransaction();
-		Cursor c = sqlDb.query("wallet_items", new String[] { "quote_id" }, "id = ?",
+		Cursor c = sqlDb.query(WALLET_ITEMS, new String[] { "quote_id" }, ID_EQUALS,
 				new String[] { id.toString() }, null, null, null);
 		c.moveToFirst();
 		int quoteId = c.getInt(0);
-		sqlDb.delete("quotes", "id = ?", new String[] { String.valueOf(quoteId) });
-		sqlDb.delete("wallet_items", "id = ?", new String[] { id.toString() });
+		sqlDb.delete("quotes", ID_EQUALS, new String[] { String.valueOf(quoteId) });
+		sqlDb.delete(WALLET_ITEMS, ID_EQUALS, new String[] { id.toString() });
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();
 	}
 
 	public void move(int id, boolean up) {
-		DbHelper.move(sqlDb, "wallet_items", id, up);
+		DbHelper.move(sqlDb, WALLET_ITEMS, id, up);
 	}
 
 	public ContentValues getContentValues(WalletItem w) {

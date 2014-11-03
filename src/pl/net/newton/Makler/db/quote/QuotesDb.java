@@ -12,7 +12,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import static pl.net.newton.Makler.db.Constants.QUOTES;
+
 public class QuotesDb {
+
 	private final Context ctx;
 
 	private final SQLiteDatabase sqlDb;
@@ -78,7 +81,7 @@ public class QuotesDb {
 			ContentValues cv = new ContentValues();
 			cv.put("symbol_id", symbolId);
 			cv.put("position", pos++);
-			sqlDb.insert("quotes", null, cv);
+			sqlDb.insert(QUOTES, null, cv);
 		}
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();
@@ -88,21 +91,21 @@ public class QuotesDb {
 		sqlDb.beginTransaction();
 		Integer symbolId = this.symbolsDb.getSymbolId(q.getSymbol());
 		ContentValues cv = getContentValues(q);
-		sqlDb.update("quotes", cv, "symbol_id = ?", new String[] { symbolId.toString() });
+		sqlDb.update(QUOTES, cv, "symbol_id = ?", new String[] { symbolId.toString() });
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();
 	}
 
 	public void deleteQuote(Integer id) {
 		sqlDb.beginTransaction();
-		sqlDb.delete("quotes", "id = ?", new String[] { id.toString() });
+		sqlDb.delete(QUOTES, "id = ?", new String[] { id.toString() });
 		sqlDb.delete("alerts", "quote_id = ?", new String[] { id.toString() });
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();
 	}
 
 	public void move(int id, boolean up) {
-		DbHelper.move(sqlDb, "quotes", id, up);
+		DbHelper.move(sqlDb, QUOTES, id, up);
 	}
 
 	private ContentValues getContentValues(Quote quote) {

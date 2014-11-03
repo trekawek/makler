@@ -13,6 +13,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import static pl.net.newton.Makler.db.Constants.ID_EQUALS;
+import static pl.net.newton.Makler.db.Constants.QUOTES;
+import static pl.net.newton.Makler.db.Constants.SYMBOLS;
+import static pl.net.newton.Makler.db.Constants.SYMBOL;
 
 public class SymbolsDb {
 	private static final String TAG = "MaklerSymbolsDb";
@@ -35,7 +39,7 @@ public class SymbolsDb {
 	}
 
 	public Integer getSymbolId(String symbol) {
-		Cursor c = sqlDb.query("symbols", new String[] { "id" }, "symbols.symbol = ? COLLATE NOCASE",
+		Cursor c = sqlDb.query(SYMBOLS, new String[] { "id" }, "symbols.symbol = ? COLLATE NOCASE",
 				new String[] { symbol }, null, null, null);
 		if (c.getCount() == 0) {
 			return null;
@@ -47,14 +51,14 @@ public class SymbolsDb {
 	}
 
 	public List<Symbol> getSymbols(String name) {
-		ArrayList<Symbol> symbols = new ArrayList<Symbol>();
+		List<Symbol> symbols = new ArrayList<Symbol>();
 		Cursor c;
 		if (StringUtils.isNoneBlank(name)) {
 			String n = "%" + name + "%";
-			c = sqlDb.query("symbols", null, "deleted = 0 AND (name LIKE ? OR symbol LIKE ?)", new String[] {
-					n, n }, null, null, "symbol");
+			c = sqlDb.query(SYMBOLS, null, "deleted = 0 AND (name LIKE ? OR symbol LIKE ?)", new String[] {
+					n, n }, null, null, SYMBOL);
 		} else {
-			c = sqlDb.query("symbols", null, "deleted = 0", null, null, null, "symbol");
+			c = sqlDb.query(SYMBOLS, null, "deleted = 0", null, null, null, SYMBOL);
 		}
 		if (c.moveToFirst()) {
 			do {
@@ -68,7 +72,7 @@ public class SymbolsDb {
 	public Symbol getSymbolBySymbol(String symbol) {
 		Cursor c;
 		Symbol s = null;
-		c = sqlDb.query("symbols", null, "deleted = 0 AND symbol = ?", new String[] { symbol }, null, null,
+		c = sqlDb.query(SYMBOLS, null, "deleted = 0 AND symbol = ?", new String[] { symbol }, null, null,
 				null);
 		if (c.moveToFirst()) {
 			s = new SymbolBuilder().setFromCursor(c).build();
@@ -80,7 +84,7 @@ public class SymbolsDb {
 	public Symbol getSymbolByName(String name) {
 		Cursor c;
 		Symbol s = null;
-		c = sqlDb.query("symbols", null, "deleted = 0 AND name = ?", new String[] { name }, null, null, null);
+		c = sqlDb.query(SYMBOLS, null, "deleted = 0 AND name = ?", new String[] { name }, null, null, null);
 		if (c.moveToFirst()) {
 			s = new SymbolBuilder().setFromCursor(c).build();
 		}
@@ -89,11 +93,11 @@ public class SymbolsDb {
 	}
 
 	public Symbol findSymbolByName(String name) {
-		name = new StringBuilder("%").append(name).append("%").toString();
+		final String wildcardName = new StringBuilder("%").append(name).append("%").toString();
 		Cursor c;
 		Symbol s = null;
-		c = sqlDb.query("symbols", null, "deleted = 0 AND name LIKE ?", new String[] { name }, null, null,
-				null);
+		c = sqlDb.query(SYMBOLS, null, "deleted = 0 AND name LIKE ?", new String[] { wildcardName }, null,
+				null, null);
 		if (c.moveToFirst()) {
 			s = new SymbolBuilder().setFromCursor(c).build();
 		}
@@ -103,14 +107,14 @@ public class SymbolsDb {
 
 	public void updateSymbol(Symbol s) {
 		sqlDb.beginTransaction();
-		Cursor c = sqlDb.query("symbols", new String[] { "id" }, "symbol = ?",
-				new String[] { s.getSymbol() }, null, null, null);
+		Cursor c = sqlDb.query(SYMBOLS, new String[] { "id" }, "symbol = ?", new String[] { s.getSymbol() },
+				null, null, null);
 		if (c.getCount() == 0) {
-			sqlDb.insert("symbols", null, contentValues(s));
+			sqlDb.insert(SYMBOLS, null, contentValues(s));
 		} else {
 			c.moveToFirst();
 			Integer id = c.getInt(0);
-			sqlDb.update("symbols", contentValues(s), "id = ?", new String[] { id.toString() });
+			sqlDb.update(SYMBOLS, contentValues(s), ID_EQUALS, new String[] { id.toString() });
 		}
 		c.close();
 		sqlDb.setTransactionSuccessful();
@@ -123,8 +127,8 @@ public class SymbolsDb {
 		sqlDb.beginTransaction();
 		ContentValues cv = new ContentValues();
 		cv.put("deleted", 1);
-		sqlDb.update("symbols", cv, null, null);
-		Cursor c = sqlDb.query("symbols", new String[] { "id", "symbol" }, null, null, null, null, null);
+		sqlDb.update(SYMBOLS, cv, null, null);
+		Cursor c = sqlDb.query(SYMBOLS, new String[] { "id", SYMBOL }, null, null, null, null, null);
 		Map<String, Integer> symbolToId = new HashMap<String, Integer>();
 		if (c.moveToFirst()) {
 			do {
@@ -134,10 +138,10 @@ public class SymbolsDb {
 		c.close();
 		for (Symbol s : symbols) {
 			if (symbolToId.containsKey(s.getSymbol())) {
-				sqlDb.update("symbols", contentValues(s), "id = ?",
+				sqlDb.update(SYMBOLS, contentValues(s), ID_EQUALS,
 						new String[] { symbolToId.get(s.getSymbol()).toString() });
 			} else {
-				sqlDb.insert("symbols", null, contentValues(s));
+				sqlDb.insert(SYMBOLS, null, contentValues(s));
 			}
 		}
 		sqlDb.setTransactionSuccessful();
@@ -153,13 +157,13 @@ public class SymbolsDb {
 		c.close();
 
 		// remove orphan quotes
-		c = sqlDb.query("quotes", new String[] { "id" }, "from_wallet = 1", null, null, null, null);
+		c = sqlDb.query(QUOTES, new String[] { "id" }, "from_wallet = 1", null, null, null, null);
 		while (c.moveToNext()) {
 			int quoteId = c.getInt(0);
 			Cursor wallet = sqlDb.query("wallet_items", new String[] { "id" }, "quote_id = ?",
 					new String[] { String.valueOf(quoteId) }, null, null, null);
 			if (!wallet.moveToFirst()) {
-				sqlDb.delete("quotes", "id = ?", new String[] { String.valueOf(quoteId) });
+				sqlDb.delete(QUOTES, ID_EQUALS, new String[] { String.valueOf(quoteId) });
 			}
 			wallet.close();
 		}
@@ -174,16 +178,16 @@ public class SymbolsDb {
 	private void deleteSymbol(int oldId, int newId) {
 		Log.d(TAG, "oldId: " + oldId + ", newId: " + newId);
 		String[] oldIdArgs = new String[] { String.valueOf(oldId) };
-		sqlDb.delete("symbols", "id = ?", oldIdArgs);
+		sqlDb.delete(SYMBOLS, "id = ?", oldIdArgs);
 		ContentValues cv = new ContentValues();
 		cv.put("symbol_id", newId);
-		sqlDb.update("quotes", cv, "symbol_id = ?", oldIdArgs);
+		sqlDb.update(QUOTES, cv, "symbol_id = ?", oldIdArgs);
 		sqlDb.update("wallet_items", cv, "symbol_id = ?", oldIdArgs);
 	}
 
 	public ContentValues contentValues(Symbol symbol) {
 		ContentValues cv = new ContentValues();
-		cv.put("symbol", symbol.getSymbol());
+		cv.put(SYMBOL, symbol.getSymbol());
 		cv.put("name", symbol.getName());
 		cv.put("code", symbol.getCode());
 		cv.put("is_index", symbol.isIndex() ? 1 : 0);
