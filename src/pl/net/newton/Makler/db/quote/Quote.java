@@ -48,7 +48,7 @@ public class Quote {
 	}
 
 	public Calendar getAsCalendar(QuoteField field) {
-		return DateFormatUtils.safeParseTime(get(UPDATED));
+		return DateFormatUtils.safeParseTime(get(field));
 	}
 
 	public boolean getAsBoolean(QuoteField field) {
@@ -103,14 +103,12 @@ public class Quote {
 				continue;
 			}
 			final String v = get(f);
+			final String escapedColumn = String.format("`%s`", f.getDatabaseField());
 			if (v == null) {
-				cv.putNull(f.getDatabaseField());
+				cv.putNull(escapedColumn);
 			} else {
-				cv.put(f.getDatabaseField(), v);
+				cv.put(escapedColumn, v);
 			}
-		}
-		if (get(UPDATED) != null) {
-			cv.put(UPDATED.getDatabaseField(), DateFormatUtils.formatTime(getAsCalendar(UPDATED)));
 		}
 		return cv;
 	}
