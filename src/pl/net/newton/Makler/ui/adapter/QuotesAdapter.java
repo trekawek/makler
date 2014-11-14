@@ -5,6 +5,7 @@ import java.util.List;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
+import pl.net.newton.Makler.db.quote.QuoteField;
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Context;
@@ -74,22 +75,22 @@ public class QuotesAdapter extends BaseAdapter {
 		}
 
 		Quote quote = quotes.get(position);
-		holder.update.setText(DateFormatUtils.formatTime(quote.getUpdate()));
-		holder.symbol.setText(quote.getSymbol());
-		if (quote.getSymbol().length() > 5) {
+		holder.update.setText(DateFormatUtils.formatTime(quote.getAsCalendar(QuoteField.UPDATED)));
+		holder.symbol.setText(quote.get(QuoteField.SYMBOL));
+		if (quote.get(QuoteField.SYMBOL).length() > 5) {
 			holder.symbol.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 			holder.symbol.setPadding(0, dpToPx(convertView.getContext(), 14), 0, 0);
 		}
-		if (quote.isIndex()) {
+		if (quote.getAsBoolean(QuoteField.IS_INDEX)) {
 			holder.name.setVisibility(View.INVISIBLE);
 		} else {
 			holder.name.setVisibility(View.VISIBLE);
-			holder.name.setText(quote.getName());
+			holder.name.setText(quote.get(QuoteField.NAME));
 		}
-		holder.kursMin.setText(NumberFormatUtils.formatNumber(quote.getKursMin()));
+		holder.kursMin.setText(NumberFormatUtils.formatNumber(quote.getAsDecimal(QuoteField.MIN)));
 		holder.kurs.setText(NumberFormatUtils.formatNumber(quote.chooseKurs()));
 		holder.zmiana.setText(NumberFormatUtils.formatNumber(quote.chooseZmiana()) + "%");
-		holder.kursMax.setText(NumberFormatUtils.formatNumber(quote.getKursMax()));
+		holder.kursMax.setText(NumberFormatUtils.formatNumber(quote.getAsDecimal(QuoteField.MAX)));
 
 		Resources res = convertView.getResources();
 		if (quote.chooseZmiana() != null) {

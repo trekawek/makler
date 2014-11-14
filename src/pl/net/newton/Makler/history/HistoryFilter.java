@@ -166,6 +166,6 @@ public class HistoryFilter {
 	}
 
 	public boolean isRangeExist(Symbol symbol, int graphRange) {
-		return provider.isRangeExist(symbol, graphRange);
+		return provider.rangeExist(symbol, graphRange);
 	}
 }

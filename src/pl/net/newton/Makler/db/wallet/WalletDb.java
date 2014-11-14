@@ -5,7 +5,7 @@ import java.util.List;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.DbHelper;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import android.content.ContentValues;
@@ -23,13 +23,13 @@ public class WalletDb {
 
 	private final SymbolsDb symbolsDb;
 
-	private final QuotesDb quotesDb;
+	private final QuotesDao quotesDb;
 
 	public WalletDb(SQLiteDatabase sqlDb, Context ctx) {
 		this.ctx = ctx;
 		this.sqlDb = sqlDb;
 		this.symbolsDb = new SymbolsDb(sqlDb, ctx);
-		this.quotesDb = new QuotesDb(sqlDb, ctx);
+		this.quotesDb = new QuotesDao(sqlDb, ctx);
 	}
 
 	public List<WalletItem> getWalletItems() {

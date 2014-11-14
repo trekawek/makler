@@ -4,31 +4,27 @@ import java.math.BigDecimal;
 
 import android.content.Context;
 import android.content.res.Resources;
-
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
+import pl.net.newton.Makler.db.quote.QuoteField;
 
 public enum Subject {
 	KURS {
 		@Override
 		public BigDecimal getValue(Quote q) {
-			return q.getKurs();
+			return q.getAsDecimal(QuoteField.QUOTE);
 		}
 	},
 	WOLUMEN {
 		@Override
 		public BigDecimal getValue(Quote q) {
-			if (q.getWolumen() == null) {
-				return null;
-			} else {
-				return new BigDecimal(q.getWolumen());
-			}
+			return q.getAsDecimal(QuoteField.VOL);
 		}
 	},
 	WARTOSC {
 		@Override
 		public BigDecimal getValue(Quote q) {
-			return q.getWartosc();
+			return q.getAsDecimal(QuoteField.VALUE);
 		}
 	};
 

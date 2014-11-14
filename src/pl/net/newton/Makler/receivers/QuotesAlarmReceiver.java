@@ -1,6 +1,6 @@
 package pl.net.newton.Makler.receivers;
 
-import pl.net.newton.Makler.gpw.service.impl.QuotesServiceImpl;
+import pl.net.newton.Makler.gpw.service.QuotesService;
 import pl.net.newton.Makler.common.Configuration;
 import pl.net.newton.Makler.common.GpwUtils;
 import android.app.AlarmManager;
@@ -22,8 +22,8 @@ public class QuotesAlarmReceiver extends BroadcastReceiver {
 			return;
 		}
 		Log.d(TAG, "starting service");
-		Intent quotesIntent = new Intent(ctx, QuotesServiceImpl.class);
-		quotesIntent.putExtra(QuotesServiceImpl.StartIntent.class.getName(), QuotesServiceImpl.StartIntent.DOWNLOAD_QUOTES.name());
+		Intent quotesIntent = new Intent(ctx, QuotesService.class);
+		quotesIntent.putExtra(QuotesService.StartIntent.class.getName(), QuotesService.StartIntent.DOWNLOAD_QUOTES.name());
 		ctx.startService(quotesIntent);
 	}
 

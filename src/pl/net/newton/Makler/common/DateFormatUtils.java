@@ -58,7 +58,7 @@ public final class DateFormatUtils {
 		}
 		try {
 			return parseTime(string);
-		} catch (Exception e) {
+		} catch (ParseException e) {
 			Log.e(TAG, "Can't parse time", e);
 			return null;
 		}

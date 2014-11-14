@@ -1,8 +1,8 @@
 package pl.net.newton.Makler.service;
 
-import pl.net.newton.Makler.db.service.impl.SqlProviderImpl;
-import pl.net.newton.Makler.gpw.service.impl.QuotesServiceImpl;
-import pl.net.newton.Makler.history.service.HistoryServiceImpl;
+import pl.net.newton.Makler.db.service.SqlProvider;
+import pl.net.newton.Makler.gpw.service.QuotesService;
+import pl.net.newton.Makler.history.service.HistoryService;
 import android.content.Context;
 import android.content.Intent;
 
@@ -16,11 +16,11 @@ public class ServiceManager {
 	private Context context;
 
 	public ServiceManager(Context context) {
-		quotesServiceIntent = new Intent(context, QuotesServiceImpl.class);
-		quotesServiceIntent.putExtra(QuotesServiceImpl.StartIntent.class.getName(),
-				QuotesServiceImpl.StartIntent.START_UPDATER_THREAD.name());
-		sqlProviderIntent = new Intent(context, SqlProviderImpl.class);
-		historyServiceIntent = new Intent(context, HistoryServiceImpl.class);
+		quotesServiceIntent = new Intent(context, QuotesService.class);
+		quotesServiceIntent.putExtra(QuotesService.StartIntent.class.getName(),
+				QuotesService.StartIntent.START_UPDATER_THREAD.name());
+		sqlProviderIntent = new Intent(context, SqlProvider.class);
+		historyServiceIntent = new Intent(context, HistoryService.class);
 		this.context = context;
 	}
 

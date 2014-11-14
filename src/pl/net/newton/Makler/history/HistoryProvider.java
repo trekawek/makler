@@ -7,5 +7,5 @@ public interface HistoryProvider {
 
 	EntryListWithIndexes getIntraday(Symbol symbol, boolean force);
 
-	boolean isRangeExist(final Symbol symbol, int range);
+	boolean rangeExist(final Symbol symbol, int range);
 }

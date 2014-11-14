@@ -6,7 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuoteField;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.gpw.DefaultQuotesReceiver;
@@ -53,7 +54,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 
 	private View noQuotes;
 
-	private QuotesDb quotesDb;
+	private QuotesDao quotesDb;
 
 	private SymbolsDb symbolsDb;
 
@@ -171,35 +172,35 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		switch (item.getItemId()) {
 			case ContextMenuItem.DETAILS:
 				intent = new Intent(this, QuoteDetails.class);
-				intent.putExtra(SYMBOL, quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.get(QuoteField.SYMBOL));
 				startActivity(intent);
 				break;
 
 			case ContextMenuItem.ALERTS:
 				intent = new Intent(this, Alerts.class);
-				intent.putExtra(SYMBOL, quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.get(QuoteField.SYMBOL));
 				startActivity(intent);
 				break;
 
 			case ContextMenuItem.WALLET:
 				intent = new Intent(this, WalletForm.class);
-				intent.putExtra(SYMBOL, quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.get(QuoteField.SYMBOL));
 				intent.putExtra("quote", quote.chooseKurs());
 				startActivity(intent);
 				break;
 
 			case ContextMenuItem.UP:
-				quotesDb.move(quote.getId(), true);
+				quotesDb.move(quote.getAsInt(QuoteField.ID), true);
 				refreshList();
 				break;
 
 			case ContextMenuItem.DOWN:
-				quotesDb.move(quote.getId(), false);
+				quotesDb.move(quote.getAsInt(QuoteField.ID), false);
 				refreshList();
 				break;
 
 			case ContextMenuItem.DELETE:
-				quotesDb.deleteQuote(quote.getId());
+				quotesDb.deleteQuote(quote.getAsInt(QuoteField.ID));
 				refreshList();
 				break;
 
@@ -214,7 +215,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 		Quote quote = quotes.get(position);
 
 		Intent intent = new Intent(quotesList.getContext(), QuoteDetails.class);
-		intent.putExtra(SYMBOL, quote.getSymbol());
+		intent.putExtra(SYMBOL, quote.get(QuoteField.SYMBOL));
 		startActivity(intent);
 	}
 
@@ -349,7 +350,7 @@ public class Quotes extends AbstractActivity implements QuotesListener, OnItemCl
 
 	@Override
 	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
-		this.quotesDb = new QuotesDb(sqlDb, this);
+		this.quotesDb = new QuotesDao(sqlDb, this);
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
 
 		areSymbolsUpToDate();

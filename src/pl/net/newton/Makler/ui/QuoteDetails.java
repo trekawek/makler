@@ -16,7 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuoteField;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
 import pl.net.newton.Makler.gpw.ex.GpwException;
@@ -51,7 +52,7 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 
 	private LinearLayout graphLayout;
 
-	private QuotesDb quotesDb;
+	private QuotesDao quotesDb;
 
 	private SymbolsDb symbolsDb;
 
@@ -111,18 +112,17 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 		mHandler.post(mRefreshList);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void refresh() {
 		if (quotesDb == null) {
 			return;
 		}
 
 		quote = quotesDb.getQuoteBySymbol(quoteSymbol);
-		if (quote == null || quote.getSymbol() == null) {
+		if (quote == null || quote.get(QuoteField.SYMBOL) == null) {
 			return;
 		}
 
-		if (quote.getSymbol().length() > 5) {
+		if (quote.get(QuoteField.SYMBOL).length() > 5) {
 			TextView symbol = (TextView) findViewById(R.id.quoteDetailSymbol);
 			symbol.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 			symbol.setPadding(0, QuotesAdapter.dpToPx(this, 14), 0, 0);
@@ -130,34 +130,36 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 
 		setTextView(R.id.quoteDetailKurs, quote.chooseKurs());
 		setTextView(R.id.quoteDetailZmiana, NumberFormatUtils.formatNumber(quote.chooseZmiana()) + "%");
-		setTextView(R.id.quoteDetailKursMax, quote.getKursMax());
-		setTextView(R.id.quoteDetailKursMin, quote.getKursMin());
-		setTextView(R.id.quoteDetailKursOdn, quote.getKursOdn());
-		setTextView(R.id.quoteDetailSymbol, quote.getSymbol());
+		setTextView(R.id.quoteDetailKursMax, quote.getAsDecimal(QuoteField.MAX));
+		setTextView(R.id.quoteDetailKursMin, quote.getAsDecimal(QuoteField.MIN));
+		setTextView(R.id.quoteDetailKursOdn, quote.getAsDecimal(QuoteField.REFERENCE));
+		setTextView(R.id.quoteDetailSymbol, quote.get(QuoteField.SYMBOL));
 		if (!index) {
-			setTextView(R.id.quoteDetailName, quote.getName());
-			setTextView(R.id.quoteDetailTko, quote.getTko());
-			setTextView(R.id.quoteDetailTkoProcent, quote.getTkoProcent());
-			setTextView(R.id.quoteDetailKursOtw, quote.getKursOtw());
-			setTextView(R.id.quoteDetailWolumen, quote.getWolumen());
+			setTextView(R.id.quoteDetailName, quote.get(QuoteField.NAME));
+			setTextView(R.id.quoteDetailTko, quote.getAsDecimal(QuoteField.TKO));
+			setTextView(R.id.quoteDetailTkoProcent, quote.getAsDecimal(QuoteField.TKO_PERCENT));
+			setTextView(R.id.quoteDetailKursOtw, quote.getAsDecimal(QuoteField.OPEN));
+			setTextView(R.id.quoteDetailWolumen, quote.getAsInt(QuoteField.VOL));
 
-			setTextView(R.id.quoteDetailOfertK, quote.getkOfert());
-			setTextView(R.id.quoteDetailWolumenK, quote.getkWol());
-			setTextView(R.id.quoteDetailLimitK, quote.getkLimString());
+			setTextView(R.id.quoteDetailOfertK, quote.getAsInt(QuoteField.BID_OFFERS));
+			setTextView(R.id.quoteDetailWolumenK, quote.getAsInt(QuoteField.BID_VOL));
+			setTextView(R.id.quoteDetailLimitK, quote.getAsDecimal(QuoteField.BID));
 
-			setTextView(R.id.quoteDetailLimitS, quote.getsLimString());
-			setTextView(R.id.quoteDetailWolumenS, quote.getsWol());
-			setTextView(R.id.quoteDetailOfertS, quote.getsOfert());
+			setTextView(R.id.quoteDetailLimitS, quote.getAsDecimal(QuoteField.ASK));
+			setTextView(R.id.quoteDetailWolumenS, quote.getAsInt(QuoteField.ASK_VOL));
+			setTextView(R.id.quoteDetailOfertS, quote.getAsInt(QuoteField.ASK_OFFERS));
 
 		}
-		setTextView(R.id.quoteDetailUpdate, DateFormatUtils.formatTime(quote.getUpdate()));
-		setTextView(R.id.quoteDetailWartosc, quote.getWartosc());
+		setTextView(R.id.quoteDetailUpdate,
+				DateFormatUtils.formatTime(quote.getAsCalendar(QuoteField.UPDATED)));
+		setTextView(R.id.quoteDetailWartosc, quote.getAsDecimal(QuoteField.VALUE));
 
 		Resources res = getResources();
 		View zmiana = findViewById(R.id.quoteDetailZmiana);
 		setBackground(res, zmiana);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void setBackground(Resources res, View zmiana) {
 		if (quote.chooseZmiana() != null) {
 			switch (quote.chooseZmiana().compareTo(BigDecimal.ZERO)) {
@@ -210,13 +212,13 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 
 			case R.id.showAlerts:
 				intent = new Intent(this, Alerts.class);
-				intent.putExtra(SYMBOL, quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.get(QuoteField.SYMBOL));
 				startActivity(intent);
 				break;
 
 			case R.id.addToWallet:
 				intent = new Intent(this, WalletForm.class);
-				intent.putExtra(SYMBOL, quote.getSymbol());
+				intent.putExtra(SYMBOL, quote.get(QuoteField.SYMBOL));
 				intent.putExtra("quote", quote.chooseKurs());
 				startActivity(intent);
 				break;
@@ -252,17 +254,17 @@ public class QuoteDetails extends AbstractActivity implements QuotesListener, Hi
 	@Override
 	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
-		this.quotesDb = new QuotesDb(sqlDb, this);
+		this.quotesDb = new QuotesDao(sqlDb, this);
 
 		quote = quotesDb.getQuoteBySymbol(quoteSymbol);
-		index = quote.isIndex();
+		index = quote.getAsBoolean(QuoteField.IS_INDEX);
 		if (index) {
 			setContentView(R.layout.quote_details_index);
 		} else {
 			setContentView(R.layout.quote_details);
 		}
 		graphLayout = (LinearLayout) findViewById(R.id.graphParent);
-		setTitle(quote.getName());
+		setTitle(quote.get(QuoteField.NAME));
 		refresh();
 
 		graphLayout.removeAllViews();

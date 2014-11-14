@@ -5,6 +5,7 @@ import java.util.List;
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.ui.QuoteDetails;
 import pl.net.newton.Makler.common.Configuration;
+import pl.net.newton.Makler.db.quote.QuoteField;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,13 +16,13 @@ import android.net.Uri;
 public class AlertChecker {
 	private Context ctx;
 
-	private AlertsDb alertsDb;
+	private AlertsDao alertsDb;
 
 	private Configuration config;
 
 	private NotificationManager notifManager;
 
-	public AlertChecker(Context ctx, AlertsDb alertsDb, Configuration config) {
+	public AlertChecker(Context ctx, AlertsDao alertsDb, Configuration config) {
 		this.ctx = ctx;
 		this.alertsDb = alertsDb;
 		this.config = config;
@@ -29,7 +30,7 @@ public class AlertChecker {
 	}
 
 	public void checkAlerts() {
-		List<Alert> alerts = alertsDb.getAlerts();
+		List<Alert> alerts = alertsDb.getAll();
 		for (Alert a : alerts) {
 			if (!a.getUsed() && a.isAlarming()) {
 				launchAlert(a);
@@ -39,7 +40,7 @@ public class AlertChecker {
 
 	@SuppressWarnings("deprecation")
 	private void launchAlert(Alert a) {
-		alertsDb.markAlertAsUsed(a);
+		alertsDb.markAsUsed(a);
 		int icon;
 		String ringTone;
 		if (a.getEvent() == Event.WZR_DO || a.getEvent() == Event.WZR_O || a.getEvent() == Event.WZR_POW) {
@@ -51,7 +52,7 @@ public class AlertChecker {
 		}
 
 		Intent intent = new Intent(ctx, QuoteDetails.class);
-		intent.putExtra("symbol", a.getQuote().getSymbol());
+		intent.putExtra("symbol", a.getQuote().get(QuoteField.SYMBOL));
 		intent.putExtra("fromAlert", true);
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intent,
 				PendingIntent.FLAG_CANCEL_CURRENT);

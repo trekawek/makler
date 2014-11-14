@@ -13,13 +13,9 @@ import android.content.Context;
 import android.provider.Settings.Secure;
 import android.util.Log;
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuoteBuilder;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolBuilder;
 import pl.net.newton.Makler.httpClient.Connector;
-import pl.net.newton.Makler.common.Configuration;
-import pl.net.newton.Makler.common.DateFormatUtils;
-import pl.net.newton.Makler.common.NumberFormatUtils;
 
 public class DefaultQuotesReceiver implements QuotesReceiver {
 	private static final String TAG = "MaklerDefaultQuotesReceiver";
@@ -66,10 +62,11 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 			reader = get(url.toString());
 			String line;
 			while ((line = reader.readLine()) != null) {
-				Quote q = quoteFromLine(line);
-				if (q != null) {
-					quotes.add(q);
+				if (StringUtils.trimToNull(line) == null) {
+					continue;
 				}
+				Quote q = new Quote(line);
+				quotes.add(q);
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -119,41 +116,6 @@ public class DefaultQuotesReceiver implements QuotesReceiver {
 		} else {
 			return id;
 		}
-	}
-
-	private Quote quoteFromLine(String line) {
-		String[] a = line.split("\\|");
-		QuoteBuilder builder = new QuoteBuilder();
-
-		builder.setSymbol(a[0]).setName(a[1]);
-		builder.setUpdate(a[2]);
-		try {
-			builder.setKurs(NumberFormatUtils.parseOrNull(a[3]))
-					.setZmiana(NumberFormatUtils.parseOrNull(a[4]))
-					.setKursOdn(NumberFormatUtils.parseOrNull(a[5]))
-					.setKursOtw(NumberFormatUtils.parseOrNull(a[6]))
-					.setKursMin(NumberFormatUtils.parseOrNull(a[7]))
-					.setKursMax(NumberFormatUtils.parseOrNull(a[8]))
-					.setTko(NumberFormatUtils.parseOrNull(a[9]))
-					.setTkoProcent(NumberFormatUtils.parseOrNull(a[10]))
-					.setWolumen(NumberFormatUtils.parseIntOrNull(a[11]))
-					.setWartosc(NumberFormatUtils.parseOrNull(a[12]));
-			if (a.length > 13) {
-				builder.setkOfert(NumberFormatUtils.parseIntOrNull(a[13]))
-						.setkWol(NumberFormatUtils.parseIntOrNull(a[14]))
-						.setkLim(NumberFormatUtils.parseOrNull(a[15]))
-						.setsLim(NumberFormatUtils.parseOrNull(a[16]))
-						.setsWol(NumberFormatUtils.parseIntOrNull(a[17]))
-						.setsOfert(NumberFormatUtils.parseIntOrNull(a[18]));
-			}
-		} catch (ArrayIndexOutOfBoundsException e) {
-			Log.e(TAG, "Can't parse quote", e);
-		}
-
-		if (Configuration.DEBUG_UPDATES) {
-			builder.setUpdate(DateFormatUtils.formatCurrentTime());
-		}
-		return builder.build();
 	}
 
 	private BufferedReader get(String path) throws IOException {

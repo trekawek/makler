@@ -9,6 +9,7 @@ import org.achartengine.chart.XYChart;
 import org.achartengine.model.SeriesSelection;
 
 import pl.net.newton.Makler.db.quote.Quote;
+import pl.net.newton.Makler.db.quote.QuoteField;
 import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.ui.graph.GraphView.GraphRange;
 import pl.net.newton.Makler.common.NumberFormatUtils;
@@ -69,9 +70,10 @@ public class MaklerGraphicalView extends GraphicalView {
 
 		// For 1D graph range
 		if (graphRange == GraphRange.D1) {
-			if (quote.getKurs() != null && quote.getKursOdn() != null) {
-				change = (quote.getKurs().doubleValue() - quote.getKursOdn().doubleValue())
-						/ quote.getKursOdn().doubleValue() * 100;
+			final BigDecimal q = quote.getAsDecimal(QuoteField.QUOTE);
+			final BigDecimal r = quote.getAsDecimal(QuoteField.REFERENCE);
+			if (q != null && r != null) {
+				change = (q.doubleValue() - r.doubleValue()) / r.doubleValue() * 100;
 			}
 		} else {
 			double x1 = ((double) entries.getClose(0)) / 100;

@@ -3,7 +3,8 @@ package pl.net.newton.Makler.ui;
 import java.math.BigDecimal;
 
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuoteField;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.db.wallet.WalletDb;
 import pl.net.newton.Makler.db.wallet.WalletItem;
@@ -124,18 +125,18 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 
 	private void reset() {
 		walletItemQuantity.setText(NumberFormatUtils.formatNumber(walletItem.getQuantity()));
-		walletItemKurs.setText(NumberFormatUtils.formatNumber(quote.getKurs()));
-		walletItemZmiana.setText(NumberFormatUtils.formatNumber(quote.getZmiana()));
+		walletItemKurs.setText(NumberFormatUtils.formatNumber(quote.chooseKurs()));
+		walletItemZmiana.setText(NumberFormatUtils.formatNumber(quote.chooseZmiana()));
 		walletItemAvg.setText(NumberFormatUtils.formatNumber(walletItem.getAvgBuy()));
 		walletItemZysk.setText(NumberFormatUtils.formatNumber(walletItem.gain()));
 
 		quantity = walletItem.getQuantity();
 		kupno = walletItem.getAvgBuy().doubleValue();
 
-		if (quote.getKurs() == null) {
+		if (quote.get(QuoteField.QUOTE) == null) {
 			sprzedaz = kupno;
 		} else {
-			sprzedaz = quote.getKurs().doubleValue();
+			sprzedaz = quote.getAsDecimal(QuoteField.QUOTE).doubleValue();
 		}
 		updateFields();
 	}
@@ -144,7 +145,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 		String symbolName = getIntent().getStringExtra("symbol");
 		walletItem = walletDb.getWalletItem(symbolsDb.getSymbolBySymbol(symbolName));
 
-		if (quote.getSymbol().length() > 5) {
+		if (quote.get(QuoteField.SYMBOL).length() > 5) {
 			TextView symbolField = (TextView) findViewById(R.id.quoteDetailSymbol);
 			symbolField.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 			symbolField.setPadding(0, QuotesAdapter.dpToPx(this, 14), 0, 0);
@@ -165,12 +166,12 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 
 		textViewZysk = (TextView) findViewById(R.id.textViewZysk);
 
-		walletItemSymbol.setText(quote.getSymbol());
-		walletItemName.setText(quote.getName());
-		if (quote.getKurs() == null) {
+		walletItemSymbol.setText(quote.get(QuoteField.SYMBOL));
+		walletItemName.setText(quote.get(QuoteField.NAME));
+		if (quote.get(QuoteField.QUOTE) == null) {
 			walletItemKurs.setText(R.string.zero);
 		} else {
-			walletItemKurs.setText(quote.getKurs().toString());
+			walletItemKurs.setText(quote.chooseKurs().toString());
 		}
 		walletItemZmiana.setText(String.valueOf(0));
 		walletItemAvg.setText(NumberFormatUtils.formatNumber(walletItem.getAvgBuy()));
@@ -344,7 +345,7 @@ public class WalletItemCalculator extends AbstractActivity implements TextWatche
 	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
 		this.walletDb = new WalletDb(sqlDb, this);
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
-		QuotesDb quotesDb = new QuotesDb(sqlDb, this);
+		QuotesDao quotesDb = new QuotesDao(sqlDb, this);
 		quote = quotesDb.getQuoteBySymbol(quoteSymbol);
 		setView();
 		reset();

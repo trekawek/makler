@@ -2,6 +2,8 @@ package pl.net.newton.Makler.ui;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.StringUtils;
+
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
@@ -12,14 +14,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 public class WalletForm extends AbstractActivity implements OnClickListener {
-	private static final String TAG = "Makler";
 
 	private RadioButton kupno, sprzedaz;
 
@@ -79,57 +79,45 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		String name, quantity, quote;
 		Character type = null;
 		if (kupno.isChecked()) {
 			type = 'K';
 		} else if (sprzedaz.isChecked()) {
 			type = 'S';
 		}
-		name = this.walor.getText().toString();
-		quantity = this.ilosc.getText().toString();
-		quote = this.kurs.getText().toString();
-		if (name.length() == 0 || quantity.length() == 0 || quote.length() == 0) {
+		final String name = this.walor.getText().toString();
+		final String quantity = this.ilosc.getText().toString();
+		final String quote = this.kurs.getText().toString();
+		if (StringUtils.isAnyEmpty(name, quantity, quote) || type == null) {
 			return;
 		}
-		if (type == null) {
-			return;
-		}
-		Symbol s = symbolsDb.getSymbolBySymbol(name);
-		if (s == null) {
-			return;
+		if (addTransaction(quantity, quote, type, name)) {
+			Intent resultIntent = new Intent();
+			setResult(Activity.RESULT_OK, resultIntent);
+			finish();
 		}
 
+	}
+
+	private boolean addTransaction(String quantity, String quote, Character type, String symbolName) {
+		Symbol s = symbolsDb.getSymbolBySymbol(symbolName);
+		if (s == null) {
+			return false;
+		}
 		if (s.isIndex()) {
 			showMessage("Nie możesz przeprowadzić transakcji z indeksem");
-			return;
+			return false;
 		}
-
 		WalletItem item = walletDb.getWalletItem(s);
+		String q = quantity;
 		if (type == 'S' && item.getQuantity() < Integer.parseInt(quantity)) {
-			quantity = item.getQuantity().toString();
+			q = item.getQuantity().toString();
 		}
 
-		BigDecimal commision = BigDecimal.ZERO;
-		BigDecimal minCommision = BigDecimal.ZERO;
-		BigDecimal account = BigDecimal.ZERO;
-		try {
-			commision = config.getCommision();
-		} catch (Exception e) {
-			Log.e(TAG, "Can't get commision", e);
-		}
-		try {
-			minCommision = config.getMinCommision();
-		} catch (Exception e) {
-			Log.e(TAG, "Can't get min commision", e);
-		}
-		try {
-			account = config.getWalletAccount();
-		} catch (Exception e) {
-			Log.e(TAG, "Can't get wallet account", e);
-		}
-
-		BigDecimal value = new BigDecimal(quote).multiply(new BigDecimal(quantity));
+		BigDecimal commision = config.getCommision();
+		BigDecimal minCommision = config.getMinCommision();
+		BigDecimal account = config.getWalletAccount();
+		BigDecimal value = new BigDecimal(quote).multiply(new BigDecimal(q));
 		BigDecimal com = value.divide(new BigDecimal(100)).multiply(commision);
 		if (com.compareTo(minCommision) < 0) {
 			com = minCommision;
@@ -143,12 +131,8 @@ public class WalletForm extends AbstractActivity implements OnClickListener {
 
 		item.addTrans(type, Integer.parseInt(quantity), new BigDecimal(quote.replace(" ", "")), com);
 		walletDb.updateWalletItem(item);
-
 		config.setWalletAccount(account.toString());
-
-		Intent resultIntent = new Intent();
-		setResult(Activity.RESULT_OK, resultIntent);
-		finish();
+		return true;
 	}
 
 	@Override

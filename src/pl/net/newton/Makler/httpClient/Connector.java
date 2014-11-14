@@ -61,10 +61,10 @@ public class Connector {
 	protected URI uriFromPath(String path, String query) {
 		URI u;
 		try {
-			if (port == 80) {
-				u = new URI("http", null, host, port, path, query, null);
-			} else {
+			if (port == 443) {
 				u = new URI("https", null, host, port, path, query, null);
+			} else {
+				u = new URI("http", null, host, port, path, query, null);
 			}
 			return u;
 		} catch (URISyntaxException e) {

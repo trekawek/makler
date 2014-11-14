@@ -10,16 +10,15 @@ public final class GpwUtils {
 	}
 
 	public static boolean gpwActive() {
-		if (Configuration.DEBUG_UPDATES) {
-			return true;
-		}
-
 		Calendar c = Calendar.getInstance();
 		c.setTimeZone(WARSAW_TIMEZONE);
 		return !isWeekend(c) && workingHours(c);
 	}
 
 	public static boolean isOvertime(Calendar calendar) {
+		if (calendar == null) {
+			return false;
+		}
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minute = calendar.get(Calendar.MINUTE);
 		return hour == 17 && minute >= 20 && minute < 30;

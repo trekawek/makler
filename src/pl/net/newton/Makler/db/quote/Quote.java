@@ -1,176 +1,66 @@
 package pl.net.newton.Makler.db.quote;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.EnumMap;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import android.content.ContentValues;
+import android.database.Cursor;
 import pl.net.newton.Makler.common.DateFormatUtils;
 import pl.net.newton.Makler.common.GpwUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
+import static pl.net.newton.Makler.db.quote.QuoteField.*;
 
 public class Quote {
-	private final Integer id;
+	private final Map<QuoteField, String> map = new EnumMap<QuoteField, String>(QuoteField.class);
 
-	private final String symbol, name;
-
-	private final BigDecimal kurs, zmiana, kursOdn, kursOtw, kursMin, kursMax, tko, tkoProcent, wartosc;
-
-	private final BigDecimal kLim, sLim;
-
-	private final Integer kOfert, kWol, sOfert, sWol, wolumen;
-
-	private final Calendar update;
-
-	private final Boolean index;
-
-	Quote(QuoteBuilder builder) {
-		this.id = builder.getId();
-		this.symbol = builder.getSymbol();
-		this.name = builder.getName();
-		this.kurs = builder.getKurs();
-		this.kursOdn = builder.getKursOdn();
-		this.zmiana = calculateChange(builder.getZmiana(), builder.getKurs(), builder.getKursOdn());
-		this.kursOtw = builder.getKursOtw();
-		this.kursMin = builder.getKursMin();
-		this.kursMax = builder.getKursMax();
-		this.tko = builder.getTko();
-		this.tkoProcent = builder.getTkoProcent();
-		this.wartosc = builder.getWartosc();
-		this.kLim = builder.getkLim();
-		this.sLim = builder.getsLim();
-		this.kOfert = builder.getkOfert();
-		this.kWol = builder.getkWol();
-		this.sOfert = builder.getsOfert();
-		this.sWol = builder.getsWol();
-		this.wolumen = builder.getWolumen();
-		this.update = DateFormatUtils.safeParseTime(builder.getUpdate());
-		this.index = builder.getIndex();
-	}
-
-	private BigDecimal calculateChange(BigDecimal zmiana, BigDecimal kurs, BigDecimal kursOdn) {
-		if (zmiana != null && zmiana.compareTo(BigDecimal.ZERO) != 0) {
-			return zmiana;
-		}
-		if (kurs == null || kursOdn == null || kursOdn.compareTo(BigDecimal.ZERO) == 0) {
-			return zmiana;
-		}
-		return kurs.divide(kursOdn, 4, RoundingMode.HALF_UP).subtract(BigDecimal.ONE)
-				.multiply(new BigDecimal(100));
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public Boolean isIndex() {
-		return index;
-	}
-
-	public String getSymbol() {
-		return symbol;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public BigDecimal getKurs() {
-		return kurs;
-	}
-
-	public BigDecimal getZmiana() {
-		return zmiana;
-	}
-
-	public BigDecimal getKursOdn() {
-		return kursOdn;
-	}
-
-	public BigDecimal getKursOtw() {
-		return kursOtw;
-	}
-
-	public BigDecimal getKursMin() {
-		return kursMin;
-	}
-
-	public BigDecimal getKursMax() {
-		return kursMax;
-	}
-
-	public BigDecimal getTko() {
-		return tko;
-	}
-
-	public BigDecimal getTkoProcent() {
-		return tkoProcent;
-	}
-
-	public Integer getWolumen() {
-		return wolumen;
-	}
-
-	public BigDecimal getWartosc() {
-		return wartosc;
-	}
-
-	public Calendar getUpdate() {
-		return update;
-	}
-
-	@Override
-	public String toString() {
-		return symbol + " " + kurs.toString();
-	}
-
-	public Integer getkOfert() {
-		return kOfert;
-	}
-
-	public Integer getkWol() {
-		return kWol;
-	}
-
-	public BigDecimal getkLim() {
-		return kLim;
-	}
-
-	public Integer getsOfert() {
-		return sOfert;
-	}
-
-	public Integer getsWol() {
-		return sWol;
-	}
-
-	public BigDecimal getsLim() {
-		return sLim;
-	}
-
-	public String getsLimString() {
-		String value = limitString(sLim);
-		if (value != null) {
-			return value;
-		} else {
-			return NumberFormatUtils.formatNumber(sLim);
+	public Quote(Cursor cursor) {
+		for (QuoteField f : QuoteField.values()) {
+			final String columnName = f.getDatabaseField();
+			final int columnIndex = cursor.getColumnIndex(columnName);
+			if (columnIndex != -1) {
+				map.put(f, cursor.getString(columnIndex));
+			}
 		}
 	}
 
-	public String getkLimString() {
-		String value = limitString(kLim);
-		if (value != null) {
-			return value;
-		} else {
-			return NumberFormatUtils.formatNumber(kLim);
+	public Quote(String line) {
+		final String[] split = StringUtils.split(line, '|');
+		for (int i = 0; i < split.length; i++) {
+			map.put(QuoteField.values()[i], split[i]);
 		}
+	}
+
+	public String get(QuoteField field) {
+		return map.get(field);
+	}
+
+	public BigDecimal getAsDecimal(QuoteField field) {
+		return NumberFormatUtils.parseOrNull(get(field));
+	}
+
+	public int getAsInt(QuoteField field) {
+		return NumberFormatUtils.parseIntOrZero(get(field));
+	}
+
+	public Calendar getAsCalendar(QuoteField field) {
+		return DateFormatUtils.safeParseTime(get(UPDATED));
+	}
+
+	public boolean getAsBoolean(QuoteField field) {
+		return Boolean.parseBoolean(get(field));
 	}
 
 	public BigDecimal chooseKurs() {
-		if (tko != null && GpwUtils.isOvertime(update)) {
-			return tko;
+		if (get(TKO) != null && GpwUtils.isOvertime(getAsCalendar(UPDATED))) {
+			return getAsDecimal(TKO);
 		}
-		for (BigDecimal v : Arrays.asList(kurs, tko, kursOtw, kursOdn)) {
+		for (QuoteField field : Arrays.asList(QUOTE, TKO, OPEN, REFERENCE)) {
+			final BigDecimal v = getAsDecimal(field);
 			if (v != null) {
 				return v;
 			}
@@ -179,10 +69,11 @@ public class Quote {
 	}
 
 	public BigDecimal chooseZmiana() {
-		if (tkoProcent != null && GpwUtils.isOvertime(update)) {
-			return tkoProcent;
+		if (get(TKO_PERCENT) != null && GpwUtils.isOvertime(getAsCalendar(UPDATED))) {
+			return getAsDecimal(TKO_PERCENT);
 		}
-		for (BigDecimal v : Arrays.asList(zmiana, tkoProcent)) {
+		for (QuoteField field : Arrays.asList(CHANGE, TKO_PERCENT)) {
+			final BigDecimal v = getAsDecimal(field);
 			if (v != null) {
 				return v;
 			}
@@ -190,17 +81,43 @@ public class Quote {
 		return null;
 	}
 
-	private String limitString(BigDecimal limit) {
-		if (limit == null) {
-			return null;
+	public String formatAskBid(QuoteField field) {
+		final BigDecimal value = getAsDecimal(field);
+		if (value != null) {
+			switch (value.intValue()) {
+				case -1:
+					return "PCRO";
+				case -2:
+					return "PKC";
+				default:
+					break;
+			}
 		}
-		switch (limit.intValue()) {
-			case -1:
-				return "PCRO";
-			case -2:
-				return "PKC";
-			default:
-				return null;
-		}
+		return NumberFormatUtils.formatNumber(value);
 	}
+
+	public ContentValues getContentValue() {
+		final ContentValues cv = new ContentValues();
+		for (QuoteField f : QuoteField.values()) {
+			if (!f.isIncludeInCv()) {
+				continue;
+			}
+			final String v = get(f);
+			if (v == null) {
+				cv.putNull(f.getDatabaseField());
+			} else {
+				cv.put(f.getDatabaseField(), v);
+			}
+		}
+		if (get(UPDATED) != null) {
+			cv.put(UPDATED.getDatabaseField(), DateFormatUtils.formatTime(getAsCalendar(UPDATED)));
+		}
+		return cv;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s %s", get(SYMBOL), get(QUOTE));
+	}
+
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
+import pl.net.newton.Makler.db.quote.QuoteField;
 import pl.net.newton.Makler.common.LocaleUtils;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 import android.content.Context;
@@ -69,7 +70,7 @@ public class Alert {
 		s.append("Alert: ");
 		s.append(subject.getLabel(context));
 		s.append(" ");
-		s.append(quote.getName());
+		s.append(quote.get(QuoteField.NAME));
 		s.append(" ");
 		s.append(event.getLabel(context, R.array.alert_events_quote_strings2));
 		s.append(" ");

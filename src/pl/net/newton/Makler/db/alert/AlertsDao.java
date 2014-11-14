@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuoteField;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.gpw.ex.GpwException;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,22 +14,36 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import static pl.net.newton.Makler.db.Constants.ALERTS;
 import static pl.net.newton.Makler.db.Constants.ID_EQUALS;
+import static pl.net.newton.Makler.db.DbHelper._;
 
-public class AlertsDb {
+public class AlertsDao {
 	private static final String CAN_T_GET_ALERT = "Can't get alert";
 
 	private static final String TAG = "MaklerAlertsDb";
 
 	private final SQLiteDatabase sqlDb;
 
-	private final QuotesDb quotesDb;
+	private final QuotesDao quotesDb;
 
-	public AlertsDb(SQLiteDatabase sqlDb, Context ctx) {
+	public AlertsDao(SQLiteDatabase sqlDb, Context ctx) {
 		this.sqlDb = sqlDb;
-		this.quotesDb = new QuotesDb(sqlDb, ctx);
+		this.quotesDb = new QuotesDao(sqlDb, ctx);
 	}
 
-	public List<Alert> getAlerts() {
+	public boolean create(Alert a) {
+		ContentValues cv = getContentValues(a);
+		if (cv == null) {
+			return false;
+		} else {
+			sqlDb.beginTransaction();
+			sqlDb.insert(ALERTS, null, cv);
+			sqlDb.setTransactionSuccessful();
+			sqlDb.endTransaction();
+			return true;
+		}
+	}
+
+	public List<Alert> getAll() {
 		List<Alert> alerts = new ArrayList<Alert>();
 		Cursor c = sqlDb.query(ALERTS, null, null, null, null, null, null);
 		if (c.moveToFirst()) {
@@ -44,19 +59,9 @@ public class AlertsDb {
 		return alerts;
 	}
 
-	public void markAlertAsUsed(Alert alert) {
-		sqlDb.beginTransaction();
-		ContentValues cv = new ContentValues();
-		cv.put("used", 1);
-		sqlDb.update(ALERTS, cv, "id = ?", new String[] { String.valueOf(alert.getId()) });
-		sqlDb.setTransactionSuccessful();
-		sqlDb.endTransaction();
-	}
-
-	public List<Alert> alertsByQuote(Quote quote) {
+	public List<Alert> getByQuote(Quote quote) {
 		List<Alert> alerts = new ArrayList<Alert>();
-		Cursor c = sqlDb.query(ALERTS, null, "quote_id = ?", new String[] { quote.getId().toString() }, null,
-				null, null);
+		Cursor c = sqlDb.query(ALERTS, null, "quote_id = ?", _(quote.get(QuoteField.ID)), null, null, null);
 		if (c.moveToFirst()) {
 			do {
 				try {
@@ -70,28 +75,8 @@ public class AlertsDb {
 		return alerts;
 	}
 
-	public void deleteAlert(Integer id) {
-		sqlDb.beginTransaction();
-		sqlDb.delete(ALERTS, "id = ?", new String[] { id.toString() });
-		sqlDb.setTransactionSuccessful();
-		sqlDb.endTransaction();
-	}
-
-	public boolean addAlert(Alert a) {
-		ContentValues cv = getContentValues(a);
-		if (cv == null) {
-			return false;
-		} else {
-			sqlDb.beginTransaction();
-			sqlDb.insert(ALERTS, null, cv);
-			sqlDb.setTransactionSuccessful();
-			sqlDb.endTransaction();
-			return true;
-		}
-	}
-
-	public Alert getAlertById(int id) {
-		Cursor c = sqlDb.query(ALERTS, null, ID_EQUALS, new String[] { String.valueOf(id) }, null, null, null);
+	public Alert getById(int id) {
+		Cursor c = sqlDb.query(ALERTS, null, ID_EQUALS, _(String.valueOf(id)), null, null, null);
 		Alert alert = null;
 		if (c.moveToFirst()) {
 			try {
@@ -104,7 +89,7 @@ public class AlertsDb {
 		return alert;
 	}
 
-	public void updateAlert(Alert a) {
+	public void update(Alert a) {
 		ContentValues cv = getContentValues(a);
 		if (cv != null) {
 			sqlDb.beginTransaction();
@@ -114,9 +99,25 @@ public class AlertsDb {
 		}
 	}
 
+	public void markAsUsed(Alert alert) {
+		sqlDb.beginTransaction();
+		ContentValues cv = new ContentValues();
+		cv.put("used", 1);
+		sqlDb.update(ALERTS, cv, "id = ?", _(String.valueOf(alert.getId())));
+		sqlDb.setTransactionSuccessful();
+		sqlDb.endTransaction();
+	}
+
+	public void delete(int id) {
+		sqlDb.beginTransaction();
+		sqlDb.delete(ALERTS, ID_EQUALS, _(String.valueOf(id)));
+		sqlDb.setTransactionSuccessful();
+		sqlDb.endTransaction();
+	}
+
 	private ContentValues getContentValues(Alert a) {
 		ContentValues cv = new ContentValues();
-		cv.put("quote_id", a.getQuote().getId());
+		cv.put("quote_id", a.getQuote().get(QuoteField.ID));
 		cv.put("subject", a.getSubject().toString());
 		cv.put("event", a.getEvent().toString());
 		cv.put("value", a.getAlertValue().getValue().toString());

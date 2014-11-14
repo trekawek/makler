@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import android.database.Cursor;
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.common.NumberFormatUtils;
 
@@ -24,7 +24,7 @@ public class WalletItemBuilder {
 		return new WalletItem(this);
 	}
 
-	public WalletItemBuilder setFromCursor(Cursor c, QuotesDb db) {
+	public WalletItemBuilder setFromCursor(Cursor c, QuotesDao db) {
 		this.id = c.getInt(c.getColumnIndex("id"));
 		this.quantity = c.getInt(c.getColumnIndex("quantity"));
 		this.symbol = c.getString(c.getColumnIndex("symbol"));

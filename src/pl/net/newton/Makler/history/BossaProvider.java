@@ -23,15 +23,15 @@ public class BossaProvider implements HistoryProvider {
 
 	private static final String QUERY = "id=%s";
 
-	private Connector conn;
-
-	private Cache intradayCache;
-
-	private Cache historyCache;
-
 	private static final String HISTORY_FILE_PREFIX = "history_cache_v2_";
 
 	private static final String INTRADAY_FILE_PREFIX = "intraday_cache_v2_";
+
+	private final Connector conn;
+
+	private final Cache intradayCache;
+
+	private final Cache historyCache;
 
 	public BossaProvider(Context ctx) {
 		conn = new Connector(HOST, 80);
@@ -40,25 +40,25 @@ public class BossaProvider implements HistoryProvider {
 	}
 
 	public EntryListWithIndexes getIntraday(Symbol symbol, boolean force) {
-		String symbolName = symbol.getSymbol();
+		final String symbolName = symbol.getSymbol();
 		if (intradayCache.hasKey(symbolName) && !force) {
 			return new EntryListWithIndexes(intradayCache.getEntry(symbolName));
 		}
 
-		String query = String.format(QUERY, symbolName);
-		EntryList entries = getEntries(INTRADAY_PATH, query);
+		final String query = String.format(QUERY, symbolName);
+		final EntryList entries = getEntries(INTRADAY_PATH, query);
 		intradayCache.addEntry(symbolName, entries);
 		return new EntryListWithIndexes(entries);
 	}
 
 	public EntryListWithIndexes getHistory(Symbol symbol, boolean force) {
-		String symbolName = symbol.getSymbol();
+		final String symbolName = symbol.getSymbol();
 		if (historyCache.hasKey(symbolName) && !force) {
 			return new EntryListWithIndexes(historyCache.getEntry(symbolName));
 		}
 
-		String query = String.format(QUERY, symbolName);
-		EntryList entries = getEntries(HISTORY_PATH, query);
+		final String query = String.format(QUERY, symbolName);
+		final EntryList entries = getEntries(HISTORY_PATH, query);
 		historyCache.addEntry(symbolName, entries);
 		return new EntryListWithIndexes(entries);
 	}
@@ -119,7 +119,7 @@ public class BossaProvider implements HistoryProvider {
 		return count;
 	}
 
-	public boolean isRangeExist(final Symbol symbol, int range) {
+	public boolean rangeExist(final Symbol symbol, int range) {
 		String symbolName = symbol.getSymbol();
 
 		if (range >= 0 && range <= 2 && !intradayCache.hasKey(symbolName)) {

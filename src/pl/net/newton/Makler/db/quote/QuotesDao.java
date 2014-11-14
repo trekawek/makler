@@ -6,7 +6,6 @@ import java.util.List;
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.DbHelper;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
-import pl.net.newton.Makler.common.DateFormatUtils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,7 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import static pl.net.newton.Makler.db.Constants.QUOTES;
 
-public class QuotesDb {
+public class QuotesDao {
 
 	private final Context ctx;
 
@@ -22,7 +21,7 @@ public class QuotesDb {
 
 	private final SymbolsDb symbolsDb;
 
-	public QuotesDb(SQLiteDatabase sqlDb, Context ctx) {
+	public QuotesDao(SQLiteDatabase sqlDb, Context ctx) {
 		this.ctx = ctx;
 		this.sqlDb = sqlDb;
 		this.symbolsDb = new SymbolsDb(sqlDb, ctx);
@@ -39,7 +38,7 @@ public class QuotesDb {
 		Cursor c = sqlDb.rawQuery(sql, null);
 		if (c.moveToFirst()) {
 			do {
-				quotes.add(new QuoteBuilder().setFromCursor(c).build());
+				quotes.add(new Quote(c));
 			} while (c.moveToNext());
 		}
 		c.close();
@@ -51,7 +50,7 @@ public class QuotesDb {
 		if (!c.moveToFirst()) {
 			return null;
 		}
-		Quote q = new QuoteBuilder().setFromCursor(c).build();
+		Quote q = new Quote(c);
 		c.close();
 		return q;
 	}
@@ -62,7 +61,7 @@ public class QuotesDb {
 			if (!c.moveToFirst()) {
 				return null;
 			}
-			return new QuoteBuilder().setFromCursor(c).build();
+			return new Quote(c);
 		} finally {
 			c.close();
 		}
@@ -89,9 +88,9 @@ public class QuotesDb {
 
 	public void updateQuote(Quote q) {
 		sqlDb.beginTransaction();
-		Integer symbolId = this.symbolsDb.getSymbolId(q.getSymbol());
-		ContentValues cv = getContentValues(q);
-		sqlDb.update(QUOTES, cv, "symbol_id = ?", new String[] { symbolId.toString() });
+		int symbolId = this.symbolsDb.getSymbolId(q.get(QuoteField.SYMBOL));
+		ContentValues cv = q.getContentValue();
+		sqlDb.update(QUOTES, cv, "symbol_id = ?", new String[] { Integer.toString(symbolId) });
 		sqlDb.setTransactionSuccessful();
 		sqlDb.endTransaction();
 	}
@@ -107,32 +106,4 @@ public class QuotesDb {
 	public void move(int id, boolean up) {
 		DbHelper.move(sqlDb, QUOTES, id, up);
 	}
-
-	private ContentValues getContentValues(Quote quote) {
-		ContentValues cv = new ContentValues();
-		DbHelper.putToCv(cv, "kurs", quote.getKurs());
-		DbHelper.putToCv(cv, "zmiana", quote.getZmiana());
-		DbHelper.putToCv(cv, "kurs_odn", quote.getKursOdn());
-		DbHelper.putToCv(cv, "kurs_min", quote.getKursMin());
-		DbHelper.putToCv(cv, "kurs_max", quote.getKursMax());
-		DbHelper.putToCv(cv, "wartosc", quote.getWartosc());
-		if (quote.getUpdate() == null) {
-			DbHelper.putToCv(cv, "`update`", null);
-		} else {
-			DbHelper.putToCv(cv, "`update`", DateFormatUtils.formatTime(quote.getUpdate()));
-		}
-		DbHelper.putToCv(cv, "kurs_otw", quote.getKursOtw());
-		DbHelper.putToCv(cv, "tko", quote.getTko());
-		DbHelper.putToCv(cv, "tko_procent", quote.getTkoProcent());
-		DbHelper.putToCv(cv, "wolumen", quote.getWolumen());
-
-		DbHelper.putToCv(cv, "k_ofert", quote.getkOfert());
-		DbHelper.putToCv(cv, "k_wol", quote.getkWol());
-		DbHelper.putToCv(cv, "k_lim", quote.getkLim());
-		DbHelper.putToCv(cv, "s_lim", quote.getsLim());
-		DbHelper.putToCv(cv, "s_wol", quote.getsWol());
-		DbHelper.putToCv(cv, "s_ofert", quote.getsOfert());
-		return cv;
-	}
-
 }

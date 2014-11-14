@@ -10,7 +10,7 @@ public class Symbol {
 
 	private final String name;
 
-	private final Boolean isIndex;
+	private final boolean isIndex;
 
 	private boolean deleted;
 
@@ -37,7 +37,7 @@ public class Symbol {
 		return name;
 	}
 
-	public Boolean isIndex() {
+	public boolean isIndex() {
 		return isIndex;
 	}
 
@@ -45,7 +45,7 @@ public class Symbol {
 		return deleted;
 	}
 
-	public void setDeleted(Boolean deleted) {
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
 

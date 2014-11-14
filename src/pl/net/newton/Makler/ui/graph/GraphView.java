@@ -21,6 +21,7 @@ import org.achartengine.renderer.XYSeriesRenderer;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
+import pl.net.newton.Makler.db.quote.QuoteField;
 import pl.net.newton.Makler.db.symbol.Symbol;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.history.EntryListWithIndexes;
@@ -171,7 +172,7 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 	}
 
 	public void refreshGraph(boolean force) {
-		Symbol symbol = symbolsDb.getSymbolBySymbol(quote.getSymbol());
+		Symbol symbol = symbolsDb.getSymbolBySymbol(quote.get(QuoteField.SYMBOL));
 
 		try {
 			if (!historyService.isRangeExist(symbol, graphRange)) {
@@ -269,51 +270,30 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		}
 
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		XYSeries series = new XYSeries(quote.getSymbol());
-		double min = -1, max = -1;
+		XYSeries series = new XYSeries(quote.get(QuoteField.SYMBOL));
+		double min = Double.MAX_VALUE, max = -1;
 		for (int i = 0; i < entries.getLength(); i++) {
 			double value = ((double) entries.getClose(i)) / 100;
 			series.add(entries.getGraphIndex(i), value);
-
-			if (min == -1 || min > value) {
-				min = value;
-			}
-			if (max == -1 || max < value) {
-				max = value;
-			}
+			min = Math.min(value, min);
+			max = Math.max(value, max);
 		}
 		dataset.addSeries(series);
 
 		boolean kursOdn = false;
 		if (displayReferenceQuote()) {
-			double kursOdnDouble = quote.getKursOdn().doubleValue();
+			double kursOdnDouble = quote.getAsDecimal(QuoteField.REFERENCE).doubleValue();
 			series = new XYSeries("Kurs odn.");
 			series.add(0, kursOdnDouble);
 			series.add(HistoryFilter.MINUTES_IN_DAY, kursOdnDouble);
 			dataset.addSeries(series);
 			kursOdn = true;
 
-			if (min > kursOdnDouble) {
-				min = kursOdnDouble;
-			}
-			if (max < kursOdnDouble) {
-				max = kursOdnDouble;
-			}
+			min = Math.min(kursOdnDouble, min);
+			max = Math.max(kursOdnDouble, max);
 		}
 
-		XYMultipleSeriesRenderer renderer = getRenderer(kursOdn, min, max);
-
-		renderer.setYAxisMax(max);
-		renderer.setYAxisMin(min);
-
-		if (graphRange == GraphRange.D1) {
-			renderer.setXAxisMax(HistoryFilter.MINUTES_IN_DAY);
-		} else {
-			renderer.setXAxisMax(entries.getGraphIndex(entries.getLength() - 1));
-		}
-		renderer.setXAxisMin(entries.getGraphIndex(0));
-		renderLabels(entries, renderer);
-
+		XYMultipleSeriesRenderer renderer = getRenderer(entries, kursOdn, min, max);
 		return new LineChart(dataset, renderer);
 	}
 
@@ -357,16 +337,19 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		if (graphRange != GraphRange.D1) {
 			return false;
 		}
-		if (quote == null || quote.getKursOdn() == null || quote.getKursOdn().compareTo(BigDecimal.ZERO) <= 0) {
+		if (quote == null || quote.get(QuoteField.REFERENCE) == null
+				|| quote.getAsDecimal(QuoteField.REFERENCE).compareTo(BigDecimal.ZERO) <= 0) {
 			return false;
 		}
-		if (quote.getUpdate() == null || quote.getUpdate().get(Calendar.HOUR_OF_DAY) < 9) {
+		if (quote.get(QuoteField.UPDATED) == null
+				|| quote.getAsCalendar(QuoteField.UPDATED).get(Calendar.HOUR_OF_DAY) < 9) {
 			return false;
 		}
 		return true;
 	}
 
-	private XYMultipleSeriesRenderer getRenderer(boolean kursOdn, double min, double max) {
+	private XYMultipleSeriesRenderer getRenderer(EntryListWithIndexes entries, boolean kursOdn, double min,
+			double max) {
 		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
 		if (graphRange == GraphRange.D1) {
 			renderer.setXAxisMax(HistoryFilter.MINUTES_IN_DAY);
@@ -404,6 +387,16 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		renderer.setPanEnabled(false);
 		renderer.setPanEnabled(false, false);
 		renderer.setClickEnabled(false);
+		renderer.setYAxisMax(max);
+		renderer.setYAxisMin(min);
+
+		if (graphRange == GraphRange.D1) {
+			renderer.setXAxisMax(HistoryFilter.MINUTES_IN_DAY);
+		} else {
+			renderer.setXAxisMax(entries.getGraphIndex(entries.getLength() - 1));
+		}
+		renderer.setXAxisMin(entries.getGraphIndex(0));
+		renderLabels(entries, renderer);
 
 		return renderer;
 	}
@@ -547,7 +540,7 @@ public class GraphView extends LinearLayout implements OnGestureListener, OnTouc
 		}
 
 		Intent intent = new Intent(context, FullScreenGraph.class);
-		intent.putExtra("symbol", quote.getSymbol());
+		intent.putExtra("symbol", quote.get(QuoteField.SYMBOL));
 		intent.putExtra("graphRange", getGraphRange());
 		intent.putExtra("graphType", getGraphType());
 		context.startActivity(intent);

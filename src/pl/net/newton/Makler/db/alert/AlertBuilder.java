@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import android.database.Cursor;
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.gpw.ex.GpwException;
 
 public class AlertBuilder {
@@ -24,7 +24,7 @@ public class AlertBuilder {
 
 	private boolean used;
 
-	public AlertBuilder setFromCursor(Cursor c, QuotesDb db) throws GpwException {
+	public AlertBuilder setFromCursor(Cursor c, QuotesDao db) throws GpwException {
 		this.id = c.getInt(c.getColumnIndex("id"));
 		this.quote = db.getQuoteById(c.getInt(c.getColumnIndex("quote_id")));
 		if (quote == null) {

@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import pl.net.newton.Makler.db.service.SqlProvider;
 import pl.net.newton.Makler.gpw.DefaultQuotesReceiver;
 import pl.net.newton.Makler.gpw.QuotesReceiver;
 import pl.net.newton.Makler.gpw.ex.GpwException;
@@ -13,8 +12,8 @@ import pl.net.newton.Makler.gpw.service.QuotesService;
 import pl.net.newton.Makler.history.service.HistoryListener;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.service.ServiceManager;
-import pl.net.newton.Makler.ui.AbstractActivity.ProcessPerformer;
 import pl.net.newton.Makler.common.Configuration;
+import pl.net.newton.Makler.db.service.SqlProvider;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -56,13 +55,13 @@ public abstract class AbstractActivity extends Activity {
 		}
 
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			quotesService = (QuotesService) service;
+			quotesService = ((QuotesService.LocalBinder) service).getService();
 			if (AbstractActivity.this instanceof QuotesListener) {
 				QuotesListener listener = (QuotesListener) AbstractActivity.this;
 				quotesService.register(listener);
 			}
 			quotesService.setUpdates(updatesEnabled());
-			quotesService.setForeground(true);
+			quotesService.setIsInForeground(true);
 			servicesInitialized();
 		}
 	};
@@ -73,7 +72,7 @@ public abstract class AbstractActivity extends Activity {
 		}
 
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			historyService = (HistoryService) service;
+			historyService = ((HistoryService.LocalBinder) service).getService();
 			if (AbstractActivity.this instanceof HistoryListener) {
 				HistoryListener listener = (HistoryListener) AbstractActivity.this;
 				historyService.register(listener);
@@ -88,7 +87,7 @@ public abstract class AbstractActivity extends Activity {
 		}
 
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			SqlProvider sqlProvider = (SqlProvider) service;
+			SqlProvider sqlProvider = ((SqlProvider.LocalBinder) service).getService();
 			sqlDb = sqlProvider.getSql();
 			servicesInitialized();
 		}
@@ -135,7 +134,7 @@ public abstract class AbstractActivity extends Activity {
 		Log.d(TAG, this.getClass().getName() + " - onPause");
 		if (quotesService != null) {
 			quotesService.setUpdates(true);
-			quotesService.setForeground(false);
+			quotesService.setIsInForeground(false);
 		}
 	}
 
@@ -145,7 +144,7 @@ public abstract class AbstractActivity extends Activity {
 		Log.d(TAG, this.getClass().getName() + " - onResume");
 		if (quotesService != null) {
 			quotesService.setUpdates(updatesEnabled());
-			quotesService.setForeground(true);
+			quotesService.setIsInForeground(true);
 		}
 	}
 

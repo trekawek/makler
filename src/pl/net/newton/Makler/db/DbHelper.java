@@ -60,4 +60,8 @@ public final class DbHelper {
 			cv.put(name, value.toString());
 		}
 	}
+
+	public static String[] _(String... args) {
+		return args;
+	}
 }

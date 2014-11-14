@@ -2,7 +2,8 @@ package pl.net.newton.Makler.ui;
 
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuoteField;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.db.symbol.SymbolsDb;
 import pl.net.newton.Makler.history.EntryListWithIndexes;
 import pl.net.newton.Makler.history.service.HistoryListener;
@@ -70,10 +71,10 @@ public class FullScreenGraph extends AbstractActivity implements HistoryListener
 
 	@Override
 	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
-		QuotesDb quotesDb = new QuotesDb(sqlDb, this);
+		QuotesDao quotesDb = new QuotesDao(sqlDb, this);
 		this.symbolsDb = new SymbolsDb(sqlDb, this);
 		quote = quotesDb.getQuoteBySymbol(quoteSymbol);
-		setTitle(quote.getName());
+		setTitle(quote.get(QuoteField.NAME));
 
 		graphView = new GraphView(this, quote, mHandler, historyService, symbolsDb);
 		graphView.setGraphRange(graphRange);

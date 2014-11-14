@@ -26,8 +26,6 @@ public final class Configuration {
 
 	private static final String WALLET_ACCOUNT = "walletAccount";
 
-	public static final boolean DEBUG_UPDATES = false;
-
 	private SharedPreferences pref;
 
 	private Editor edit;
@@ -58,11 +56,19 @@ public final class Configuration {
 	}
 
 	public BigDecimal getCommision() {
-		return new BigDecimal(pref.getString(COMMISION, "0"));
+		try {
+			return new BigDecimal(pref.getString(COMMISION, "0"));
+		} catch (NumberFormatException e) {
+			return BigDecimal.ZERO;
+		}
 	}
 
 	public BigDecimal getMinCommision() {
-		return new BigDecimal(pref.getString(MIN_COMMISION, "0"));
+		try {
+			return new BigDecimal(pref.getString(MIN_COMMISION, "0"));
+		} catch (NumberFormatException e) {
+			return BigDecimal.ZERO;
+		}
 	}
 
 	public String getLastSymbolsUpdated() {
@@ -80,7 +86,11 @@ public final class Configuration {
 	}
 
 	public BigDecimal getWalletAccount() {
-		return new BigDecimal(pref.getString(WALLET_ACCOUNT, "0"));
+		try {
+			return new BigDecimal(pref.getString(WALLET_ACCOUNT, "0"));
+		} catch (NumberFormatException e) {
+			return BigDecimal.ZERO;
+		}
 	}
 
 }

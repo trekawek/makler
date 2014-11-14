@@ -25,11 +25,12 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import pl.net.newton.Makler.R;
 import pl.net.newton.Makler.db.alert.Alert;
 import pl.net.newton.Makler.db.alert.AlertBuilder;
-import pl.net.newton.Makler.db.alert.AlertsDb;
+import pl.net.newton.Makler.db.alert.AlertsDao;
 import pl.net.newton.Makler.db.alert.Event;
 import pl.net.newton.Makler.db.alert.Subject;
 import pl.net.newton.Makler.db.quote.Quote;
-import pl.net.newton.Makler.db.quote.QuotesDb;
+import pl.net.newton.Makler.db.quote.QuoteField;
+import pl.net.newton.Makler.db.quote.QuotesDao;
 import pl.net.newton.Makler.history.service.HistoryService;
 import pl.net.newton.Makler.ui.adapter.AlertsAdapter;
 import pl.net.newton.Makler.ui.adapter.QuotesAdapter;
@@ -44,9 +45,9 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 
 	private Quote quote;
 
-	private AlertsDb alertsDb;
+	private AlertsDao alertsDb;
 
-	private QuotesDb quotesDb;
+	private QuotesDao quotesDb;
 
 	private String symbol;
 
@@ -140,12 +141,12 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 			if (this.alertId != 0) {
 				builder.setId(alertId).setUsed(false);
 				Alert newAlert = builder.build();
-				alertsDb.updateAlert(newAlert);
+				alertsDb.update(newAlert);
 				finish();
 				return;
 			} else {
 				Alert newAlert = builder.build();
-				if (alertsDb.addAlert(newAlert)) {
+				if (alertsDb.create(newAlert)) {
 					subjectSpinner.setSelection(0);
 					eventSpinner.setSelection(0);
 					valueEditText.setText("");
@@ -159,7 +160,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 	}
 
 	public void refreshList() {
-		alerts = alertsDb.alertsByQuote(quote);
+		alerts = alertsDb.getByQuote(quote);
 		alertList.setAdapter(new AlertsAdapter(this, alerts));
 		View label = findViewById(R.id.alertListLabel);
 		if (alerts.isEmpty()) {
@@ -187,7 +188,7 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 			intent.putExtra("alertId", selectedAlert.getId());
 			startActivityForResult(intent, EDIT_RESULT);
 		} else if (id == ContextMenuItem.DELETE) {
-			alertsDb.deleteAlert(selectedAlert.getId());
+			alertsDb.delete(selectedAlert.getId());
 			refreshList();
 		}
 		return true;
@@ -250,8 +251,8 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 
 	@Override
 	protected void initUi(SQLiteDatabase sqlDb, HistoryService historyService) {
-		this.quotesDb = new QuotesDb(sqlDb, this);
-		this.alertsDb = new AlertsDb(sqlDb, this);
+		this.quotesDb = new QuotesDao(sqlDb, this);
+		this.alertsDb = new AlertsDao(sqlDb, this);
 		if (alertId != 0) {
 			setAlertData(alertId);
 		} else {
@@ -268,15 +269,15 @@ public class Alerts extends AbstractActivity implements OnClickListener, OnItemS
 	private void setSymbolData(String symbol) {
 		this.quote = quotesDb.getQuoteBySymbol(symbol);
 		TextView txt = (TextView) findViewById(R.id.alertQuoteName);
-		txt.setText(quote.getName());
+		txt.setText(quote.get(QuoteField.NAME));
 	}
 
 	private void setAlertData(int alertId) {
-		alert = alertsDb.getAlertById(alertId);
+		alert = alertsDb.getById(alertId);
 		this.quote = alert.getQuote();
 
 		TextView txt = (TextView) findViewById(R.id.alertQuoteName);
-		txt.setText(quote.getName());
+		txt.setText(quote.get(QuoteField.NAME));
 
 		eventInitialized = false;
 		subjectSpinner.setSelection(alert.getSubject().ordinal());

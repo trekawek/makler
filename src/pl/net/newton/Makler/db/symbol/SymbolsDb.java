@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import pl.net.newton.Makler.R;
+import pl.net.newton.Makler.db.Constants;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,12 +31,12 @@ public class SymbolsDb {
 		this.sqlDb = sqlDb;
 	}
 
-	public Boolean symbolsEmpty() {
-		Cursor c = sqlDb.rawQuery(ctx.getString(R.string.symbolsEmpty), new String[] {});
-		c.moveToFirst();
-		Integer count = c.getInt(0);
+	public boolean symbolsEmpty() {
+		final boolean isEmpty;
+		final Cursor c = sqlDb.query(Constants.SYMBOLS, null, null, null, null, null, null);
+		isEmpty = c.moveToFirst();
 		c.close();
-		return count == 0;
+		return isEmpty;
 	}
 
 	public Integer getSymbolId(String symbol) {
